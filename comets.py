@@ -1,10 +1,26 @@
-# imports
+#!/usr/bin/env python
+
+'''
+The Comets module serves as a Python user interface to COMETS.
+For more information see https://comets-manual.readthedocs.io/en/latest/
+'''
+
 import re
 import math
 import subprocess as sp
 import pandas as pd
 import os
 import cobra
+import io
+
+__author__ = "Djordje Bajic, Jean Vila"
+__copyright__ = "Copyright 2019, The COMETS Consortium"
+__credits__ = ["Djordje Bajic", "Jean Vila"]
+__license__ = "MIT"
+__version__ = "0.2.0"
+__maintainer__ = "Djordje Bajic"
+__email__ = "djordje.bajic@yale.edu"
+__status__ = "Beta"
 
 
 class CorruptLine(Exception):
@@ -41,197 +57,11 @@ def readlines_file(filename):
     return f_lines
 
 
-'''
-Comets model
-'''
-
-
-class model:
-    def __init__(self, model_name, input_model=None):
-        self.model_name = model_name
-        self.reactions = pd.DataFrame(columns=['REACTION_NAMES', 'ID',
-                                               'LB', 'UB', 'EXCH'])
-        self.metabolites = pd.DataFrame(columns=['METABOLITE_NAMES'])
-        self.smat = pd.DataFrame(columns=['metabolite', 'rxn', 's_coef'])
-
-        if isinstance(input_model, str):
-            ''' the input is a comets model file; read it'''
-            
-            filedata_string = read_file(input_model)
-            f_lines = readlines_file(input_model)
-            end_blocks = []
-            for i in range(0, len(f_lines)):
-                if '//\n' in f_lines[i]:
-                    end_blocks.append(i)
-            
-            # '''----------- S MATRIX --------------------------------------'''
-            lin_smat = re.split('SMATRIX',
-                                filedata_string)[0].count('\n')
-            lin_smat_end = next(x for x in end_blocks if x > lin_smat)-2
-
-            # TODO: fix delimiter here to be robust to tabs, and test it
-            self.smat = pd.read_csv(input_model, delimiter=' ',
-                                    skiprows=lin_smat,
-                                    skipfooter=end_blocks[-1] - lin_smat_end,
-                                    engine='python', skipinitialspace=True)
-
-            self.smat.columns = ['metabolite', 'rxn', 's_coef']
-            
-            # '''----------- REACTIONS AND BOUNDS---------------------------'''
-            lin_rxns = re.split('REACTION_NAMES',
-                                filedata_string)[0].count('\n')
-            lin_rxns_end = next(x for x in end_blocks if x > lin_rxns)-2
-
-            rxn = pd.read_csv(input_model, delimiter=' ',
-                              skiprows=lin_rxns,
-                              skipfooter=end_blocks[-1] - lin_rxns_end,
-                              engine='python', skipinitialspace=True)
-
-            lin_bnds = re.split('BOUNDS',
-                                filedata_string)[0].count('\n')
-            lin_bnds_end = next(x for x in end_blocks if x > lin_bnds)-2
-            
-            bnds = pd.read_csv(input_model, delimiter=' ',
-                               skiprows=lin_bnds,
-                               skipfooter=end_blocks[-1] - lin_bnds_end,
-                               engine='python', skipinitialspace=True)
-
-            self.default_bounds = [int(bnds.columns[1]), int(bnds.columns[2])]
-            self.reactions = pd.concat([rxn, bnds], axis=1)
-            self.reactions.columns = ['REACTION_NAMES', 'ID', 'LB', 'UB']
-            
-            # '''----------- METABOLITES -----------------------------------'''
-            lin_mets = re.split('METABOLITE_NAMES',
-                                filedata_string)[0].count('\n')
-            lin_mets_end = next(x for x in end_blocks if x > lin_mets)-2
-            
-            self.metabolites = pd.read_csv(input_model, delimiter=' ',
-                                           skiprows=lin_mets,
-                                           skipfooter=end_blocks[-1] -
-                                           lin_mets_end,
-                                           engine='python',
-                                           skipinitialspace=True)
-
-            # '''----------- EXCHANGE RXNS ---------------------------------'''
-            lin_exch = re.split('EXCHANGE_REACTIONS',
-                                filedata_string)[0].count('\n')+1
-            exch_rxns = [int(i) for i in re.findall(r'\S+',
-                                                    f_lines[lin_exch].strip())]
-
-            self.reactions['EXCH'] = [True if x in exch_rxns else False
-                                      for x in self.reactions['ID']]
-
-            # '''----------- OBJECTIVE -------------------------------------'''
-            lin_obj = re.split('OBJECTIVE',
-                               filedata_string)[0].count('\n')+1
-            self.objective = int(f_lines[lin_obj].strip())
-
-            # '''----------- OBJECTIVE STYLE -------------------------------'''
-            lin_obj_st = re.split('OBJECTIVE_STYLE',
-                                  filedata_string)[0].count('\n')+1
-            self.obj_style = f_lines[lin_obj_st].strip()
-            
-        else:
-            '''the input is a cobra model; convert it'''
-
-            # Reactions
-            reaction_list = input_model.reactions
-            self.reactions['REACTION_NAMES'] = [str(x).split(':')[0] for
-                                                x in reaction_list]
-            self.reactions['ID'] = [i for i in range(1, len(reaction_list)+1)]
-            self.reactions['LB'] = [x.lower_bound for x in reaction_list]
-            self.reactions['UB'] = [x.upper_bound for x in reaction_list]
-
-            self.reactions['EXCH'] = False
-            self.reactions.loc[self.reactions['REACTION_NAMES'].
-                               str.contains('EX_'), 'EXCH'] = True
-            
-            # Metabolites
-            metabolite_list = input_model.metabolites
-            self.metabolites['METABOLITE_NAMES'] = [str(x) for
-                                                    x in metabolite_list]            
-
-            # S matrix
-            for index, row in self.reactions.iterrows():
-                rxn = input_model.reactions.get_by_id(row['REACTION_NAMES'])
-                rxn_num = row['ID']
-                rxn_mets = [1+list(self.metabolites['METABOLITE_NAMES']).index(
-                    x.id) for x in rxn.metabolites]
-                met_s_coefs = list(rxn.metabolites.values())
-
-                cdf = pd.DataFrame({'metabolite': rxn_mets,
-                                    'rxn': [rxn_num]*len(rxn_mets),
-                                    's_coef': met_s_coefs})
-                cdf = cdf.sort_values('metabolite')
-                self.smat = pd.concat([self.smat, cdf])
-
-            # The rest of stuff
-            self.default_bounds = [-1000, 1000]
-            obj = [str(x).split(':')[0]
-                   for x in reaction_list
-                   if x.objective_coefficient != 0][0]
-            self.objective = int(self.reactions[
-                self.reactions.REACTION_NAMES == obj]['ID'])
-            self.obj_style = 'MAX_OBJECTIVE_MIN_TOTAL'
-                
-    def write_model(self, path=None):
-        # TODO: set path (do it also in the rest of write methods)
-        if os.path.isfile(self.model_name):
-            os.remove(self.model_name)
-
-        bnd = self.reactions.loc[:, ['ID', 'LB', 'UB']].astype(
-            str).apply(lambda x: '   '.join(x), axis=1)
-        bnd = '    ' + bnd.astype(str)
-
-        rxn_n = '    ' + self.reactions['REACTION_NAMES'].astype(str)
-
-        met_n = '    ' + self.metabolites.astype(str)
-        
-        smat = self.smat.astype(str).apply(lambda x: '   '.join(x), axis=1)
-        smat = '    ' + smat.astype(str)
-
-        exch_r = ' '.join([str(x) for x in
-                           self.reactions.loc[self.reactions.EXCH, 'ID']])
-        
-        with open(self.model_name, 'a') as f:
-
-            f.write('SMATRIX  ' + str(len(self.metabolites)) +
-                    '  ' + str(len(self.reactions)) + '\n')
-            smat.to_csv(f, mode='a', header=False, index=False)
-            f.write(r'//' + '\n')
-
-            f.write('BOUNDS ' +
-                    str(self.default_bounds[0]) + ' ' +
-                    str(self.default_bounds[1]) + '\n')
-            bnd.to_csv(f, mode='a', header=False, index=False)
-            f.write(r'//' + '\n')
-            
-            f.write('OBJECTIVE\n' +
-                    '    ' + str(self.objective) + '\n')
-            f.write(r'//' + '\n')
-
-            f.write('METABOLITE_NAMES\n')
-            met_n.to_csv(f, mode='a', header=False, index=False)
-            f.write(r'//' + '\n')
-            
-            f.write('REACTION_NAMES\n')
-            rxn_n.to_csv(f, mode='a', header=False, index=False)
-            f.write(r'//' + '\n')
-
-            f.write('EXCHANGE_REACTIONS\n')
-            f.write(' ' + exch_r + '\n')
-            f.write(r'//' + '\n')
-
-            f.write('OBJECTIVE_STYLE\n' + self.obj_style + '\n')
-            f.write(r'//' + '\n')
-
-
-'''
-Class dealing with COMETS layouts
-'''
-
-
 class layout:
+    
+    '''
+    Class dealing with COMETS layouts
+    '''
     def __init__(self, input_obj=None):
 
         # define an empty layout that can be filled later
@@ -251,22 +81,25 @@ class layout:
         
         if isinstance(input_obj, str):
             # .. load file
-            filedata_string = read_file(input_obj)
-            f_lines = readlines_file(input_obj)
+            f_lines = [s for s in read_file(input_obj).splitlines() if s]
+            filedata_string = os.linesep.join(f_lines)
             end_blocks = []
             for i in range(0, len(f_lines)):
-                if '//\n' in f_lines[i]:
+                if '//' in f_lines[i]:
                     end_blocks.append(i)
 
             # '''----------- MODELS ----------------------------------------'''
-            try:
+            '''
+            Models can be specified in layout as either comets format models
+            or .xml format (sbml cobra compliant)
+            '''            
+            models = f_lines[0].split()
+            if len(models) > 1:
                 self.models = f_lines[0].split()[1:]
-                if len(self.models) == 0:
-                    raise CorruptLine
-            except CorruptLine:
-                print('\n CorruptLine ERROR \n' +
-                      'No models specified in provided layout file')
-                
+                self.update_models()
+            else:
+                print('Warning: No models in layout')
+                    
             # '''----------- GRID ------------------------------------------'''
             try:
                 self.grid = [int(i) for i in f_lines[2].split()[1:]]
@@ -292,62 +125,68 @@ class layout:
             self.media['init_amount'] = media_conc
             
             # '''----------- MEDIA DIFFUSION -------------------------------'''
-            lin_diff = re.split('diffusion_constants',
-                                filedata_string)[0].count('\n')
-            lin_diff_end = next(x for x in end_blocks if x > lin_diff)
+            self.__diffusion_flag = False
+            if 'DIFFUSION' in filedata_string:
+                self.__diffusion_flag = True
+                lin_diff = re.split('diffusion_constants',
+                                    filedata_string)[0].count('\n')
+                lin_diff_end = next(x for x in end_blocks if x > lin_diff)
 
-            self.global_diff = float(re.findall(r'\S+', f_lines[lin_diff].
-                                                strip())[1])
-            try:
-                for i in range(lin_diff+1, lin_diff_end):
-                    diff_spec = [float(x) for x in f_lines[i].split()]
-                    if diff_spec[0] > len(self.media.metabolite)-1:
-                        raise UnallocatedMetabolite
-                    else:
-                        self.media.loc[int(diff_spec[0]),
-                                       'diff_c'] = diff_spec[1]
-            except UnallocatedMetabolite:
-                print('\n ERROR UnallocatedMetabolite: Some diffusion ' +
-                      'values correspond to unallocated metabolites')
+                self.global_diff = float(re.findall(r'\S+', f_lines[lin_diff].
+                                                    strip())[1])
+                try:
+                    for i in range(lin_diff+1, lin_diff_end):
+                        diff_spec = [float(x) for x in f_lines[i].split()]
+                        if diff_spec[0] > len(self.media.metabolite)-1:
+                            raise UnallocatedMetabolite
+                        else:
+                            self.media.loc[int(diff_spec[0]),
+                                           'diff_c'] = diff_spec[1]
+                except UnallocatedMetabolite:
+                    print('\n ERROR UnallocatedMetabolite: Some diffusion ' +
+                          'values correspond to unallocated metabolites')
 
             # '''----------- MEDIA REFRESH----------------------------------'''
             # .. global refresh values
-            lin_refr = re.split('refresh',
-                                filedata_string)[0].count('\n')
-            lin_refr_end = next(x for x in end_blocks if x > lin_refr)
-            
-            g_refresh = [float(x) for x in f_lines[lin_refr].split()[1:]]
+            self.__refresh_flag = False
+            if 'REFRESH' in filedata_string:
+                self.__refresh_flag = True
+                lin_refr = re.split('refresh',
+                                    filedata_string)[0].count('\n')
+                lin_refr_end = next(x for x in end_blocks if x > lin_refr)
 
-            try:
-                if len(g_refresh) != len(media_names):
-                    raise CorruptLine
-                else:
-                    self.media['g_refresh'] = g_refresh
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Number of global refresh ' +
-                      'values does not match number of \nmedia metabolites ' +
-                      'in provided layout file')
+                g_refresh = [float(x) for x in f_lines[lin_refr].split()[1:]]
 
-            # .. local refresh values
-            lin_refr += 1
-            try:
-                for i in range(lin_refr, lin_refr_end):
-                    refr_spec = [float(x) for x in f_lines[i].split()]
-                    if len(refr_spec) != len(self.media.metabolite)+2:
+                try:
+                    if len(g_refresh) != len(media_names):
                         raise CorruptLine
-                    elif (refr_spec[0] >= self.grid[0] or
-                          refr_spec[1] >= self.grid[1]):
-                        raise OutOfGrid
                     else:
-                        self.local_refresh.append(refr_spec)
-                    
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Some local "refresh" lines ' +
-                      'have a wrong number of entries')
-            except OutOfGrid:
-                print('\n ERROR OutOfGrid: Some local "refresh" lines ' +
-                      'have coordinates that fall outside of the \ndefined ' +
-                      'grid')
+                        self.media['g_refresh'] = g_refresh
+                except CorruptLine:
+                    print('\n ERROR CorruptLine: Number of global refresh ' +
+                          'values does not match number of \nmedia ' +
+                          'metabolites in provided layout file')
+
+                # .. local refresh values
+                lin_refr += 1
+                try:
+                    for i in range(lin_refr, lin_refr_end):
+                        refr_spec = [float(x) for x in f_lines[i].split()]
+                        if len(refr_spec) != len(self.media.metabolite)+2:
+                            raise CorruptLine
+                        elif (refr_spec[0] >= self.grid[0] or
+                              refr_spec[1] >= self.grid[1]):
+                            raise OutOfGrid
+                        else:
+                            self.local_refresh.append(refr_spec)
+
+                except CorruptLine:
+                    print('\n ERROR CorruptLine: Some local "refresh" lines ' +
+                          'have a wrong number of entries')
+                except OutOfGrid:
+                    print('\n ERROR OutOfGrid: Some local "refresh" lines ' +
+                          'have coordinates that fall outside of the ' +
+                          '\ndefined ' + 'grid')
 
             # '''----------- STATIC MEDIA ----------------------------------'''
             # .. global static values
@@ -471,7 +310,10 @@ class layout:
             os.remove(outfile)
         
         lyt = open(outfile, 'a')
-        lyt.write('model_file ' + ' '.join(self.models) + '\n')
+        
+        lyt.write('model_file ' +
+                  '.cmd '.join(self.models) +
+                  '.cmd\n')
         lyt.write('  model_world\n')
         
         lyt.write('    grid_size ' +
@@ -482,25 +324,27 @@ class layout:
             lyt.write('      ' + self.media.metabolite[i] +
                       ' ' + str(self.media.init_amount[i]) + '\n')
         lyt.write(r'    //' + '\n')
-            
-        lyt.write('    diffusion_constants ' +
-                  str(self.global_diff) +
-                  '\n')
-        for i in range(0, len(self.media)):
-            if not math.isnan(self.media.diff_c[i]):
-                lyt.write('      ' + str(i) + ' ' +
-                          str(self.media.diff_c[i]) + '\n')
-        lyt.write(r'    //' + '\n')
-                
-        lyt.write('    media_refresh ' +
-                  ' '.join([str(x) for x in self.media.
-                            g_refresh.tolist()]) +
-                  '\n')
-        for i in range(0, len(self.local_refresh)):
-            lyt.write('      ' +
-                      ' '.join([str(x) for x in self.local_refresh[i]]) +
+
+        if self.__diffusion_flag:
+            lyt.write('    diffusion_constants ' +
+                      str(self.global_diff) +
                       '\n')
-        lyt.write(r'    //' + '\n')
+            for i in range(0, len(self.media)):
+                if not math.isnan(self.media.diff_c[i]):
+                    lyt.write('      ' + str(i) + ' ' +
+                              str(self.media.diff_c[i]) + '\n')
+            lyt.write(r'    //' + '\n')
+
+        if self.__refresh_flag:
+            lyt.write('    media_refresh ' +
+                      ' '.join([str(x) for x in self.media.
+                                g_refresh.tolist()]) +
+                      '\n')
+            for i in range(0, len(self.local_refresh)):
+                lyt.write('      ' +
+                          ' '.join([str(x) for x in self.local_refresh[i]]) +
+                          '\n')
+            lyt.write(r'    //' + '\n')
 
         g_static_line = [None]*(len(self.media)*2)
         g_static_line[::2] = self.media.g_static
@@ -530,6 +374,415 @@ class layout:
         lyt.write(r'//' + '\n')
         lyt.close()
 
+    def update_models(self):
+
+        for i in self.models:
+            
+            # define type of input model
+            if isinstance(i, cobra.Model):
+                input_type = 'cobra'                
+                ext = 'current'
+            elif isinstance(i, str):
+                with open(i, errors='replace') as f:
+                    ext = f.readline().split()[0]
+                if ext == '<?xml':
+                    input_type = 'cobra'
+                else:
+                    input_type = 'comets'
+            else:
+                print('WARNING:\nCannot find model ' + i + 'anywhere!')
+                
+            vmax_flag = False
+            km_flag = False
+            hill_flag = False
+
+            if input_type == 'cobra':
+                '''
+                it is a cobra type model; read it and parse it
+                '''
+                if ext == 'current':
+                    curr_m = i
+                else:
+                    curr_m = cobra.io.read_sbml_model(i)
+                
+                model_id = curr_m.id
+                # reactions and their features
+                reaction_list = curr_m.reactions
+                reactions = pd.DataFrame(columns=['REACTION_NAMES', 'ID',
+                                                  'LB', 'UB', 'EXCH'])
+                reactions['REACTION_NAMES'] = [str(x).split(':')[0] for
+                                               x in reaction_list]
+                reactions['ID'] = [k for k in
+                                   range(1, len(reaction_list)+1)]
+                reactions['LB'] = [x.lower_bound for x in reaction_list]
+                reactions['UB'] = [x.upper_bound for x in reaction_list]
+
+                reactions['EXCH'] = [True if (len(k.metabolites) == 1) &
+                                     (list(k.metabolites.
+                                           values())[0] == (-1)) &
+                                     ('DM_' not in k.id)
+                                     else False for k in reaction_list]
+
+                exch = reactions.loc[reactions['EXCH'], 'ID'].tolist()
+                reactions['EXCH_IND'] = [exch.index(x)+1
+                                         if x in exch else 0
+                                         for x in reactions['ID']]
+
+                reactions['V_MAX'] = [k.Vmax
+                                      if hasattr(k, 'Vmax')
+                                      else float('NaN')
+                                      for k in reaction_list]
+                
+                if not reactions.V_MAX.isnull().all():
+                    vmax_flag = True
+
+                reactions['KM'] = [k.Km
+                                   if hasattr(k, 'Km')
+                                   else float('NaN')
+                                   for k in reaction_list]
+
+                if not reactions.KM.isnull().all():
+                    km_flag = True
+
+                reactions['HILL'] = [k.Hill
+                                     if hasattr(k, 'Hill')
+                                     else float('NaN')
+                                     for k in reaction_list]
+
+                if not reactions.HILL.isnull().all():
+                    hill_flag = True
+
+                if vmax_flag:
+                    if hasattr(curr_m, 'default_vmax'):
+                        default_vmax = curr_m.default_vmax
+                    else:
+                        default_vmax = 10
+
+                if km_flag:
+                    if hasattr(curr_m, 'default_km'):
+                        default_km = curr_m.default_km
+                    else:
+                        default_km = 1
+
+                if hill_flag:
+                    if hasattr(curr_m, 'default_hill'):
+                        default_hill = curr_m.default_hill
+                    else:
+                        default_hill = 1
+
+                # Metabolites
+                metabolites = pd.DataFrame(columns=['METABOLITE_NAMES'])
+                metabolite_list = curr_m.metabolites
+                metabolites['METABOLITE_NAMES'] = [str(x) for
+                                                   x in metabolite_list]
+
+                # S matrix
+                smat = pd.DataFrame(columns=['metabolite',
+                                             'rxn',
+                                             's_coef'])
+                for index, row in reactions.iterrows():
+                    rxn = curr_m.reactions.get_by_id(
+                        row['REACTION_NAMES'])
+                    rxn_num = row['ID']
+                    rxn_mets = [1+list(metabolites[
+                        'METABOLITE_NAMES']).index(
+                        x.id) for x in rxn.metabolites]
+                    met_s_coefs = list(rxn.metabolites.values())
+
+                    cdf = pd.DataFrame({'metabolite': rxn_mets,
+                                        'rxn': [rxn_num]*len(rxn_mets),
+                                        's_coef': met_s_coefs})
+                    cdf = cdf.sort_values('metabolite')
+                    smat = pd.concat([smat, cdf])
+
+                smat = smat.sort_values(by=['metabolite', 'rxn'])
+
+                # The rest of stuff
+                if hasattr(curr_m, 'default_bounds'):
+                    default_bounds = curr_m.default_bounds
+                else:
+                    default_bounds = [0, 1000]
+
+                obj = [str(x).split(':')[0]
+                       for x in reaction_list
+                       if x.objective_coefficient != 0][0]
+                objective = int(reactions[reactions.
+                                          REACTION_NAMES == obj]['ID'])
+
+                if hasattr(curr_m, 'comets_optimizer'):
+                    optimizer = curr_m.comets_optimizer
+                else:
+                    optimizer = 'GUROBI'
+
+                if hasattr(curr_m, 'comets_obj_style'):
+                    obj_style = curr_m.comets_obj_style
+                else:
+                    obj_style = 'MAXIMIZE_OBJECTIVE_FLUX'
+
+            elif input_type == 'comets':
+                '''
+                it is a comets type model; read it and parse it
+                '''
+                model_id = os.path.splitext(os.path.basename(i))[0]
+
+                # in this way, its robust to empty lines:
+                m_f_lines = [s for s in read_file(i).splitlines() if s]
+                m_filedata_string = os.linesep.join(m_f_lines)
+                ends = []
+                for k in range(0, len(m_f_lines)):
+                    if '//' in m_f_lines[k]:
+                        ends.append(k)
+
+                # '''----------- S MATRIX ------------------------------'''
+                lin_smat = re.split('SMATRIX',
+                                    m_filedata_string)[0].count('\n')
+                lin_smat_end = next(x for x in ends if x > lin_smat)
+
+                smat = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                    lin_smat:lin_smat_end])),
+                                   delimiter=r'\s+',
+                                   skipinitialspace=True)
+                smat.columns = ['metabolite', 'rxn', 's_coef']
+
+                # '''----------- REACTIONS AND BOUNDS-------------------'''
+                lin_rxns = re.split('REACTION_NAMES',
+                                    m_filedata_string)[0].count('\n')
+                lin_rxns_end = next(x for x in
+                                    ends if x > lin_rxns)
+
+                rxn = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                    lin_rxns:lin_rxns_end])),
+                                  delimiter=r'\s+',
+                                  skipinitialspace=True)
+                                  
+                rxn['ID'] = range(1, len(rxn)+1)
+
+                lin_bnds = re.split('BOUNDS',
+                                    m_filedata_string)[0].count('\n')
+                lin_bnds_end = next(x for x in ends if x > lin_bnds)
+
+                bnds = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                    lin_bnds:lin_bnds_end])),
+                                   delimiter=r'\s+',
+                                   skipinitialspace=True)
+
+                default_bounds = [float(bnds.columns[1]),
+                                  float(bnds.columns[2])]
+
+                bnds.columns = ['ID', 'LB', 'UB']
+                reactions = pd.merge(rxn, bnds,
+                                     left_on='ID', right_on='ID',
+                                     how='left')
+                reactions.LB.fillna(default_bounds[0], inplace=True)
+                reactions.UB.fillna(default_bounds[1], inplace=True)
+
+                # '''----------- METABOLITES ---------------------------'''
+                lin_mets = re.split('METABOLITE_NAMES',
+                                    m_filedata_string)[0].count('\n')
+                lin_mets_end = next(x for x in ends if x > lin_mets)
+
+                metabolites = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                    lin_mets:lin_mets_end])),
+                                          delimiter=r'\s+',
+                                          skipinitialspace=True)
+                
+                # '''----------- EXCHANGE RXNS -------------------------'''
+                lin_exch = re.split('EXCHANGE_REACTIONS',
+                                    m_filedata_string)[0].count('\n')+1
+                exch = [int(k) for k in re.findall(r'\S+',
+                                                   m_f_lines[lin_exch].
+                                                   strip())]
+
+                reactions['EXCH'] = [True if x in exch else False
+                                     for x in reactions['ID']]
+                reactions['EXCH_IND'] = [exch.index(x)+1
+                                         if x in exch else 0
+                                         for x in reactions['ID']]
+
+                # '''----------- VMAX VALUES --------------------------'''
+                if 'VMAX_VALUES' in m_filedata_string:
+                    vmax_flag = True
+                    lin_vmax = re.split('VMAX_VALUES',
+                                        m_filedata_string)[0].count('\n')
+                    lin_vmax_end = next(x for x in ends if x > lin_vmax)
+
+                    Vmax = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                        lin_vmax:lin_vmax_end])),
+                                       delimiter=r'\s+',
+                                       skipinitialspace=True)
+
+                    Vmax.columns = ['EXCH_IND', 'V_MAX']
+
+                    reactions = pd.merge(reactions, Vmax,
+                                         left_on='EXCH_IND',
+                                         right_on='EXCH_IND',
+                                         how='left')
+                    default_vmax = float(m_f_lines[lin_vmax-1].split()[1])
+
+                # '''----------- VMAX VALUES --------------------------'''
+                if 'KM_VALUES' in m_filedata_string:
+                    km_flag = True
+                    lin_km = re.split('KM_VALUES',
+                                      m_filedata_string)[0].count('\n')
+                    lin_km_end = next(x for x in ends if x > lin_km)
+
+                    Km = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                        lin_km:lin_km_end])),
+                                     delimiter=r'\s+',
+                                     skipinitialspace=True)
+                    Km.columns = ['EXCH_IND', 'KM']
+
+                    reactions = pd.merge(reactions, Km,
+                                         left_on='EXCH_IND',
+                                         right_on='EXCH_IND',
+                                         how='left')                    
+                    default_km = float(m_f_lines[lin_km-1].split()[1])
+
+                # '''----------- VMAX VALUES --------------------------'''
+                if 'HILL_COEFFICIENTS' in m_filedata_string:
+                    hill_flag = True
+                    lin_hill = re.split('HILL_COEFFICIENTS',
+                                        m_filedata_string)[0].count('\n')
+                    lin_hill_end = next(x for x in ends if x > lin_hill)
+
+                    Hill = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                        lin_hill:lin_hill_end])),
+                                       delimiter=r'\s+',
+                                       skipinitialspace=True)
+                    Hill.columns = ['EXCH_IND', 'HILL']
+
+                    reactions = pd.merge(reactions, Hill,
+                                         left_on='EXCH_IND',
+                                         right_on='EXCH_IND',
+                                         how='left')
+                    default_hill = float(m_f_lines[lin_hill-1].split()[1])
+
+                # '''----------- OBJECTIVE -----------------------------'''
+                lin_obj = re.split('OBJECTIVE',
+                                   m_filedata_string)[0].count('\n')+1
+                objective = int(m_f_lines[lin_obj].strip())
+
+                # '''----------- OBJECTIVE STYLE -----------------------'''
+                if 'OBJECTIVE_STYLE' in m_filedata_string:
+                    lin_obj_st = re.split('OBJECTIVE_STYLE',
+                                          m_filedata_string)[0].count(
+                                              '\n')+1
+                    obj_style = m_f_lines[lin_obj_st].strip()
+                else:
+                    obj_style = 'MAXIMIZE_OBJECTIVE_FLUX'
+
+                # '''----------- OPTIMIZER -----------------------------'''
+                if 'OPTIMIZER' in m_filedata_string:
+                    lin_opt = re.split('OPTIMIZER',
+                                       m_filedata_string)[0].count('\n')
+                    optimizer = m_f_lines[lin_opt].split()[1]
+                else:
+                    optimizer = 'GUROBI'
+            else:
+                print('Model ' + i + ' format is not recognized, ' +
+                      'simulation will fail')
+                
+            # format variables for writing comets model
+            bnd = reactions.loc[(reactions['LB'] != default_bounds[0]) |
+                                (reactions['UB'] != default_bounds[1]),
+                                ['ID', 'LB', 'UB']].astype(
+                                    str).apply(lambda x: '   '.join(x),
+                                               axis=1)                
+            bnd = '    ' + bnd.astype(str)
+
+            rxn_n = '    ' + reactions['REACTION_NAMES'].astype(str)
+
+            met_n = '    ' + metabolites.astype(str)
+
+            smat = smat.astype(str).apply(lambda x:
+                                          '   '.join(x), axis=1)
+            smat = '    ' + smat.astype(str)
+
+            exch_r = ' '.join([str(x) for x in
+                               reactions.loc[reactions.EXCH, 'ID']])
+
+            # optional fields (vmax,km, hill)
+            if vmax_flag:
+                Vmax = reactions.loc[reactions['V_MAX'].notnull(),
+                                     ['EXCH_IND', 'V_MAX']]
+                Vmax = Vmax.astype(str).apply(lambda x:
+                                              '   '.join(x), axis=1)
+                Vmax = '    ' + Vmax.astype(str)
+
+            if km_flag:
+                Km = reactions.loc[reactions['KM'].notnull(),
+                                   ['EXCH_IND', 'KM']]
+                Km = Km.astype(str).apply(lambda x:
+                                          '   '.join(x), axis=1)
+                Km = '    ' + Km.astype(str)
+
+            if hill_flag:
+                Hill = reactions.loc[reactions['HILL'].notnull(),
+                                     ['EXCH_IND', 'HILL']]
+                Hill = Hill.astype(str).apply(lambda x:
+                                              '   '.join(x), axis=1)
+                Hill = '    ' + Hill.astype(str)
+
+            if os.path.isfile(model_id + '.cmd'):
+                os.remove(model_id + '.cmd')
+            
+            with open((model_id + '.cmd'), 'a') as f:
+
+                f.write('SMATRIX  ' + str(len(metabolites)) +
+                        '  ' + str(len(reactions)) + '\n')
+                smat.to_csv(f, mode='a', header=False, index=False)
+                f.write(r'//' + '\n')
+
+                f.write('BOUNDS ' +
+                        str(default_bounds[0]) + ' ' +
+                        str(default_bounds[1]) + '\n')
+                bnd.to_csv(f, mode='a', header=False, index=False)
+                f.write(r'//' + '\n')
+
+                f.write('OBJECTIVE\n' +
+                        '    ' + str(objective) + '\n')
+                f.write(r'//' + '\n')
+
+                f.write('METABOLITE_NAMES\n')
+                met_n.to_csv(f, mode='a', header=False, index=False)
+                f.write(r'//' + '\n')
+
+                f.write('REACTION_NAMES\n')
+                rxn_n.to_csv(f, mode='a', header=False, index=False)
+                f.write(r'//' + '\n')
+
+                f.write('EXCHANGE_REACTIONS\n')
+                f.write(' ' + exch_r + '\n')
+                f.write(r'//' + '\n')
+
+                if vmax_flag:
+                    f.write('VMAX_VALUES ' +
+                            str(default_vmax) + '\n')
+                    Vmax.to_csv(f, mode='a', header=False, index=False)
+                    f.write(r'//' + '\n')
+
+                if km_flag:
+                    f.write('KM_VALUES ' +
+                            str(default_km) + '\n')
+                    Km.to_csv(f, mode='a', header=False, index=False)
+                    f.write(r'//' + '\n')
+
+                if hill_flag:
+                    f.write('HILL_VALUES ' +
+                            str(default_hill) + '\n')
+                    Hill.to_csv(f, mode='a', header=False, index=False)
+                    f.write(r'//' + '\n')
+
+                f.write('OBJECTIVE_STYLE\n' + obj_style + '\n')
+                f.write(r'//' + '\n')
+
+                f.write('OPTIMIZER ' + optimizer + '\n')
+                f.write(r'//' + '\n')
+
+        self.models = [os.path.splitext(os.path.basename(k))[0] if
+                       not isinstance(k, cobra.Model) else
+                       k.id for k in self.models]
+        
     def update_media(self):
         # TODO: update media with all exchangeable metabolites from all models
         pass
@@ -540,16 +793,17 @@ class layout:
     
         
 class params:
-
+    '''
+    Class storing COMETS parameters
+    '''
     def __init__(self, global_params=None, package_params=None):
-        
         self.all_params = {'BiomassLogName': 'biomass.txt',
                            'BiomassLogRate': 1,
                            'FluxLogName': 'flux_out',
                            'FluxLogRate': 5,
                            'MediaLogName': 'media_out',
                            'MediaLogRate': 5,
-                           'TotalbiomassLogName': 'total_biomass_out.txt',
+                           'TotalBiomassLogName': 'total_biomass_out.txt',
                            'maxCycles': 100,
                            'saveslideshow': False,
                            'totalBiomassLogRate': 1,
@@ -607,7 +861,7 @@ class params:
                          'FluxLogRate': 'global',
                          'MediaLogName': 'global',
                          'MediaLogRate': 'global',
-                         'TotalbiomassLogName': 'global',
+                         'TotalBiomassLogName': 'global',
                          'maxCycles': 'package',
                          'saveslideshow': 'global',
                          'totalBiomassLogRate': 'global',
@@ -695,8 +949,8 @@ class params:
         # If evolution is true, we dont want to write the total biomass log
         if self.all_params['evolution']:
             self.all_params['writeTotalBiomassLog'] = False
-                            
-    ''' write parameters files; probably only used by class comets'''
+
+    ''' write parameters files; method probably only used by class comets'''
     def write_params(self, out_glb, out_pkg):
 
         if os.path.isfile(out_glb):
@@ -772,15 +1026,12 @@ class comets:
                                self.COMETS_HOME + '/bin/' +
                                self.VERSION + '.jar')
 
-#        self.D_JAVA_LIB_PATH = ('/usr/local/lib/jni' +
-#                                self.GUROBI_HOME + '/linux64/lib')
-        
         self.layout = layout
         self.parameters = parameters
         
         # dealing with output files
         self.parameters.all_params['useLogNameTimeStamp'] = False
-        self.parameters.all_params['TotalbiomassLogName'] = (
+        self.parameters.all_params['TotalBiomassLogName'] = (
             'total_biomass_log_' + hex(id(self)))
         self.parameters.all_params['BiomassLogName'] = (
             'biomass_log_' + hex(id(self)))
@@ -829,17 +1080,20 @@ class comets:
         os.remove(c_package)
         os.remove(c_script)
         os.remove('.current_layout')
+        os.remove('COMETS_manifest.txt')  # todo: stop writing this in java
         
         # '''----------- READ OUTPUT ---------------------------------------'''
 
         # Read total biomass output
         if self.parameters.all_params['writeTotalBiomassLog']:
             tbmf = readlines_file(
-                self.parameters.all_params['TotalbiomassLogName'])
+                self.parameters.all_params['TotalBiomassLogName'])
             self.total_biomass = pd.DataFrame([re.split(r'\t+', x.strip())
                                                for x in tbmf],
                                               columns=['cycle'] +
                                               self.layout.models)
+            self.total_biomass = self.total_biomass.astype('float')
+            os.remove(self.parameters.all_params['TotalBiomassLogName'])
             
         # Read flux
         if self.parameters.all_params['writeFluxLog']:
@@ -853,35 +1107,44 @@ class comets:
                                    [float(x)
                                     for x in re.search(r'\[(.*)\]',
                                                        i).group(1).split()])
-
+            os.remove(self.parameters.all_params['FluxLogName'])
+                
         # Read spatial biomass log
         if self.parameters.all_params['writeBiomassLog']:
             biomass_out_file = 'biomass_log_' + hex(id(self))
             self.biomass = pd.read_csv(biomass_out_file,
-                                       header=None, delimiter=' ',
+                                       header=None, delimiter=r'\s+',
                                        names=['Cycle', 'x', 'y',
                                               'species', 'biomass'])
-
+            os.remove(biomass_out_file)
+            
         # Read evolution-related logs
         if self.parameters.all_params['evolution']:
             evo_out_file = 'biomass_log_' + hex(id(self))
             self.evolution = pd.read_csv(evo_out_file,
-                                         header=None, delimiter=' ',
+                                         header=None, delimiter=r'\s+',
                                          names=['Cycle', 'x', 'y',
                                                 'species', 'biomass'])
             genotypes_out_file = 'GENOTYPES_biomass_log_' + hex(id(self))
             self.genotypes = pd.read_csv(genotypes_out_file,
-                                         header=None, delimiter=' ',
+                                         header=None, delimiter=r'\s+',
                                          names=['Ancestor',
                                                 'Mutation',
                                                 'Species'])
-
+            
         print('Done!')
 
-        # TODO read media logs
-        # TODO read spatial biomass logs
+        
+# TODO: read media logs (after fixing format in java)
+# TODO: read spatial biomass logs
+# TODO: remove comets manifest (preferably, dont write it)
+# TODO: find quicker reading solution than the pd.read_csv stringIO hack
+# TODO: fucntions to generate predefined media, spatial layouts etc
+# TODO: write noncustom initial pop in layout
+# TODO: add barriers in layout class
+# TODO: add units when printing params
+# TODO: solve weird rounding errors when reading from comets model
+# TODO: include all params in one file (maybe layout?) to avoid file writing
+# TODO: update media with all exchangeable metabolites from all models
+# TODO: give warning when unknown parameter is set
 
-# my_params = params('files/global_params', 'files/package_params')
-# my_layout = layout('files/layout_blueprint')
-# my_comets = comets(my_layout, my_params)
-# my_comets.run()
