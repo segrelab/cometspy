@@ -17,7 +17,7 @@ __author__ = "Djordje Bajic, Jean Vila"
 __copyright__ = "Copyright 2019, The COMETS Consortium"
 __credits__ = ["Djordje Bajic", "Jean Vila"]
 __license__ = "MIT"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __maintainer__ = "Djordje Bajic"
 __email__ = "djordje.bajic@yale.edu"
 __status__ = "Beta"
@@ -80,7 +80,7 @@ class layout:
         self.initial_pop = []
         
         if isinstance(input_obj, str):
-            # .. load file
+            # .. load layout file
             f_lines = [s for s in read_file(input_obj).splitlines() if s]
             filedata_string = os.linesep.join(f_lines)
             end_blocks = []
@@ -263,10 +263,10 @@ class layout:
                     print('Some initial population values' +
                           ' fall outside of the defined grid')
         else:
-            ''' Make a default layout with media components from the
-                provided model '''
+            # if input are models, build default layout with media from them
             if not isinstance(input_obj, list):
                 input_obj = [input_obj]
+                
             self.models = [x.model_name for x in input_obj]
             self.grid = [1, 1]
             self.media = pd.DataFrame(columns=['metabolite',
@@ -275,11 +275,12 @@ class layout:
                                                'g_static',
                                                'g_static_val',
                                                'g_refresh'])
-            
-            # write models in current working folder and extract metabolites
+
+            # update models and extract exchanged metabolites
+            self.update_models()
             exchanged_metab = []
             for i in input_obj:
-                i.write_model()
+
                 exchr = i.reactions.loc[i.reactions.EXCH, 'ID'].tolist()
                 exchm = i.smat.loc[i.smat.rxn.isin(exchr),
                                    'metabolite'].tolist()
@@ -376,6 +377,7 @@ class layout:
 
     def update_models(self):
 
+        self.all_exchanged_mets = []
         for i in self.models:
             
             # define type of input model
@@ -635,7 +637,7 @@ class layout:
                     reactions = pd.merge(reactions, Km,
                                          left_on='EXCH_IND',
                                          right_on='EXCH_IND',
-                                         how='left')                    
+                                         how='left')
                     default_km = float(m_f_lines[lin_km-1].split()[1])
 
                 # '''----------- VMAX VALUES --------------------------'''
@@ -681,7 +683,14 @@ class layout:
             else:
                 print('Model ' + i + ' format is not recognized, ' +
                       'simulation will fail')
-                
+
+            # define all possible exch. metabolites, used for updating layout
+            exchmets = pd.merge(reactions.loc[reactions['EXCH'],'ID'], smat,
+                                left_on = 'ID', right_on = 'rxn',
+                                how = 'inner')['metabolite']
+            exchmets = metabolites.iloc[exchmets-1]
+            self.all_exchanged_mets.append(exchmets.METABOLITE_NAMES)
+
             # format variables for writing comets model
             bnd = reactions.loc[(reactions['LB'] != default_bounds[0]) |
                                 (reactions['UB'] != default_bounds[1]),
