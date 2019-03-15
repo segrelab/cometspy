@@ -998,42 +998,15 @@ class comets:
         self.working_dir = os.getcwd() + '/' + working_dir
         self.GUROBI_HOME = os.environ['GUROBI_HOME']
         self.COMETS_HOME = os.environ['COMETS_HOME']
-
+        
         self.VERSION = 'comets_evo'
-        self.JAVA_CLASSPATH = (self.GUROBI_HOME +
-                               '/lib/gurobi.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/junit/junit-4.12.jar:' +
-                               self.COMETS_HOME +
-                               '/junit/hamcrest-core-1.3.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/jogl/jogamp-all-platforms/' +
-                               'jar/jogl-all.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/jogl/jogamp-all-platforms/' +
-                               'jar/gluegen-rt.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/jogl/jogamp-all-platforms/' +
-                               'jar/gluegen.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/jogl/jogamp-all-platforms/jar/' +
-                               'gluegen-rt-natives-linux-amd64.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/jogl/jogamp-all-platforms/jar/' +
-                               'jogl-all-natives-linux-amd64.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/JMatIO/lib/jamtio.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/JMatIO/JMatIO-041212/lib/jmat.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/colt/lib/concurrent.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/colt/lib/colt.jar:' +
-                               self.COMETS_HOME +
-                               '/lib/commons-lang3-3.7/' +
-                               'commons-lang3-3.7.jar:' +
-                               self.COMETS_HOME + '/bin/' +
-                               self.VERSION + '.jar')
+
+        # set default classpaths, which users may change
+        self.build_default_classpath_pieces()
+        self.build_and_set_classpath() 
+        self.test_classpath_pieces()
+        
+        # check to see if user has the libraries where expected
 
         self.layout = layout
         self.parameters = parameters
@@ -1048,6 +1021,72 @@ class comets:
             'flux_log_' + hex(id(self)))
         self.parameters.all_params['MediaLogName'] = (
             'media_log_' + hex(id(self)))
+        
+    def build_default_classpath_pieces(self):
+        self.classpath_pieces = {}
+        self.classpath_pieces['gurobi'] = self.GUROBI_HOME + '/lib/gurobi.jar'
+        self.classpath_pieces['junit'] = self.COMETS_HOME + '/lib/junit/junit-4.12.jar'
+        self.classpath_pieces['hamcrest'] = self.COMETS_HOME + '/junit/hamcrest-core-1.3.jar'  
+        self.classpath_pieces['jogl_all'] = self.COMETS_HOME + '/lib/jogl/jogamp-all-platforms/jar/jogl-all.jar'
+        self.classpath_pieces['gluegen_rt'] = self.COMETS_HOME + '/lib/jogl/jogamp-all-platforms/jar/gluegen-rt.jar'
+        self.classpath_pieces['gluegen'] = self.COMETS_HOME + '/lib/jogl/jogamp-all-platforms/jar/gluegen.jar'
+        self.classpath_pieces['gluegen_rt_natives'] = self.COMETS_HOME + '/lib/jogl/jogamp-all-platforms/jar/gluegen-rt-natives-linux-amd64.jar'
+        self.classpath_pieces['jogl_all_natives'] = self.COMETS_HOME + '/lib/jogl/jogamp-all-platforms/jar/jogl-all-natives-linux-amd64.jar'
+        self.classpath_pieces['jmatio'] = self.COMETS_HOME + '/lib/JMatIO/lib/jamtio.jar'
+        self.classpath_pieces['jmat'] = self.COMETS_HOME + '/lib/JMatIO/JMatIO-041212/lib/jmat.jar'
+        self.classpath_pieces['concurrent'] = self.COMETS_HOME + '/lib/colt/lib/concurrent.jar'
+        self.classpath_pieces['colt'] = self.COMETS_HOME + '/lib/colt/lib/colt.jar'
+        self.classpath_pieces['lang3'] = self.COMETS_HOME + '/lib/commons-lang3-3.7/commons-lang3-3.7.jar'
+        self.classpath_pieces['bin'] = self.COMETS_HOME + '/bin/' + self.VERSION + ".jar"        
+    
+    def build_and_set_classpath(self):
+        """ builds the JAVA_CLASSPATH from the pieces currently in self.classpath_pieces"""
+        paths = list(self.classpath_pieces.values())
+        classpath = ":".join(paths)
+        self.JAVA_CLASSPATH = classpath
+    
+    def test_classpath_pieces(self):
+        """ checks to see if there is a file at each location in classpath pieces.
+        If not, warns the user that comets will not work without the libraries.
+        tells the user to either edit those pieces (if in linux) or just set the classpath
+        directly"""
+        broken_pieces = self.get_broken_classpath_pieces()
+        if len(broken_pieces) == 0:
+            pass  # yay! class files are where we hoped
+        print("warning:  we cannot find required java class libraries at the expected locations")
+        print("    specifically, we cannot find the following libraries at these locations:\n")
+        print("library common name \t expected path")
+        print("___________________ \t _____________")
+        for key, value in broken_pieces.items():
+            print("{}\t{}".format(key, value))
+        print("\n  You have two options to fix this problem:")
+        print("1.  set each class path correctly by doing:")
+        print("       comets.set_classpath(libraryname, path)")
+        print("       e.g.   comets.set_classpath(\"hamcrest\", \"/home/chaco001/comets/junit/hamcrest-core-1.3.jar\")\n")
+        print("       note that versions dont always have to exactly match, but you're on your own if they don't\n")
+        print("2.  fully define the classpath yourself by overwriting comets.JAVA_CLASSPATH")
+        print("       look at the current comets.JAVA_CLASSPATH to see how this should look.")
+
+
+
+                
+    def get_broken_classpath_pieces(self):
+        """ checks to see if there is a file at each location in classpath pieces.
+        saves the pieces where there is no file and returns them as a dictionary,
+        where the key is the common name of the class library and the value is the path """
+        broken_pieces = {}
+        for key, value in self.classpath_pieces.items():
+            if not os.path.isfile(value):
+                broken_pieces[key] = value    
+        return(broken_pieces)
+        
+    def set_classpath(self, libraryname, path):
+        """ tells comets where to find required java librarys 
+            e.g. comets.set_classpath(\"hamcrest\", \"/home/chaco001/comets/junit/hamcrest-core-1.3.jar\") 
+            Then re-builds the path"""
+        self.classpath_pieces[libraryname] = path
+        self.build_and_set_classpath()
+        
 
     def run(self):
         print('\nRunning COMETS simulation ...')
