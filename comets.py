@@ -57,10 +57,18 @@ def readlines_file(filename):
     return f_lines
 
 
-class layout:
-    
+class layout:  
     '''
-    Class dealing with COMETS layouts
+    Generates a COMETS layout either by reading from a file or by building one
+    from a list of COBRA models. Or, with no arguments, build an empty layout.
+    
+    To read a layout from a file, give the path as a string:
+        
+        layout = comets.layout("./path/to/layout/layoutfile.txt")
+    
+    To build a layout from a list of models, give the models in a list:
+        ijo = cobra.test.load
+    
     '''
     def __init__(self, input_obj=None):
 
@@ -79,230 +87,244 @@ class layout:
         self.initial_pop_type = None
         self.initial_pop = []
         
+        if input_obj is None:
+            print("building empty layout model")
+            input_obj = "./test_models/layout_blueprint"
+            # TODO the above is not failsafe!!!!
+        
         if isinstance(input_obj, str):
-            # .. load layout file
-            f_lines = [s for s in read_file(input_obj).splitlines() if s]
-            filedata_string = os.linesep.join(f_lines)
-            end_blocks = []
-            for i in range(0, len(f_lines)):
-                if '//' in f_lines[i]:
-                    end_blocks.append(i)
-
-            # '''----------- MODELS ----------------------------------------'''
-            '''
-            Models can be specified in layout as either comets format models
-            or .xml format (sbml cobra compliant)
-            '''            
-            models = f_lines[0].split()
-            if len(models) > 1:
-                self.models = f_lines[0].split()[1:]
-                self.update_models()
-            else:
-                print('Warning: No models in layout')
-                    
-            # '''----------- GRID ------------------------------------------'''
-            try:
-                self.grid = [int(i) for i in f_lines[2].split()[1:]]
-                if len(self.grid) < 2:
-                    raise CorruptLine
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Only ' + str(len(self.grid)) +
-                      ' dimension(s) specified for world grid')
-                
-            # '''----------- MEDIA DESCRIPTION -----------------------------'''
-            lin_media = re.split('world_media',
-                                 filedata_string)[0].count('\n') + 1
-            lin_media_end = next(x for x in end_blocks if x > lin_media)
-            
-            media_names = []
-            media_conc = []
-            for i in range(lin_media, lin_media_end):
-                metabolite = f_lines[i].split()
-                media_names.append(metabolite[0])
-                media_conc.append(float(metabolite[1]))
-
-            self.media['metabolite'] = media_names
-            self.media['init_amount'] = media_conc
-            
-            # '''----------- MEDIA DIFFUSION -------------------------------'''
-            self.__diffusion_flag = False
-            if 'DIFFUSION' in filedata_string:
-                self.__diffusion_flag = True
-                lin_diff = re.split('diffusion_constants',
-                                    filedata_string)[0].count('\n')
-                lin_diff_end = next(x for x in end_blocks if x > lin_diff)
-
-                self.global_diff = float(re.findall(r'\S+', f_lines[lin_diff].
-                                                    strip())[1])
-                try:
-                    for i in range(lin_diff+1, lin_diff_end):
-                        diff_spec = [float(x) for x in f_lines[i].split()]
-                        if diff_spec[0] > len(self.media.metabolite)-1:
-                            raise UnallocatedMetabolite
-                        else:
-                            self.media.loc[int(diff_spec[0]),
-                                           'diff_c'] = diff_spec[1]
-                except UnallocatedMetabolite:
-                    print('\n ERROR UnallocatedMetabolite: Some diffusion ' +
-                          'values correspond to unallocated metabolites')
-
-            # '''----------- MEDIA REFRESH----------------------------------'''
-            # .. global refresh values
-            self.__refresh_flag = False
-            if 'REFRESH' in filedata_string:
-                self.__refresh_flag = True
-                lin_refr = re.split('refresh',
-                                    filedata_string)[0].count('\n')
-                lin_refr_end = next(x for x in end_blocks if x > lin_refr)
-
-                g_refresh = [float(x) for x in f_lines[lin_refr].split()[1:]]
-
-                try:
-                    if len(g_refresh) != len(media_names):
-                        raise CorruptLine
-                    else:
-                        self.media['g_refresh'] = g_refresh
-                except CorruptLine:
-                    print('\n ERROR CorruptLine: Number of global refresh ' +
-                          'values does not match number of \nmedia ' +
-                          'metabolites in provided layout file')
-
-                # .. local refresh values
-                lin_refr += 1
-                try:
-                    for i in range(lin_refr, lin_refr_end):
-                        refr_spec = [float(x) for x in f_lines[i].split()]
-                        if len(refr_spec) != len(self.media.metabolite)+2:
-                            raise CorruptLine
-                        elif (refr_spec[0] >= self.grid[0] or
-                              refr_spec[1] >= self.grid[1]):
-                            raise OutOfGrid
-                        else:
-                            self.local_refresh.append(refr_spec)
-
-                except CorruptLine:
-                    print('\n ERROR CorruptLine: Some local "refresh" lines ' +
-                          'have a wrong number of entries')
-                except OutOfGrid:
-                    print('\n ERROR OutOfGrid: Some local "refresh" lines ' +
-                          'have coordinates that fall outside of the ' +
-                          '\ndefined ' + 'grid')
-
-            # '''----------- STATIC MEDIA ----------------------------------'''
-            # .. global static values
-            lin_static = re.split('static',
-                                  filedata_string)[0].count('\n')
-            lin_stat_end = next(x for x in end_blocks if x > lin_static)
-
-            g_static = [float(x) for x in f_lines[lin_static].split()[1:]]
-            try:
-                if len(g_static) != 2*len(self.media.metabolite):
-                    raise CorruptLine
-                else:
-                    self.media.loc[:, 'g_static'] = [int(x)
-                                                     for x in g_static[0::2]]
-                    self.media.loc[:, 'g_static_val'] = [float(x) for x in
-                                                         g_static[1::2]]
-            except CorruptLine:
-                print('\nERROR CorruptLine: Wrong number of global ' +
-                      'static values')
-                
-            # .. local static values
-            lin_static += 1
-            try:
-                for i in range(lin_static, lin_stat_end):
-                    stat_spec = [float(x) for x in f_lines[i].split()]
-                    if len(stat_spec) != (2*len(self.media.metabolite))+2:
-                        raise CorruptLine
-                    elif (stat_spec[0] >= self.grid[0] or
-                          stat_spec[1] >= self.grid[1]):
-                        raise OutOfGrid
-                    else:
-                        self.local_static.append(stat_spec)
-                        
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Wrong number of local static ' +
-                      'values at some lines')
-            except OutOfGrid:
-                print('\n ERROR OutOfGrid: Some local "static" lines have ' +
-                      ' coordinates that fall outside of the defined grid')
-
-            # '''----------- INITIAL POPULATION ----------------------------'''
-            lin_initpop = re.split('initial_pop',
-                                   filedata_string)[0].count('\n')
-            lin_initpop_end = next(x for x in end_blocks if x > lin_initpop)
-
-            g_initpop = f_lines[lin_initpop].split()[1:]
-            
-            if (len(g_initpop) > 0 and g_initpop[0] in ['random',
-                                                        'random_rect',
-                                                        'filled',
-                                                        'filled_rect',
-                                                        'square']):
-                self.initial_pop_type = g_initpop[0]
-                self.initial_pop = [float(x) for x in g_initpop[1:]]
-            else:
-                self.initial_pop_type = 'custom'
-                
-                # .. local initial population values
-                lin_initpop += 1
-                try:
-                    for i in range(lin_initpop, lin_initpop_end):
-                        ipop_spec = [float(x) for x in
-                                     f_lines[lin_initpop].split()]
-                        if len(ipop_spec) != len(self.models)+2:
-                            raise CorruptLine
-                        if (ipop_spec[0] >= self.grid[0] or
-                                ipop_spec[1] >= self.grid[1]):
-                            raise OutOfGrid
-                        else:
-                            self.initial_pop.append(ipop_spec)
-                except CorruptLine:
-                    print('Problem at some initial population lines')
-                except OutOfGrid:
-                    print('Some initial population values' +
-                          ' fall outside of the defined grid')
+            if not os.path.isfile(input_obj):
+                raise IOError(' when running comets.layout(), input_obj is a string, and therefore should be a path to a layout; however, no file could be found at that path destionation')
+            self.read_comets_layout(input_obj)
         else:
             # if input are models, build default layout with media from them
             if not isinstance(input_obj, list):
                 input_obj = [input_obj]
+            self.build_layout_from_models(input_obj)
                 
-            self.models = [x.model_name for x in input_obj]
-            self.grid = [1, 1]
-            self.media = pd.DataFrame(columns=['metabolite',
-                                               'init_amount',
-                                               'diff_c',
-                                               'g_static',
-                                               'g_static_val',
-                                               'g_refresh'])
 
-            # update models and extract exchanged metabolites
+            
+    def read_comets_layout(self, input_obj):
+                # .. load layout file
+        f_lines = [s for s in read_file(input_obj).splitlines() if s]
+        filedata_string = os.linesep.join(f_lines)
+        end_blocks = []
+        for i in range(0, len(f_lines)):
+            if '//' in f_lines[i]:
+                end_blocks.append(i)
+
+        # '''----------- MODELS ----------------------------------------'''
+        '''
+        Models can be specified in layout as either comets format models
+        or .xml format (sbml cobra compliant)
+        '''            
+        models = f_lines[0].split()
+        if len(models) > 1:
+            self.models = f_lines[0].split()[1:]
             self.update_models()
-            exchanged_metab = []
-            for i in input_obj:
-
-                exchr = i.reactions.loc[i.reactions.EXCH, 'ID'].tolist()
-                exchm = i.smat.loc[i.smat.rxn.isin(exchr),
-                                   'metabolite'].tolist()
-                exchm = i.metabolites.iloc[[x-1 for x in exchm]][
-                    'METABOLITE_NAMES'].tolist()
-                exchanged_metab.append(exchm)
+        else:
+            print('Warning: No models in layout')
                 
-            # using set comprehension here to remove duplicates automatically
-            exchanged_metab = list({item
-                                    for sublist in exchanged_metab
-                                    for item in sublist})
-            self.media['metabolite'] = exchanged_metab
-            self.media['init_amount'] = 0
-            self.media['g_static'] = 0
-            self.media['g_static_val'] = 0
-            self.media['g_refresh'] = 0
-            self.global_diff = 1e-6
-            self.local_refresh = []
-            self.local_static = []
+        # '''----------- GRID ------------------------------------------'''
+        try:
+            self.grid = [int(i) for i in f_lines[2].split()[1:]]
+            if len(self.grid) < 2:
+                raise CorruptLine
+        except CorruptLine:
+            print('\n ERROR CorruptLine: Only ' + str(len(self.grid)) +
+                  ' dimension(s) specified for world grid')
+            
+        # '''----------- MEDIA DESCRIPTION -----------------------------'''
+        lin_media = re.split('world_media',
+                             filedata_string)[0].count('\n') + 1
+        lin_media_end = next(x for x in end_blocks if x > lin_media)
+        
+        media_names = []
+        media_conc = []
+        for i in range(lin_media, lin_media_end):
+            metabolite = f_lines[i].split()
+            media_names.append(metabolite[0])
+            media_conc.append(float(metabolite[1]))
+
+        self.media['metabolite'] = media_names
+        self.media['init_amount'] = media_conc
+        
+        # '''----------- MEDIA DIFFUSION -------------------------------'''
+        self.__diffusion_flag = False
+        if 'DIFFUSION' in filedata_string:
+            self.__diffusion_flag = True
+            lin_diff = re.split('diffusion_constants',
+                                filedata_string)[0].count('\n')
+            lin_diff_end = next(x for x in end_blocks if x > lin_diff)
+
+            self.global_diff = float(re.findall(r'\S+', f_lines[lin_diff].
+                                                strip())[1])
+            try:
+                for i in range(lin_diff+1, lin_diff_end):
+                    diff_spec = [float(x) for x in f_lines[i].split()]
+                    if diff_spec[0] > len(self.media.metabolite)-1:
+                        raise UnallocatedMetabolite
+                    else:
+                        self.media.loc[int(diff_spec[0]),
+                                       'diff_c'] = diff_spec[1]
+            except UnallocatedMetabolite:
+                print('\n ERROR UnallocatedMetabolite: Some diffusion ' +
+                      'values correspond to unallocated metabolites')
+
+        # '''----------- MEDIA REFRESH----------------------------------'''
+        # .. global refresh values
+        self.__refresh_flag = False
+        if 'REFRESH' in filedata_string:
+            self.__refresh_flag = True
+            lin_refr = re.split('refresh',
+                                filedata_string)[0].count('\n')
+            lin_refr_end = next(x for x in end_blocks if x > lin_refr)
+
+            g_refresh = [float(x) for x in f_lines[lin_refr].split()[1:]]
+
+            try:
+                if len(g_refresh) != len(media_names):
+                    raise CorruptLine
+                else:
+                    self.media['g_refresh'] = g_refresh
+            except CorruptLine:
+                print('\n ERROR CorruptLine: Number of global refresh ' +
+                      'values does not match number of \nmedia ' +
+                      'metabolites in provided layout file')
+
+            # .. local refresh values
+            lin_refr += 1
+            try:
+                for i in range(lin_refr, lin_refr_end):
+                    refr_spec = [float(x) for x in f_lines[i].split()]
+                    if len(refr_spec) != len(self.media.metabolite)+2:
+                        raise CorruptLine
+                    elif (refr_spec[0] >= self.grid[0] or
+                          refr_spec[1] >= self.grid[1]):
+                        raise OutOfGrid
+                    else:
+                        self.local_refresh.append(refr_spec)
+
+            except CorruptLine:
+                print('\n ERROR CorruptLine: Some local "refresh" lines ' +
+                      'have a wrong number of entries')
+            except OutOfGrid:
+                print('\n ERROR OutOfGrid: Some local "refresh" lines ' +
+                      'have coordinates that fall outside of the ' +
+                      '\ndefined ' + 'grid')
+
+        # '''----------- STATIC MEDIA ----------------------------------'''
+        # .. global static values
+        lin_static = re.split('static',
+                              filedata_string)[0].count('\n')
+        lin_stat_end = next(x for x in end_blocks if x > lin_static)
+
+        g_static = [float(x) for x in f_lines[lin_static].split()[1:]]
+        try:
+            if len(g_static) != 2*len(self.media.metabolite):
+                raise CorruptLine
+            else:
+                self.media.loc[:, 'g_static'] = [int(x)
+                                                 for x in g_static[0::2]]
+                self.media.loc[:, 'g_static_val'] = [float(x) for x in
+                                                     g_static[1::2]]
+        except CorruptLine:
+            print('\nERROR CorruptLine: Wrong number of global ' +
+                  'static values')
+            
+        # .. local static values
+        lin_static += 1
+        try:
+            for i in range(lin_static, lin_stat_end):
+                stat_spec = [float(x) for x in f_lines[i].split()]
+                if len(stat_spec) != (2*len(self.media.metabolite))+2:
+                    raise CorruptLine
+                elif (stat_spec[0] >= self.grid[0] or
+                      stat_spec[1] >= self.grid[1]):
+                    raise OutOfGrid
+                else:
+                    self.local_static.append(stat_spec)
+                    
+        except CorruptLine:
+            print('\n ERROR CorruptLine: Wrong number of local static ' +
+                  'values at some lines')
+        except OutOfGrid:
+            print('\n ERROR OutOfGrid: Some local "static" lines have ' +
+                  ' coordinates that fall outside of the defined grid')
+
+        # '''----------- INITIAL POPULATION ----------------------------'''
+        lin_initpop = re.split('initial_pop',
+                               filedata_string)[0].count('\n')
+        lin_initpop_end = next(x for x in end_blocks if x > lin_initpop)
+
+        g_initpop = f_lines[lin_initpop].split()[1:]
+        
+        if (len(g_initpop) > 0 and g_initpop[0] in ['random',
+                                                    'random_rect',
+                                                    'filled',
+                                                    'filled_rect',
+                                                    'square']):
+            self.initial_pop_type = g_initpop[0]
+            self.initial_pop = [float(x) for x in g_initpop[1:]]
+        else:
             self.initial_pop_type = 'custom'
-            self.initial_pop = [[0] * 2 + [1e-9] * len(self.models)]
-            # TODO: add all ions unlimited to media
+            
+            # .. local initial population values
+            lin_initpop += 1
+            try:
+                for i in range(lin_initpop, lin_initpop_end):
+                    ipop_spec = [float(x) for x in
+                                 f_lines[lin_initpop].split()]
+                    if len(ipop_spec) != len(self.models)+2:
+                        raise CorruptLine
+                    if (ipop_spec[0] >= self.grid[0] or
+                            ipop_spec[1] >= self.grid[1]):
+                        raise OutOfGrid
+                    else:
+                        self.initial_pop.append(ipop_spec)
+            except CorruptLine:
+                print('Problem at some initial population lines')
+            except OutOfGrid:
+                print('Some initial population values' +
+                      ' fall outside of the defined grid')
+                
+    def build_layout_from_models(self, models):
+        self.models = [x.model_name for x in models]
+        self.grid = [1, 1]
+        self.media = pd.DataFrame(columns=['metabolite',
+                                           'init_amount',
+                                           'diff_c',
+                                           'g_static',
+                                           'g_static_val',
+                                           'g_refresh'])
+
+        # update models and extract exchanged metabolites
+        self.update_models()
+        exchanged_metab = []
+        for i in models:
+
+            exchr = i.reactions.loc[i.reactions.EXCH, 'ID'].tolist()
+            exchm = i.smat.loc[i.smat.rxn.isin(exchr),
+                               'metabolite'].tolist()
+            exchm = i.metabolites.iloc[[x-1 for x in exchm]][
+                'METABOLITE_NAMES'].tolist()
+            exchanged_metab.append(exchm)
+            
+        # using set comprehension here to remove duplicates automatically
+        exchanged_metab = list({item
+                                for sublist in exchanged_metab
+                                for item in sublist})
+        self.media['metabolite'] = exchanged_metab
+        self.media['init_amount'] = 0
+        self.media['g_static'] = 0
+        self.media['g_static_val'] = 0
+        self.media['g_refresh'] = 0
+        self.global_diff = 1e-6
+        self.local_refresh = []
+        self.local_static = []
+        self.initial_pop_type = 'custom'
+        self.initial_pop = [[0] * 2 + [1e-9] * len(self.models)]
+        # TODO: add all ions unlimited to media        
             
     def write_layout(self, outfile):
         ''' Write the layout in a file'''
@@ -683,6 +705,22 @@ class layout:
             else:
                 print('Model ' + i + ' format is not recognized, ' +
                       'simulation will fail')
+                
+            ## jeremy debug
+
+            #print(smat)
+            #(reactions['EXCH'])  # trues and falses
+            #print(reactions.loc[reactions['EXCH'],'ID'])
+            #print(reactions.loc[reactions['EXCH'],'ID'].to_frame())
+#            exch_ids = reactions.loc[reactions['EXCH'],'ID'].to_frame('ID')
+#            print(type(exch_ids))
+#            exchmets = smat.merge(exch_ids, left_on = 'rxn', right_on = 'ID')
+#            print(exchmets)
+#            break
+#
+#            
+#            print(exchmets)
+#            print('joined')
 
             # define all possible exch. metabolites, used for updating layout
             exchmets = pd.merge(reactions.loc[reactions['EXCH'], 'ID'], smat,
