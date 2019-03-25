@@ -287,43 +287,43 @@ class layout:
                 print('Some initial population values' +
                       ' fall outside of the defined grid')
                 
-    def build_layout_from_models(self, models):
-        self.models = models
-        self.grid = [1, 1]
-        self.media = pd.DataFrame(columns=['metabolite',
-                                           'init_amount',
-                                           'diff_c',
-                                           'g_static',
-                                           'g_static_val',
-                                           'g_refresh'])
-
-        # update models and extract exchanged metabolites
-        self.update_models()
-        exchanged_metab = []
-        for i in models:
-
-            exchr = i.reactions.loc[i.reactions.EXCH, 'ID'].tolist()
-            exchm = i.smat.loc[i.smat.rxn.isin(exchr),
-                               'metabolite'].tolist()
-            exchm = i.metabolites.iloc[[x-1 for x in exchm]][
-                'METABOLITE_NAMES'].tolist()
-            exchanged_metab.append(exchm)
-            
-        # using set comprehension here to remove duplicates automatically
-        exchanged_metab = list({item
-                                for sublist in exchanged_metab
-                                for item in sublist})
-        self.media['metabolite'] = exchanged_metab
-        self.media['init_amount'] = 0
-        self.media['g_static'] = 0
-        self.media['g_static_val'] = 0
-        self.media['g_refresh'] = 0
-        self.global_diff = 1e-6
-        self.local_refresh = []
-        self.local_static = []
-        self.initial_pop_type = 'custom'
-        self.initial_pop = [[0] * 2 + [1e-9] * len(self.models)]
-        # TODO: add all ions unlimited to media        
+#    def build_layout_from_models(self, models):
+#        self.models = models
+#        self.grid = [1, 1]
+#        self.media = pd.DataFrame(columns=['metabolite',
+#                                           'init_amount',
+#                                           'diff_c',
+#                                           'g_static',
+#                                           'g_static_val',
+#                                           'g_refresh'])
+#
+#        # update models and extract exchanged metabolites
+#        self.update_models()
+#        exchanged_metab = []
+#        for i in models:
+#
+#            exchr = i.reactions.loc[i.reactions.EXCH, 'ID'].tolist()
+#            exchm = i.smat.loc[i.smat.rxn.isin(exchr),
+#                               'metabolite'].tolist()
+#            exchm = i.metabolites.iloc[[x-1 for x in exchm]][
+#                'METABOLITE_NAMES'].tolist()
+#            exchanged_metab.append(exchm)
+#            
+#        # using set comprehension here to remove duplicates automatically
+#        exchanged_metab = list({item
+#                                for sublist in exchanged_metab
+#                                for item in sublist})
+#        self.media['metabolite'] = exchanged_metab
+#        self.media['init_amount'] = 0
+#        self.media['g_static'] = 0
+#        self.media['g_static_val'] = 0
+#        self.media['g_refresh'] = 0
+#        self.global_diff = 1e-6
+#        self.local_refresh = []
+#        self.local_static = []
+#        self.initial_pop_type = 'custom'
+#        self.initial_pop = [[0] * 2 + [1e-9] * len(self.models)]
+#        # TODO: add all ions unlimited to media        
         
     def get_model_ids(self):
         ids = [x.id for x in self.models]
@@ -822,8 +822,8 @@ class layout:
         pass
     
     def add_model(self, model):
-        self.models.append(model.model_name)
-        self.update_media()
+        self.models.append(model)
+        self.update_models()
     
         
 class params:
