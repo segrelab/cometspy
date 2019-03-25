@@ -89,18 +89,17 @@ class layout:
         
         if input_obj is None:
             print("building empty layout model")
-            input_obj = "./test_models/layout_blueprint"
-            # TODO the above is not failsafe!!!!
-        
-        if isinstance(input_obj, str):
+            self.read_comets_layout("./test_models/layout_blueprint")
+        elif isinstance(input_obj, str):
             if not os.path.isfile(input_obj):
                 raise IOError(' when running comets.layout(), input_obj is a string, and therefore should be a path to a layout; however, no file could be found at that path destionation')
             self.read_comets_layout(input_obj)
         else:
-            # if input are models, build default layout with media from them
+            self.read_comets_layout("./test_models/layout_blueprint")
             if not isinstance(input_obj, list):
-                input_obj = [input_obj]
-            self.build_layout_from_models(input_obj)
+                input_obj = [input_obj] # probably just one cobra model 
+            self.models = input_obj
+            self.update_models()
                 
 
             
@@ -289,7 +288,7 @@ class layout:
                       ' fall outside of the defined grid')
                 
     def build_layout_from_models(self, models):
-        self.models = [x.model_name for x in models]
+        self.models = models
         self.grid = [1, 1]
         self.media = pd.DataFrame(columns=['metabolite',
                                            'init_amount',
@@ -325,6 +324,10 @@ class layout:
         self.initial_pop_type = 'custom'
         self.initial_pop = [[0] * 2 + [1e-9] * len(self.models)]
         # TODO: add all ions unlimited to media        
+        
+    def get_model_ids(self):
+        ids = [x.id for x in self.models]
+        return(ids)
             
     def write_layout(self, outfile):
         ''' Write the layout in a file'''
@@ -335,7 +338,7 @@ class layout:
         lyt = open(outfile, 'a')
         
         lyt.write('model_file ' +
-                  '.cmd '.join(self.models) +
+                  '.cmd '.join(self.get_model_ids()) +
                   '.cmd\n')
         lyt.write('  model_world\n')
         
@@ -705,22 +708,6 @@ class layout:
             else:
                 print('Model ' + i + ' format is not recognized, ' +
                       'simulation will fail')
-                
-            ## jeremy debug
-
-            #print(smat)
-            #(reactions['EXCH'])  # trues and falses
-            #print(reactions.loc[reactions['EXCH'],'ID'])
-            #print(reactions.loc[reactions['EXCH'],'ID'].to_frame())
-#            exch_ids = reactions.loc[reactions['EXCH'],'ID'].to_frame('ID')
-#            print(type(exch_ids))
-#            exchmets = smat.merge(exch_ids, left_on = 'rxn', right_on = 'ID')
-#            print(exchmets)
-#            break
-#
-#            
-#            print(exchmets)
-#            print('joined')
 
             # define all possible exch. metabolites, used for updating layout
             exchmets = pd.merge(reactions.loc[reactions['EXCH'], 'ID'], smat,
@@ -826,9 +813,9 @@ class layout:
                 f.write('OPTIMIZER ' + optimizer + '\n')
                 f.write(r'//' + '\n')
 
-        self.models = [os.path.splitext(os.path.basename(k))[0] if
-                       not isinstance(k, cobra.Model) else
-                       k.id for k in self.models]
+#        self.models = [os.path.splitext(os.path.basename(k))[0] if
+#                       not isinstance(k, cobra.Model) else
+#                       k.id for k in self.models]
         
     def update_media(self):
         # TODO: update media with all exchangeable metabolites from all models
