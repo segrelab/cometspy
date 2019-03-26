@@ -88,6 +88,14 @@ class model:
                     self.read_cobra_model(model)
                 except:
                     self.read_comets_model(model)
+                    
+    def get_exchange_metabolites(self):
+        """ useful for layouts to grab these and get the set of them"""
+        exchmets = pd.merge(self.reactions.loc[self.reactions['EXCH'], 'ID'], self.smat,
+                            left_on='ID', right_on='rxn',
+                            how='inner')['metabolite']
+        exchmets = self.metabolites.iloc[exchmets-1]
+        return(exchmets.METABOLITE_NAMES)
         
     def read_cobra_model(self, path):
         curr_m = cobra.io.read_sbml_model(path)  
@@ -355,6 +363,111 @@ class model:
         # assign the dataframes we just built
         self.reactions = reactions
         self.metabolites = metabolites
+        
+        
+    def write_comets_model(self, alternate_path = None):
+        
+        if alternate_path is not None:
+            path_to_write = alternate_path
+        else:
+            path_to_write = self.model_id + '.cmd'
+        
+        # format variables for writing comets model
+        bnd = self.reactions.loc[(self.reactions['LB'] != self.default_bounds[0]) |
+                            (self.reactions['UB'] != self.default_bounds[1]),
+                            ['ID', 'LB', 'UB']].astype(
+                                str).apply(lambda x: '   '.join(x),
+                                           axis=1)                
+        bnd = '    ' + bnd.astype(str)
+
+        rxn_n = '    ' + self.reactions['REACTION_NAMES'].astype(str)
+
+        met_n = '    ' + self.metabolites.astype(str)
+
+        smat = self.smat.astype(str).apply(lambda x:
+                                      '   '.join(x), axis=1)
+        smat = '    ' + smat.astype(str)
+
+        exch_r = ' '.join([str(x) for x in
+                           self.reactions.loc[self.reactions.EXCH, 'ID']])
+
+        # optional fields (vmax,km, hill)
+        if self.vmax_flag:
+            Vmax = self.reactions.loc[self.reactions['V_MAX'].notnull(),
+                                 ['EXCH_IND', 'V_MAX']]
+            Vmax = Vmax.astype(str).apply(lambda x:
+                                          '   '.join(x), axis=1)
+            Vmax = '    ' + Vmax.astype(str)
+
+        if self.km_flag:
+            Km = self.reactions.loc[self.reactions['KM'].notnull(),
+                               ['EXCH_IND', 'KM']]
+            Km = Km.astype(str).apply(lambda x:
+                                      '   '.join(x), axis=1)
+            Km = '    ' + Km.astype(str)
+
+        if self.hill_flag:
+            Hill = self.reactions.loc[self.reactions['HILL'].notnull(),
+                                 ['EXCH_IND', 'HILL']]
+            Hill = Hill.astype(str).apply(lambda x:
+                                          '   '.join(x), axis=1)
+            Hill = '    ' + Hill.astype(str)
+
+        if os.path.isfile(path_to_write):
+            os.remove(path_to_write)
+        
+        with open(path_to_write, 'a') as f:
+
+            f.write('SMATRIX  ' + str(len(self.metabolites)) +
+                    '  ' + str(len(self.reactions)) + '\n')
+            smat.to_csv(f, mode='a', header=False, index=False)
+            f.write(r'//' + '\n')
+
+            f.write('BOUNDS ' +
+                    str(self.default_bounds[0]) + ' ' +
+                    str(self.default_bounds[1]) + '\n')
+            bnd.to_csv(f, mode='a', header=False, index=False)
+            f.write(r'//' + '\n')
+
+            f.write('OBJECTIVE\n' +
+                    '    ' + str(self.objective) + '\n')
+            f.write(r'//' + '\n')
+
+            f.write('METABOLITE_NAMES\n')
+            met_n.to_csv(f, mode='a', header=False, index=False)
+            f.write(r'//' + '\n')
+
+            f.write('REACTION_NAMES\n')
+            rxn_n.to_csv(f, mode='a', header=False, index=False)
+            f.write(r'//' + '\n')
+
+            f.write('EXCHANGE_REACTIONS\n')
+            f.write(' ' + exch_r + '\n')
+            f.write(r'//' + '\n')
+
+            if self.vmax_flag:
+                f.write('VMAX_VALUES ' +
+                        str(self.default_vmax) + '\n')
+                Vmax.to_csv(f, mode='a', header=False, index=False)
+                f.write(r'//' + '\n')
+
+            if self.km_flag:
+                f.write('KM_VALUES ' +
+                        str(self.default_km) + '\n')
+                Km.to_csv(f, mode='a', header=False, index=False)
+                f.write(r'//' + '\n')
+
+            if self.hill_flag:
+                f.write('HILL_VALUES ' +
+                        str(self.default_hill) + '\n')
+                Hill.to_csv(f, mode='a', header=False, index=False)
+                f.write(r'//' + '\n')
+
+            f.write('OBJECTIVE_STYLE\n' + self.obj_style + '\n')
+            f.write(r'//' + '\n')
+
+            f.write('OPTIMIZER ' + self.optimizer + '\n')
+            f.write(r'//' + '\n')
 
 
 class layout:  
@@ -983,6 +1096,8 @@ class layout:
             else:
                 print('Model ' + i + ' format is not recognized, ' +
                       'simulation will fail')
+                
+                
 
             # define all possible exch. metabolites, used for updating layout
             exchmets = pd.merge(reactions.loc[reactions['EXCH'], 'ID'], smat,
