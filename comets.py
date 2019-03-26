@@ -12,6 +12,7 @@ import pandas as pd
 import os
 import cobra
 import io
+import numpy as np
 
 __author__ = "Djordje Bajic, Jean Vila"
 __copyright__ = "Copyright 2019, The COMETS Consortium"
@@ -55,6 +56,305 @@ def readlines_file(filename):
     f_lines = f.readlines()
     f.close()
     return f_lines
+
+
+class model:
+    def __init__(self, model = None):
+        self.initial_pop = [0, 0, 0.0]
+        self.model_id = None
+        self.reactions = pd.DataFrame(columns=['REACTION_NAMES', 'ID',
+                                          'LB', 'UB', 'EXCH', 'EXCH_IND','V_MAX', 'KM', 'HILL'])
+        self.smat = pd.DataFrame(columns=['metabolite',
+                                     'rxn',
+                                     's_coef'])
+        self.metabolites = pd.DataFrame(columns=['METABOLITE_NAMES'])
+        
+        self.vmax_flag = False
+        self.km_flag = False
+        self.hill_flag = False
+        self.default_vmax = 10
+        self.default_km = 1
+        self.default_hill = 1
+        self.default_bounds = [0, 1000]
+        self.objective = None
+        self.optimizer = 'GUROBI'
+        self.obj_style = 'MAXIMIZE_OBJECTIVE_FLUX'
+        
+        if model is not None:
+            if isinstance(model, cobra.Model):
+                self.load_cobra_model(model)
+            else: # assume it is a path
+                try:
+                    self.read_cobra_model(model)
+                except:
+                    self.read_comets_model(model)
+        
+    def read_cobra_model(self, path):
+        curr_m = cobra.io.read_sbml_model(path)  
+        self.load_cobra_model(curr_m)
+        
+    def load_cobra_model(self, curr_m):
+        self.model_id = curr_m.id
+        # reactions and their features
+        reaction_list = curr_m.reactions
+        self.reactions['REACTION_NAMES'] = [str(x).split(':')[0] for
+                                       x in reaction_list]
+        self.reactions['ID'] = [k for k in
+                           range(1, len(reaction_list)+1)]
+        self.reactions['LB'] = [x.lower_bound for x in reaction_list]
+        self.reactions['UB'] = [x.upper_bound for x in reaction_list]
+
+        self.reactions['EXCH'] = [True if (len(k.metabolites) == 1) &
+                             (list(k.metabolites.
+                                   values())[0] == (-1)) &
+                             ('DM_' not in k.id)
+                             else False for k in reaction_list]
+
+        exch = self.reactions.loc[self.reactions['EXCH'], 'ID'].tolist()
+        self.reactions['EXCH_IND'] = [exch.index(x)+1
+                                 if x in exch else 0
+                                 for x in self.reactions['ID']]
+
+        self.reactions['V_MAX'] = [k.Vmax
+                              if hasattr(k, 'Vmax')
+                              else float('NaN')
+                              for k in reaction_list]
+        
+        if not self.reactions.V_MAX.isnull().all():
+            self.vmax_flag = True
+
+        self.reactions['KM'] = [k.Km
+                           if hasattr(k, 'Km')
+                           else float('NaN')
+                           for k in reaction_list]
+
+        if not self.reactions.KM.isnull().all():
+            self.km_flag = True
+
+        self.reactions['HILL'] = [k.Hill
+                             if hasattr(k, 'Hill')
+                             else float('NaN')
+                             for k in reaction_list]
+
+        if not self.reactions.HILL.isnull().all():
+            self.hill_flag = True
+
+        if self.vmax_flag:
+            if hasattr(curr_m, 'default_vmax'):
+                self.default_vmax = curr_m.default_vmax
+
+
+        if self.km_flag:
+            if hasattr(curr_m, 'default_km'):
+                self.default_km = curr_m.default_km
+
+        if self.hill_flag:
+            if hasattr(curr_m, 'default_hill'):
+                self.default_hill = curr_m.default_hill
+
+        # Metabolites
+        metabolite_list = curr_m.metabolites
+        self.metabolites['METABOLITE_NAMES'] = [str(x) for
+                                           x in metabolite_list]
+
+        # S matrix
+
+        for index, row in self.reactions.iterrows():
+            rxn = curr_m.reactions.get_by_id(
+                row['REACTION_NAMES'])
+            rxn_num = row['ID']
+            rxn_mets = [1+list(self.metabolites[
+                'METABOLITE_NAMES']).index(
+                x.id) for x in rxn.metabolites]
+            met_s_coefs = list(rxn.metabolites.values())
+
+            cdf = pd.DataFrame({'metabolite': rxn_mets,
+                                'rxn': [rxn_num]*len(rxn_mets),
+                                's_coef': met_s_coefs})
+            cdf = cdf.sort_values('metabolite')
+            self.smat = pd.concat([self.smat, cdf])
+
+        self.smat = self.smat.sort_values(by=['metabolite', 'rxn'])
+
+        # The rest of stuff
+        if hasattr(curr_m, 'default_bounds'):
+            self.default_bounds = curr_m.default_bounds
+            
+
+        obj = [str(x).split(':')[0]
+               for x in reaction_list
+               if x.objective_coefficient != 0][0]
+        self.objective = int(self.reactions[self.reactions.
+                                  REACTION_NAMES == obj]['ID'])
+
+        if hasattr(curr_m, 'comets_optimizer'):
+            self.optimizer = curr_m.comets_optimizer
+            
+
+        if hasattr(curr_m, 'comets_obj_style'):
+            self.obj_style = curr_m.comets_obj_style
+            
+    def read_comets_model(self, path):
+        self.model_id = os.path.splitext(os.path.basename(path))[0]
+
+        # in this way, its robust to empty lines:
+        m_f_lines = [s for s in read_file(path).splitlines() if s]
+        m_filedata_string = os.linesep.join(m_f_lines)
+        ends = []
+        for k in range(0, len(m_f_lines)):
+            if '//' in m_f_lines[k]:
+                ends.append(k)
+
+        # '''----------- S MATRIX ------------------------------'''
+        lin_smat = re.split('SMATRIX',
+                            m_filedata_string)[0].count('\n')
+        lin_smat_end = next(x for x in ends if x > lin_smat)
+
+        self.smat = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+            lin_smat:lin_smat_end])),
+                           delimiter=r'\s+',
+                           skipinitialspace=True)
+        self.smat.columns = ['metabolite', 'rxn', 's_coef']
+
+        # '''----------- REACTIONS AND BOUNDS-------------------'''
+        lin_rxns = re.split('REACTION_NAMES',
+                            m_filedata_string)[0].count('\n')
+        lin_rxns_end = next(x for x in
+                            ends if x > lin_rxns)
+
+        rxn = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+            lin_rxns:lin_rxns_end])),
+                          delimiter=r'\s+',
+                          skipinitialspace=True)
+                          
+        rxn['ID'] = range(1, len(rxn)+1)
+
+        lin_bnds = re.split('BOUNDS',
+                            m_filedata_string)[0].count('\n')
+        lin_bnds_end = next(x for x in ends if x > lin_bnds)
+
+        bnds = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+            lin_bnds:lin_bnds_end])),
+                           delimiter=r'\s+',
+                           skipinitialspace=True)
+
+        default_bounds = [float(bnds.columns[1]),
+                          float(bnds.columns[2])]
+
+        bnds.columns = ['ID', 'LB', 'UB']
+        reactions = pd.merge(rxn, bnds,
+                             left_on='ID', right_on='ID',
+                             how='left')
+        reactions.LB.fillna(default_bounds[0], inplace=True)
+        reactions.UB.fillna(default_bounds[1], inplace=True)
+
+        # '''----------- METABOLITES ---------------------------'''
+        lin_mets = re.split('METABOLITE_NAMES',
+                            m_filedata_string)[0].count('\n')
+        lin_mets_end = next(x for x in ends if x > lin_mets)
+
+        metabolites = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+            lin_mets:lin_mets_end])),
+                                  delimiter=r'\s+',
+                                  skipinitialspace=True)
+        
+        # '''----------- EXCHANGE RXNS -------------------------'''
+        lin_exch = re.split('EXCHANGE_REACTIONS',
+                            m_filedata_string)[0].count('\n')+1
+        exch = [int(k) for k in re.findall(r'\S+',
+                                           m_f_lines[lin_exch].
+                                           strip())]
+
+        reactions['EXCH'] = [True if x in exch else False
+                             for x in reactions['ID']]
+        reactions['EXCH_IND'] = [exch.index(x)+1
+                                 if x in exch else 0
+                                 for x in reactions['ID']]
+
+        # '''----------- VMAX VALUES --------------------------'''
+        if 'VMAX_VALUES' in m_filedata_string:
+            self.vmax_flag = True
+            lin_vmax = re.split('VMAX_VALUES',
+                                m_filedata_string)[0].count('\n')
+            lin_vmax_end = next(x for x in ends if x > lin_vmax)
+
+            Vmax = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                lin_vmax:lin_vmax_end])),
+                               delimiter=r'\s+',
+                               skipinitialspace=True)
+
+            Vmax.columns = ['EXCH_IND', 'V_MAX']
+
+            reactions = pd.merge(reactions, Vmax,
+                                 left_on='EXCH_IND',
+                                 right_on='EXCH_IND',
+                                 how='left')
+            self.default_vmax = float(m_f_lines[lin_vmax-1].split()[1])
+        else:
+            reactions['V_MAX'] = np.NaN
+
+        # '''----------- VMAX VALUES --------------------------'''
+        if 'KM_VALUES' in m_filedata_string:
+            self.km_flag = True
+            lin_km = re.split('KM_VALUES',
+                              m_filedata_string)[0].count('\n')
+            lin_km_end = next(x for x in ends if x > lin_km)
+
+            Km = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                lin_km:lin_km_end])),
+                             delimiter=r'\s+',
+                             skipinitialspace=True)
+            Km.columns = ['EXCH_IND', 'KM']
+
+            reactions = pd.merge(reactions, Km,
+                                 left_on='EXCH_IND',
+                                 right_on='EXCH_IND',
+                                 how='left')
+            self.default_km = float(m_f_lines[lin_km-1].split()[1])
+        else:
+            reactions['KM'] = np.NaN
+
+        # '''----------- VMAX VALUES --------------------------'''
+        if 'HILL_COEFFICIENTS' in m_filedata_string:
+            self.hill_flag = True
+            lin_hill = re.split('HILL_COEFFICIENTS',
+                                m_filedata_string)[0].count('\n')
+            lin_hill_end = next(x for x in ends if x > lin_hill)
+
+            Hill = pd.read_csv(io.StringIO('\n'.join(m_f_lines[
+                lin_hill:lin_hill_end])),
+                               delimiter=r'\s+',
+                               skipinitialspace=True)
+            Hill.columns = ['EXCH_IND', 'HILL']
+
+            reactions = pd.merge(reactions, Hill,
+                                 left_on='EXCH_IND',
+                                 right_on='EXCH_IND',
+                                 how='left')
+            self.default_hill = float(m_f_lines[lin_hill-1].split()[1])
+        else:
+            reactions['HILL'] = np.NaN
+
+        # '''----------- OBJECTIVE -----------------------------'''
+        lin_obj = re.split('OBJECTIVE',
+                           m_filedata_string)[0].count('\n')+1
+        self.objective = int(m_f_lines[lin_obj].strip())
+
+        # '''----------- OBJECTIVE STYLE -----------------------'''
+        if 'OBJECTIVE_STYLE' in m_filedata_string:
+            lin_obj_st = re.split('OBJECTIVE_STYLE',
+                                  m_filedata_string)[0].count(
+                                      '\n')+1
+            self.obj_style = m_f_lines[lin_obj_st].strip()
+
+        # '''----------- OPTIMIZER -----------------------------'''
+        if 'OPTIMIZER' in m_filedata_string:
+            lin_opt = re.split('OPTIMIZER',
+                               m_filedata_string)[0].count('\n')
+            self.optimizer = m_f_lines[lin_opt].split()[1]
+        # assign the dataframes we just built
+        self.reactions = reactions
+        self.metabolites = metabolites
 
 
 class layout:  
@@ -366,6 +666,8 @@ class layout:
         lyt.write(r'  //' + '\n')
         lyt.write(r'//' + '\n')
         lyt.close()
+        
+
 
     def update_models(self):
         
