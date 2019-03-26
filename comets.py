@@ -74,7 +74,7 @@ class layout:
 
         # define an empty layout that can be filled later
         self.models = []
-        self.grid = []
+        self.grid = [1,1]
         self.media = pd.DataFrame(columns=['metabolite',
                                            'init_amount',
                                            'diff_c',
@@ -84,21 +84,24 @@ class layout:
         self.global_diff = None
         self.local_refresh = []
         self.local_static = []
-        self.initial_pop_type = None
-        self.initial_pop = []
+        self.initial_pop_type = "custom" # JMC not sure purpose of this 
+        self.initial_pop = [] # 
+        
+        self.__diffusion_flag = False
+        self.__refresh_flag = False
         
         if input_obj is None:
-            print("building empty layout model")
-            self.read_comets_layout("./test_models/layout_blueprint")
+            print("building empty layout model\nmodels will need to be added with layout.add_model()")
         elif isinstance(input_obj, str):
             if not os.path.isfile(input_obj):
                 raise IOError(' when running comets.layout(), input_obj is a string, and therefore should be a path to a layout; however, no file could be found at that path destionation')
             self.read_comets_layout(input_obj)
         else:
-            self.read_comets_layout("./test_models/layout_blueprint")
             if not isinstance(input_obj, list):
                 input_obj = [input_obj] # probably just one cobra model 
             self.models = input_obj
+            for _ in range(len(self.models)):
+                self.initial_pop.append([0,0,1e-7])
             self.update_models()
                 
 
@@ -287,43 +290,7 @@ class layout:
                 print('Some initial population values' +
                       ' fall outside of the defined grid')
                 
-#    def build_layout_from_models(self, models):
-#        self.models = models
-#        self.grid = [1, 1]
-#        self.media = pd.DataFrame(columns=['metabolite',
-#                                           'init_amount',
-#                                           'diff_c',
-#                                           'g_static',
-#                                           'g_static_val',
-#                                           'g_refresh'])
-#
-#        # update models and extract exchanged metabolites
-#        self.update_models()
-#        exchanged_metab = []
-#        for i in models:
-#
-#            exchr = i.reactions.loc[i.reactions.EXCH, 'ID'].tolist()
-#            exchm = i.smat.loc[i.smat.rxn.isin(exchr),
-#                               'metabolite'].tolist()
-#            exchm = i.metabolites.iloc[[x-1 for x in exchm]][
-#                'METABOLITE_NAMES'].tolist()
-#            exchanged_metab.append(exchm)
-#            
-#        # using set comprehension here to remove duplicates automatically
-#        exchanged_metab = list({item
-#                                for sublist in exchanged_metab
-#                                for item in sublist})
-#        self.media['metabolite'] = exchanged_metab
-#        self.media['init_amount'] = 0
-#        self.media['g_static'] = 0
-#        self.media['g_static_val'] = 0
-#        self.media['g_refresh'] = 0
-#        self.global_diff = 1e-6
-#        self.local_refresh = []
-#        self.local_static = []
-#        self.initial_pop_type = 'custom'
-#        self.initial_pop = [[0] * 2 + [1e-9] * len(self.models)]
-#        # TODO: add all ions unlimited to media        
+          
         
     def get_model_ids(self):
         ids = [x.id for x in self.models]
@@ -401,6 +368,12 @@ class layout:
         lyt.close()
 
     def update_models(self):
+        
+        if len(self.initial_pop) < len(self.models):
+            print("warning: not all models were given biomass.\ninitializing all models with 1e-7 grams")
+            self.initial_pop = []
+            for _ in range(len(self.models)):
+                self.initial_pop.append([0,0,1e-7])
 
         self.all_exchanged_mets = []
         for i in self.models:
@@ -821,8 +794,9 @@ class layout:
         # TODO: update media with all exchangeable metabolites from all models
         pass
     
-    def add_model(self, model):
+    def add_model(self, model, initial_pop = [0,0,1e-7]):
         self.models.append(model)
+        self.initial_pop.append(initial_pop)
         self.update_models()
     
         
