@@ -89,6 +89,9 @@ class model:
                 except:
                     self.read_comets_model(model)
                     
+    def get_reaction_names(self):
+        return(list(self.reactions['REACTION_NAMES']))
+                    
     def get_exchange_metabolites(self):
         """ useful for layouts to grab these and get the set of them"""
         exchmets = pd.merge(self.reactions.loc[self.reactions['EXCH'], 'ID'], self.smat,
@@ -96,6 +99,21 @@ class model:
                             how='inner')['metabolite']
         exchmets = self.metabolites.iloc[exchmets-1]
         return(exchmets.METABOLITE_NAMES)
+        
+    def change_bounds(self, reaction, lower_bound, upper_bound):
+        if not reaction in self.reactions['REACTION_NAMES'].values:
+            print('reaction couldnt be found')
+            return
+        self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction, 'LB'] = lower_bound
+        self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction, 'UB'] = upper_bound
+
+    def get_bounds(self, reaction):
+        if not reaction in self.reactions['REACTION_NAMES'].values:
+            print('reaction couldnt be found')
+            return
+        lb = float(self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction, 'LB'])
+        ub = float(self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction, 'UB'])
+        return((lb,ub))
         
     def change_vmax(self, reaction, vmax):
         if not reaction in self.reactions['REACTION_NAMES'].values:
@@ -746,7 +764,11 @@ class layout:
         print(self.media[self.media['init_amount'] != 0.0])
         
     def set_specific_metabolite(self, met, amount):
-        self.media.loc[self.media['metabolite'] == met, 'init_amount'] = amount
+        try:
+            self.media.loc[self.media['metabolite'] == met, 'init_amount'] = amount
+        except:
+            print("the specified metabolite " + met + "is not able to be taken up, not added to media")
+                
             
     def add_typical_trace_metabolites(self, amount = 1000.0):
         trace_metabolites = ['ca2_e',
@@ -1222,7 +1244,7 @@ class comets:
         self.classpath_pieces[libraryname] = path
         self.build_and_set_classpath()
 
-    def run(self):
+    def run(self, delete_files = True):
         print('\nRunning COMETS simulation ...')
         # write the files for comets in working_dir
         c_global = self.working_dir + '.current_global'
@@ -1259,11 +1281,12 @@ class comets:
             self.run_errors = "STDERR empty."
             
         # clean workspace
-        os.remove(c_global)
-        os.remove(c_package)
-        os.remove(c_script)
-        os.remove('.current_layout')
-        os.remove('COMETS_manifest.txt')  # todo: stop writing this in java
+        if delete_files:
+            os.remove(c_global)
+            os.remove(c_package)
+            os.remove(c_script)
+            os.remove('.current_layout')
+            os.remove('COMETS_manifest.txt')  # todo: stop writing this in java
         
         # '''----------- READ OUTPUT ---------------------------------------'''
 
@@ -1276,7 +1299,8 @@ class comets:
                                               columns=['cycle'] +
                                               self.layout.models)
             self.total_biomass = self.total_biomass.astype('float')
-            os.remove(self.parameters.all_params['TotalBiomassLogName'])
+            if delete_files:
+                os.remove(self.parameters.all_params['TotalBiomassLogName'])
             
         # Read flux
         if self.parameters.all_params['writeFluxLog']:
@@ -1290,7 +1314,8 @@ class comets:
                                    [float(x)
                                     for x in re.search(r'\[(.*)\]',
                                                        i).group(1).split()])
-            os.remove(self.parameters.all_params['FluxLogName'])
+            if delete_files:
+                os.remove(self.parameters.all_params['FluxLogName'])
                 
         # Read spatial biomass log
         if self.parameters.all_params['writeBiomassLog']:
@@ -1299,7 +1324,8 @@ class comets:
                                        header=None, delimiter=r'\s+',
                                        names=['Cycle', 'x', 'y',
                                               'species', 'biomass'])
-            os.remove(biomass_out_file)
+            if delete_files:
+                os.remove(biomass_out_file)
             
         # Read evolution-related logs
         if self.parameters.all_params['evolution']:
