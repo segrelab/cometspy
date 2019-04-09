@@ -1297,7 +1297,7 @@ class comets:
             self.total_biomass = pd.DataFrame([re.split(r'\t+', x.strip())
                                                for x in tbmf],
                                               columns=['cycle'] +
-                                              self.layout.models)
+                                              self.layout.get_model_ids())
             self.total_biomass = self.total_biomass.astype('float')
             if delete_files:
                 os.remove(self.parameters.all_params['TotalBiomassLogName'])
