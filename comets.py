@@ -800,21 +800,35 @@ class layout:
             os.remove(outfile)
         
         lyt = open(outfile, 'a')
+        self.__write_models_and_world_grid_chunk(lyt)
+        self.__write_media_chunk(lyt)
+        self.__write_diffusion_chunk(lyt)
+        self.__write_refresh_chunk(lyt)
+        self.__write_static_chunk(lyt)
+        self.__write_initial_pop_chunk(lyt)
+
+        lyt.close()
         
+    def __write_models_and_world_grid_chunk(self, lyt):
+        """ writes the top 3 lines  to the open lyt file"""
         lyt.write('model_file ' +
                   '.cmd '.join(self.get_model_ids()) +
                   '.cmd\n')
         lyt.write('  model_world\n')
         
         lyt.write('    grid_size ' +
-                  ' '.join([str(x) for x in self.grid]) + '\n')
-            
+                  ' '.join([str(x) for x in self.grid]) + '\n')        
+        
+    def __write_media_chunk(self, lyt):
+        """ used by write_layout to write the global media information to the open lyt file """
         lyt.write('    world_media\n')
         for i in range(0, len(self.media)):
             lyt.write('      ' + self.media.metabolite[i] +
                       ' ' + str(self.media.init_amount[i]) + '\n')
         lyt.write(r'    //' + '\n')
-
+        
+    def __write_diffusion_chunk(self, lyt):
+        """ used by write_layout to write the metab-specific diffusion data to the open lyt file """
         if self.__diffusion_flag:
             lyt.write('    diffusion_constants ' +
                       str(self.global_diff) +
@@ -823,8 +837,10 @@ class layout:
                 if not math.isnan(self.media.diff_c[i]):
                     lyt.write('      ' + str(i) + ' ' +
                               str(self.media.diff_c[i]) + '\n')
-            lyt.write(r'    //' + '\n')
-
+            lyt.write(r'    //' + '\n')        
+            
+    def __write_refresh_chunk(self, lyt):
+        """ used by write_layout to write the global media refresh information to the open lyt file """
         if self.__refresh_flag:
             lyt.write('    media_refresh ' +
                       ' '.join([str(x) for x in self.media.
@@ -834,8 +850,10 @@ class layout:
                 lyt.write('      ' +
                           ' '.join([str(x) for x in self.local_refresh[i]]) +
                           '\n')
-            lyt.write(r'    //' + '\n')
-
+            lyt.write(r'    //' + '\n')   
+            
+    def __write_static_chunk(self, lyt):
+        """ used by write_layout to write the global static media information to the open lyt file """        
         g_static_line = [None]*(len(self.media)*2)
         g_static_line[::2] = self.media.g_static
         g_static_line[1::2] = self.media.g_static_val
@@ -848,7 +866,9 @@ class layout:
                       '\n')
         lyt.write(r'    //' + '\n')
         lyt.write(r'  //' + '\n')
-
+        
+    def __write_initial_pop_chunk(self, lyt):
+        """ writes the initial pop to the open lyt file and adds the closing //s """
         if (self.initial_pop_type == 'custom'):
             lyt.write('  initial_pop\n')
             for i in self.initial_pop:
@@ -861,8 +881,7 @@ class layout:
                       ' '.join([str(x) for x in self.initial_pop]) +
                       '\n')
         lyt.write(r'  //' + '\n')
-        lyt.write(r'//' + '\n')
-        lyt.close()
+        lyt.write(r'//' + '\n')        
         
 
     def update_models(self):
