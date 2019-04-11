@@ -84,10 +84,12 @@ class model:
             if isinstance(model, cobra.Model):
                 self.load_cobra_model(model)
             else: # assume it is a path
-                try:
-                    self.read_cobra_model(model)
-                except:
+                if model[-3:] == "cmd":
                     self.read_comets_model(model)
+                else:
+                    self.read_cobra_model(model)
+
+                    
                     
     def get_reaction_names(self):
         return(list(self.reactions['REACTION_NAMES']))
