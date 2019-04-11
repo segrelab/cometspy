@@ -533,17 +533,23 @@ class layout:
                                            'g_static',
                                            'g_static_val',
                                            'g_refresh'])
+        # local_media is a dictionary with locations as keys, and as values, 
+        # another dictionary with metabolite names as keys and amounts as values
+        # this information sets initial, location-specific media amounts.  
+        self.local_media = {}
         self.global_diff = None
         self.local_refresh = []
         self.local_static = []
         self.initial_pop_type = "custom" # JMC not sure purpose of this 
         self.initial_pop = [] # 
+        self.all_exchanged_mets = []
         
         self.default_diff_c = 5.0e-6 
         self.default_g_static = 0
         self.default_g_static_val = 0
         self.default_g_refresh = 0
         
+        self.__local_media_flag = False
         self.__diffusion_flag = False
         self.__refresh_flag = False
         
@@ -763,6 +769,19 @@ class layout:
     def display_current_media(self):
         print(self.media[self.media['init_amount'] != 0.0])
         
+    def set_specific_metabolite_at_location(self, met, location, amount):
+        """ allows the user to specify a metabolite going to a specific location
+        in a specific amount.  useful for generating non-homogenous environments.
+        THe met should be the met name (e.g. 'o2_e') the location should be a 
+        tuple (e.g. (0, 5)), and the amount should be a float / number"""
+        if met not in self.all_exchanged_mets:
+            raise Exception('met is not in the list of exchangeable mets')
+        self.__local_media_flag = True
+        if location not in list(self.local_media.keys()):
+            self.local_media[location] = {}
+        self.local_media[location][met] = amount
+
+            
     def set_specific_metabolite(self, met, amount):
         try:
             self.media.loc[self.media['metabolite'] == met, 'init_amount'] = amount
@@ -803,6 +822,7 @@ class layout:
         self.__write_models_and_world_grid_chunk(lyt)
         self.__write_media_chunk(lyt)
         self.__write_diffusion_chunk(lyt)
+        self.__write_local_media_chunk(lyt)
         self.__write_refresh_chunk(lyt)
         self.__write_static_chunk(lyt)
         self.__write_initial_pop_chunk(lyt)
@@ -826,6 +846,26 @@ class layout:
             lyt.write('      ' + self.media.metabolite[i] +
                       ' ' + str(self.media.init_amount[i]) + '\n')
         lyt.write(r'    //' + '\n')
+        
+    def __write_local_media_chunk(self, lyt):
+        """ used by write_layout to write the location-specific initial metabolite data"""
+        if self.__local_media_flag:    
+            lyt.write('    media\n')
+            locs = list(self.local_media.keys())
+            for loc in locs:
+                # this chunk goes in order, not by name, so must get met number
+                # for each location, make a list with zeros for each met.  put 
+                # non-zero numbers where the self.local_media tells us to
+                met_amounts_in_order = [0] * len(self.all_exchanged_mets)
+                for met in list(self.local_media[loc].keys()):
+                    met_amounts_in_order[self.__get_met_number(met)] = self.local_media[loc][met]
+                lyt.write('      ')
+                lyt.write('{} {} '.format(loc[0], loc[1]))
+                lyt.write(' '.join(str(x) for x in met_amounts_in_order))
+                lyt.write('\n')
+            lyt.write('    //\n')
+            
+                
         
     def __write_diffusion_chunk(self, lyt):
         """ used by write_layout to write the metab-specific diffusion data to the open lyt file """
@@ -940,10 +980,10 @@ class layout:
         self.models.append(model)
         self.update_models()
     
-#    def add_model(self, model, initial_pop = [0,0,1e-7]):
-#        self.models.append(model)
-#        self.initial_pop.append(initial_pop)
-#        self.update_models()
+    def __get_met_number(self, met):
+        """ returns the met number (of the external mets) given a name """
+        met_number = [x for x in range(len(self.all_exchanged_mets)) if self.all_exchanged_mets[x] == met][0]
+        return(met_number)
     
         
 class params:
