@@ -541,6 +541,8 @@ class layout:
         self.local_media = {}
         self.global_diff = None
         self.local_refresh = []
+        self.refresh = []
+        self.local_refresh2 = {} # wip: do this like local_media? ask djb
         self.local_static = []
         self.initial_pop_type = "custom" # JMC not sure purpose of this 
         self.initial_pop = [] # 
@@ -568,7 +570,7 @@ class layout:
             self.update_models()
                 
 
-            
+
     def read_comets_layout(self, input_obj):
                 # .. load layout file
         f_lines = [s for s in read_file(input_obj).splitlines() if s]
@@ -782,6 +784,24 @@ class layout:
         if location not in list(self.local_media.keys()):
             self.local_media[location] = {}
         self.local_media[location][met] = amount
+        
+    def set_specific_refresh(self, met, amount):
+        try:
+            self.media.loc[self.media['metabolite'] == met, 'g_refresh'] = amount
+            self.__refresh_flag = True
+        except:
+            print("the specified metabolite " + met + "is not able to be taken up, not added to media")
+      
+        
+    def set_specific_refresh_at_location(self, met, location, amount):
+        if met not in self.all_exchanged_mets:
+            raise Exception('met is not in the list of exchangeable mets')
+        self.__refresh_flag = True
+        if location not in list(self.local_refresh2.keys()):
+            self.local_refresh2[location] = {}
+        self.local_refresh2[location][met] = amount
+        
+        
 
             
     def set_specific_metabolite(self, met, amount):
@@ -825,7 +845,8 @@ class layout:
         self.__write_media_chunk(lyt)
         self.__write_diffusion_chunk(lyt)
         self.__write_local_media_chunk(lyt)
-        self.__write_refresh_chunk(lyt)
+        #self.__write_refresh_chunk(lyt)
+        self.__write_refresh2_chunk(lyt)
         self.__write_static_chunk(lyt)
         self.__write_initial_pop_chunk(lyt)
 
@@ -868,7 +889,26 @@ class layout:
             lyt.write('    //\n')
             
                 
-        
+    def __write_refresh2_chunk(self, lyt):
+        if self.__refresh_flag:
+            lyt.write('    media_refresh ' +
+                      ' '.join([str(x) for x in self.media.
+                                g_refresh.tolist()]) +
+                      '\n')
+            locs = list(self.local_refresh2.keys())
+            if len(locs) > 0:
+                for loc in locs:
+                    met_amounts_in_order = [0] * len(self.all_exchanged_mets)
+                    for met in list(self.local_refresh2[loc].keys()):
+                        met_amounts_in_order[self.__get_met_number(met)] = self.local_refresh2[loc][met]
+                    met_amounts_in_order.insert(0, loc[1])
+                    met_amounts_in_order.insert(0, loc[0])
+                    lyt.write('      ' +
+                          ' '.join([str(x) for x in met_amounts_in_order]) +
+                          '\n')
+            lyt.write(r'    //' + '\n') 
+
+                    
     def __write_diffusion_chunk(self, lyt):
         """ used by write_layout to write the metab-specific diffusion data to the open lyt file """
         if self.__diffusion_flag:
