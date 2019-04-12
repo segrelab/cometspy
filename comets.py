@@ -586,11 +586,17 @@ class layout:
         '''
         Models can be specified in layout as either comets format models
         or .xml format (sbml cobra compliant)
+        
         '''            
-        models = f_lines[0].split()
-        if len(models) > 1:
-            self.models = f_lines[0].split()[1:]
-            self.update_models()
+        # right now, assume all models in layouts are strings leading to comets model files
+        models = f_lines[0].split()[1:]
+        print(models)
+        if len(models) > 0:
+            for model_path in models:   
+                curr_model = model(model_path)
+                # TODO: get the initial pop information for each model, because the models own that info
+                self.add_model(curr_model)
+                self.update_models()
         else:
             print('Warning: No models in layout')
                 
@@ -639,14 +645,39 @@ class layout:
             except UnallocatedMetabolite:
                 print('\n ERROR UnallocatedMetabolite: Some diffusion ' +
                       'values correspond to unallocated metabolites')
-
+        # self.__local_media_flag = False
+        # if 'MEDIA' in set(filedata_string.upper().strip().split()):
+        #     self.__local_media_flag = True
+        #     lin_media = re.split('MEDIA',
+        #                         filedata_string.upper())[1].count('\n')+1 # there must be a world media, and this should come next...
+        #     lin_media_end = next(x for x in end_blocks if x > lin_media)
+        #     try:
+        #         for i in range(lin_media, lin_media_end):
+        #             media_spec = [float(x) for x in f_lines[i].split()]
+        #             if len(media_spec) != len(self.media.metabolite)+2:
+        #                 raise CorruptLine
+        #             elif (media_spec[0] >= self.grid[0] or
+        #                   media_spec[1] >= self.grid[1]):
+        #                 raise OutOfGrid
+        #             else:
+        #                 # new method
+        #                 loc = (media_spec[0],media_spec[1])
+        #                 self.local_media[loc] = {}
+        #                 media_spec = media_spec[2:]
+        #                 for j in range(len(media_spec)):
+        #                     if media_spec[j] != 0:
+        #                         self.local_media[loc][self.all_exchanged_mets[j]] = media_spec[j]
         # '''----------- MEDIA REFRESH----------------------------------'''
         # .. global refresh values
+        
+
+
+        
         self.__refresh_flag = False
-        if 'REFRESH' in filedata_string:
+        if 'REFRESH' in filedata_string.upper(): # is there a reason REFRESH is upper here but was lower below??  I made them equivalent
             self.__refresh_flag = True
-            lin_refr = re.split('refresh',
-                                filedata_string)[0].count('\n')
+            lin_refr = re.split('REFRESH',
+                                filedata_string.upper())[0].count('\n')
             lin_refr_end = next(x for x in end_blocks if x > lin_refr)
 
             g_refresh = [float(x) for x in f_lines[lin_refr].split()[1:]]
@@ -673,6 +704,14 @@ class layout:
                         raise OutOfGrid
                     else:
                         self.local_refresh.append(refr_spec)
+                        # new method
+                        loc = (refr_spec[0],refr_spec[1])
+                        self.local_refresh2[loc] = {}
+                        refr_spec = refr_spec[2:]
+                        for j in range(len(refr_spec)):
+                            if refr_spec[j] != 0:
+                                self.local_refresh2[loc][self.all_exchanged_mets[j]] = refr_spec[j]
+                    
 
             except CorruptLine:
                 print('\n ERROR CorruptLine: Some local "refresh" lines ' +
@@ -684,42 +723,52 @@ class layout:
 
         # '''----------- STATIC MEDIA ----------------------------------'''
         # .. global static values
-        lin_static = re.split('static',
-                              filedata_string)[0].count('\n')
-        lin_stat_end = next(x for x in end_blocks if x > lin_static)
-
-        g_static = [float(x) for x in f_lines[lin_static].split()[1:]]
-        try:
-            if len(g_static) != 2*len(self.media.metabolite):
-                raise CorruptLine
-            else:
-                self.media.loc[:, 'g_static'] = [int(x)
-                                                 for x in g_static[0::2]]
-                self.media.loc[:, 'g_static_val'] = [float(x) for x in
-                                                     g_static[1::2]]
-        except CorruptLine:
-            print('\nERROR CorruptLine: Wrong number of global ' +
-                  'static values')
-            
-        # .. local static values
-        lin_static += 1
-        try:
-            for i in range(lin_static, lin_stat_end):
-                stat_spec = [float(x) for x in f_lines[i].split()]
-                if len(stat_spec) != (2*len(self.media.metabolite))+2:
+        self.__static_flag = False
+        if 'STATIC' in filedata_string.upper():
+            self.__static_flag = True
+            lin_static = re.split('STATIC',
+                                  filedata_string.upper())[0].count('\n')
+            lin_stat_end = next(x for x in end_blocks if x > lin_static)
+    
+            g_static = [float(x) for x in f_lines[lin_static].split()[1:]]
+            try:
+                if len(g_static) != 2*len(self.media.metabolite):
                     raise CorruptLine
-                elif (stat_spec[0] >= self.grid[0] or
-                      stat_spec[1] >= self.grid[1]):
-                    raise OutOfGrid
                 else:
-                    self.local_static.append(stat_spec)
-                    
-        except CorruptLine:
-            print('\n ERROR CorruptLine: Wrong number of local static ' +
-                  'values at some lines')
-        except OutOfGrid:
-            print('\n ERROR OutOfGrid: Some local "static" lines have ' +
-                  ' coordinates that fall outside of the defined grid')
+                    self.media.loc[:, 'g_static'] = [int(x)
+                                                     for x in g_static[0::2]]
+                    self.media.loc[:, 'g_static_val'] = [float(x) for x in
+                                                         g_static[1::2]]
+            except CorruptLine:
+                print('\nERROR CorruptLine: Wrong number of global ' +
+                      'static values')
+                
+            # .. local static values
+            lin_static += 1
+            try:
+                for i in range(lin_static, lin_stat_end):
+                    stat_spec = [float(x) for x in f_lines[i].split()]
+                    if len(stat_spec) != (2*len(self.media.metabolite))+2:
+                        raise CorruptLine
+                    elif (stat_spec[0] >= self.grid[0] or
+                          stat_spec[1] >= self.grid[1]):
+                        raise OutOfGrid
+                    else:
+                        self.local_static.append(stat_spec)
+                        # new method
+                        loc = (stat_spec[0],stat_spec[1])
+                        self.local_static2[loc] = {}
+                        stat_spec = stat_spec[2:]
+                        for j in range(int(len(stat_spec)/2)):
+                            if stat_spec[j*2] != 0:
+                                self.local_static2[loc][self.all_exchanged_mets[j]] = stat_spec[j*2+1]
+                        
+            except CorruptLine:
+                print('\n ERROR CorruptLine: Wrong number of local static ' +
+                      'values at some lines')
+            except OutOfGrid:
+                print('\n ERROR OutOfGrid: Some local "static" lines have ' +
+                      ' coordinates that fall outside of the defined grid')
 
         # '''----------- INITIAL POPULATION ----------------------------'''
         lin_initpop = re.split('initial_pop',
@@ -1486,6 +1535,7 @@ class comets:
                                                 'Species'])
             
         print('Done!')
+
 
 # TODO: fix read_comets_layout to always expect text addresses of comets model files
 # TODO: make sure layout loading uses the new formats for location-specific media, refresh, etc
