@@ -590,7 +590,6 @@ class layout:
         '''            
         # right now, assume all models in layouts are strings leading to comets model files
         models = f_lines[0].split()[1:]
-        print(models)
         if len(models) > 0:
             for model_path in models:   
                 curr_model = model(model_path)
@@ -645,34 +644,38 @@ class layout:
             except UnallocatedMetabolite:
                 print('\n ERROR UnallocatedMetabolite: Some diffusion ' +
                       'values correspond to unallocated metabolites')
-        # self.__local_media_flag = False
-        # if 'MEDIA' in set(filedata_string.upper().strip().split()):
-        #     self.__local_media_flag = True
-        #     lin_media = re.split('MEDIA',
-        #                         filedata_string.upper())[1].count('\n')+1 # there must be a world media, and this should come next...
-        #     lin_media_end = next(x for x in end_blocks if x > lin_media)
-        #     try:
-        #         for i in range(lin_media, lin_media_end):
-        #             media_spec = [float(x) for x in f_lines[i].split()]
-        #             if len(media_spec) != len(self.media.metabolite)+2:
-        #                 raise CorruptLine
-        #             elif (media_spec[0] >= self.grid[0] or
-        #                   media_spec[1] >= self.grid[1]):
-        #                 raise OutOfGrid
-        #             else:
-        #                 # new method
-        #                 loc = (media_spec[0],media_spec[1])
-        #                 self.local_media[loc] = {}
-        #                 media_spec = media_spec[2:]
-        #                 for j in range(len(media_spec)):
-        #                     if media_spec[j] != 0:
-        #                         self.local_media[loc][self.all_exchanged_mets[j]] = media_spec[j]
+                
+                
+        self.__local_media_flag = False
+        if 'MEDIA' in set(filedata_string.upper().strip().split()):
+            self.__local_media_flag = True
+            lin_media = [x for x in range(len(f_lines)) if f_lines[x].strip().split()[0].upper() == 'MEDIA'][0]+1
+            lin_media_end = next(x for x in end_blocks if x > lin_media)
+            try:
+                for i in range(lin_media, lin_media_end):
+                    media_spec = [float(x) for x in f_lines[i].split()]
+                    if len(media_spec) != len(self.media.metabolite)+2:
+                        raise CorruptLine
+                    elif (media_spec[0] >= self.grid[0] or
+                          media_spec[1] >= self.grid[1]):
+                        raise OutOfGrid
+                    else:
+                        loc = (media_spec[0], media_spec[1])
+                        self.local_media[loc] = {}
+                        media_spec = media_spec[2:]
+                        for j in range(len(media_spec)):
+                            if media_spec[j] != 0:
+                                self.local_media[loc][self.all_exchanged_mets[j]] = media_spec[j]
+            except CorruptLine:
+                print('\n ERROR CorruptLine: Some local "media" lines ' +
+                      'have a wrong number of entries')
+            except OutOfGrid:
+                print('\n ERROR OutOfGrid: Some local "media" lines ' +
+                      'have coordinates that fall outside of the ' +
+                      '\ndefined ' + 'grid')
+
         # '''----------- MEDIA REFRESH----------------------------------'''
         # .. global refresh values
-        
-
-
-        
         self.__refresh_flag = False
         if 'REFRESH' in filedata_string.upper(): # is there a reason REFRESH is upper here but was lower below??  I made them equivalent
             self.__refresh_flag = True
