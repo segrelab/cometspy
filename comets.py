@@ -544,6 +544,7 @@ class layout:
         self.refresh = []
         self.local_refresh2 = {} # wip: do this like local_media? ask djb
         self.local_static = []
+        self.local_static2 = {}
         self.initial_pop_type = "custom" # JMC not sure purpose of this 
         self.initial_pop = [] # 
         self.all_exchanged_mets = []
@@ -556,6 +557,7 @@ class layout:
         self.__local_media_flag = False
         self.__diffusion_flag = False
         self.__refresh_flag = False
+        self.__static_flag = False
         
         if input_obj is None:
             print("building empty layout model\nmodels will need to be added with layout.add_model()")
@@ -773,6 +775,13 @@ class layout:
     def display_current_media(self):
         print(self.media[self.media['init_amount'] != 0.0])
         
+        
+    def set_specific_metabolite(self, met, amount):
+        try:
+            self.media.loc[self.media['metabolite'] == met, 'init_amount'] = amount
+        except:
+            print("the specified metabolite " + met + "is not able to be taken up, not added to media")             
+        
     def set_specific_metabolite_at_location(self, met, location, amount):
         """ allows the user to specify a metabolite going to a specific location
         in a specific amount.  useful for generating non-homogenous environments.
@@ -801,15 +810,22 @@ class layout:
             self.local_refresh2[location] = {}
         self.local_refresh2[location][met] = amount
         
-        
-
-            
-    def set_specific_metabolite(self, met, amount):
+    def set_specific_static(self, met, amount):
         try:
-            self.media.loc[self.media['metabolite'] == met, 'init_amount'] = amount
+            self.media.loc[self.media['metabolite'] == met, 'g_static'] = 1
+            self.media.loc[self.media['metabolite'] == met, 'g_static_val'] = amount
+            self.__static_flag = True
         except:
             print("the specified metabolite " + met + "is not able to be taken up, not added to media")
-                
+
+    def set_specific_static_at_location(self, met, location, amount):
+        if met not in self.all_exchanged_mets:
+            raise Exception('met is not in the list of exchangeable mets')
+        self.__static_flag = True
+        if location not in list(self.local_static2.keys()):
+            self.local_static2[location] = {}
+        self.local_static2[location][met] = amount
+            
             
     def add_typical_trace_metabolites(self, amount = 1000.0):
         trace_metabolites = ['ca2_e',
@@ -847,7 +863,10 @@ class layout:
         self.__write_local_media_chunk(lyt)
         #self.__write_refresh_chunk(lyt)
         self.__write_refresh2_chunk(lyt)
-        self.__write_static_chunk(lyt)
+        #self.__write_static_chunk(lyt)
+        self.__write_static2_chunk(lyt)
+        lyt.write(r'  //' + '\n')
+
         self.__write_initial_pop_chunk(lyt)
 
         lyt.close()
@@ -901,6 +920,30 @@ class layout:
                     met_amounts_in_order = [0] * len(self.all_exchanged_mets)
                     for met in list(self.local_refresh2[loc].keys()):
                         met_amounts_in_order[self.__get_met_number(met)] = self.local_refresh2[loc][met]
+                    met_amounts_in_order.insert(0, loc[1])
+                    met_amounts_in_order.insert(0, loc[0])
+                    lyt.write('      ' +
+                          ' '.join([str(x) for x in met_amounts_in_order]) +
+                          '\n')
+            lyt.write(r'    //' + '\n') 
+            
+    def __write_static2_chunk(self, lyt):
+        if self.__static_flag:
+            g_static_line = [None]*(len(self.media)*2)
+            g_static_line[::2] = self.media.g_static
+            g_static_line[1::2] = self.media.g_static_val
+            lyt.write('    static_media ' +
+                      ' '.join([str(x) for x in g_static_line]) + '\n')
+            locs = list(self.local_static2.keys())
+            if len(locs) > 0:
+                for loc in locs:
+                    # this is 2 * len because there is a pair of values for each met
+                    # the first value is a flag--0 if not static, 1 if static
+                    # the second value is the amount if it is static
+                    met_amounts_in_order = [0] * 2 * len(self.all_exchanged_mets)
+                    for met in list(self.local_static2[loc].keys()):
+                        met_amounts_in_order[self.__get_met_number(met) * 2] = 1 # the flag
+                        met_amounts_in_order[self.__get_met_number(met) * 2 + 1 ] = self.local_static2[loc][met]
                     met_amounts_in_order.insert(0, loc[1])
                     met_amounts_in_order.insert(0, loc[0])
                     lyt.write('      ' +
@@ -1444,7 +1487,8 @@ class comets:
             
         print('Done!')
 
-        
+# TODO: fix read_comets_layout to always expect text addresses of comets model files
+# TODO: make sure layout loading uses the new formats for location-specific media, refresh, etc
 # TODO: read media logs (after fixing format in java)
 # TODO: read spatial biomass logs
 # TODO: remove comets manifest (preferably, dont write it)
