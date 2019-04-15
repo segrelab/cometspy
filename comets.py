@@ -540,11 +540,9 @@ class layout:
         # this information sets initial, location-specific media amounts.  
         self.local_media = {}
         self.global_diff = None
-        self.local_refresh = []
         self.refresh = []
-        self.local_refresh2 = {} # wip: do this like local_media? ask djb
-        self.local_static = []
-        self.local_static2 = {}
+        self.local_refresh = {} 
+        self.local_static = {}
         self.initial_pop_type = "custom" # JMC not sure purpose of this 
         self.initial_pop = [] # 
         self.all_exchanged_mets = []
@@ -582,22 +580,7 @@ class layout:
             if '//' in f_lines[i]:
                 end_blocks.append(i)
 
-        # '''----------- MODELS ----------------------------------------'''
-        '''
-        Models can be specified in layout as either comets format models
-        or .xml format (sbml cobra compliant)
-        
-        '''            
-        # right now, assume all models in layouts are strings leading to comets model files
-        models = f_lines[0].split()[1:]
-        if len(models) > 0:
-            for model_path in models:   
-                curr_model = model(model_path)
-                # TODO: get the initial pop information for each model, because the models own that info
-                self.add_model(curr_model)
-                self.update_models()
-        else:
-            print('Warning: No models in layout')
+
                 
         # '''----------- GRID ------------------------------------------'''
         try:
@@ -607,6 +590,81 @@ class layout:
         except CorruptLine:
             print('\n ERROR CorruptLine: Only ' + str(len(self.grid)) +
                   ' dimension(s) specified for world grid')
+            
+        # '''----------- MODELS ----------------------------------------'''
+        '''
+        Models can be specified in layout as either comets format models
+        or .xml format (sbml cobra compliant)
+        
+        '''            
+        # right now, assume all models in layouts are strings leading to comets model files
+        
+        # models need initial pop, so lets grab that first
+                # '''----------- INITIAL POPULATION ----------------------------'''
+        lin_initpop = re.split('initial_pop',
+                               filedata_string)[0].count('\n')
+        lin_initpop_end = next(x for x in end_blocks if x > lin_initpop)
+
+        g_initpop = f_lines[lin_initpop].split()[1:]
+        
+        # TODO:  I think we should deprecate these. . ., it makes things difficult
+        #    then, we could just generate these on-the-fly using the python toolbox,
+        #    and have the initial_pop always appear to be 'custom' type to COMETS
+        if (len(g_initpop) > 0 and g_initpop[0] in ['random',
+                                                    'random_rect',
+                                                    'filled',
+                                                    'filled_rect',
+                                                    'square']):
+            self.initial_pop_type = g_initpop[0]
+            self.initial_pop = [float(x) for x in g_initpop[1:]]
+        else:
+            self.initial_pop_type = 'custom'
+            
+            # .. local initial population values
+            lin_initpop += 1
+            temp_init_pop_for_models = [[] for x in range(len(f_lines[0].split()[1:]))]# list of lists of lists.  first level is per-model, then per-location
+
+            try:
+                for i in range(lin_initpop, lin_initpop_end):
+                    ipop_spec = [float(x) for x in
+                                 f_lines[i].split()]
+                    if len(ipop_spec)-2 != len(temp_init_pop_for_models):
+                        raise CorruptLine
+                    if (ipop_spec[0] >= self.grid[0] or
+                            ipop_spec[1] >= self.grid[1]):
+                        raise OutOfGrid
+                    else:
+                        for j in range(len(ipop_spec)-2):
+                            if ipop_spec[j+2] != 0.0:
+                                if len(temp_init_pop_for_models[j]) == 0:
+                                    temp_init_pop_for_models[j] = [[ipop_spec[0],
+                                                                   ipop_spec[1],
+                                                                   ipop_spec[j+2]]]
+                                else:
+                                        
+                                    temp_init_pop_for_models[j].append([ipop_spec[0],
+                                                                   ipop_spec[1],
+                                                                   ipop_spec[j+2]])
+                        
+            except CorruptLine:
+                print('Problem at some initial population lines')
+            except OutOfGrid:
+                print('Some initial population values' +
+                      ' fall outside of the defined grid')
+        
+        
+        models = f_lines[0].split()[1:]
+        if len(models) > 0:
+            for i, model_path in enumerate(models):   
+                curr_model = model(model_path)
+                # TODO: get the initial pop information for each model, because the models own that info
+                curr_model.initial_pop = temp_init_pop_for_models[i]
+                self.add_model(curr_model)
+                self.update_models()
+        else:
+            print('Warning: No models in layout')
+            
+            
             
         # '''----------- MEDIA DESCRIPTION -----------------------------'''
         lin_media = re.split('world_media',
@@ -660,7 +718,7 @@ class layout:
                           media_spec[1] >= self.grid[1]):
                         raise OutOfGrid
                     else:
-                        loc = (media_spec[0], media_spec[1])
+                        loc = (int(media_spec[0]), int(media_spec[1]))
                         self.local_media[loc] = {}
                         media_spec = media_spec[2:]
                         for j in range(len(media_spec)):
@@ -706,14 +764,12 @@ class layout:
                           refr_spec[1] >= self.grid[1]):
                         raise OutOfGrid
                     else:
-                        self.local_refresh.append(refr_spec)
-                        # new method
-                        loc = (refr_spec[0],refr_spec[1])
-                        self.local_refresh2[loc] = {}
+                        loc = (int(refr_spec[0]),int(refr_spec[1]))
+                        self.local_refresh[loc] = {}
                         refr_spec = refr_spec[2:]
                         for j in range(len(refr_spec)):
                             if refr_spec[j] != 0:
-                                self.local_refresh2[loc][self.all_exchanged_mets[j]] = refr_spec[j]
+                                self.local_refresh[loc][self.all_exchanged_mets[j]] = refr_spec[j]
                     
 
             except CorruptLine:
@@ -757,14 +813,12 @@ class layout:
                           stat_spec[1] >= self.grid[1]):
                         raise OutOfGrid
                     else:
-                        self.local_static.append(stat_spec)
-                        # new method
-                        loc = (stat_spec[0],stat_spec[1])
-                        self.local_static2[loc] = {}
+                        loc = (int(stat_spec[0]),int(stat_spec[1]))
+                        self.local_static[loc] = {}
                         stat_spec = stat_spec[2:]
                         for j in range(int(len(stat_spec)/2)):
                             if stat_spec[j*2] != 0:
-                                self.local_static2[loc][self.all_exchanged_mets[j]] = stat_spec[j*2+1]
+                                self.local_static[loc][self.all_exchanged_mets[j]] = stat_spec[j*2+1]
                         
             except CorruptLine:
                 print('\n ERROR CorruptLine: Wrong number of local static ' +
@@ -773,41 +827,7 @@ class layout:
                 print('\n ERROR OutOfGrid: Some local "static" lines have ' +
                       ' coordinates that fall outside of the defined grid')
 
-        # '''----------- INITIAL POPULATION ----------------------------'''
-        lin_initpop = re.split('initial_pop',
-                               filedata_string)[0].count('\n')
-        lin_initpop_end = next(x for x in end_blocks if x > lin_initpop)
 
-        g_initpop = f_lines[lin_initpop].split()[1:]
-        
-        if (len(g_initpop) > 0 and g_initpop[0] in ['random',
-                                                    'random_rect',
-                                                    'filled',
-                                                    'filled_rect',
-                                                    'square']):
-            self.initial_pop_type = g_initpop[0]
-            self.initial_pop = [float(x) for x in g_initpop[1:]]
-        else:
-            self.initial_pop_type = 'custom'
-            
-            # .. local initial population values
-            lin_initpop += 1
-            try:
-                for i in range(lin_initpop, lin_initpop_end):
-                    ipop_spec = [float(x) for x in
-                                 f_lines[lin_initpop].split()]
-                    if len(ipop_spec) != len(self.models)+2:
-                        raise CorruptLine
-                    if (ipop_spec[0] >= self.grid[0] or
-                            ipop_spec[1] >= self.grid[1]):
-                        raise OutOfGrid
-                    else:
-                        self.initial_pop.append(ipop_spec)
-            except CorruptLine:
-                print('Problem at some initial population lines')
-            except OutOfGrid:
-                print('Some initial population values' +
-                      ' fall outside of the defined grid')
                 
           
         
@@ -858,9 +878,9 @@ class layout:
         if met not in self.all_exchanged_mets:
             raise Exception('met is not in the list of exchangeable mets')
         self.__refresh_flag = True
-        if location not in list(self.local_refresh2.keys()):
-            self.local_refresh2[location] = {}
-        self.local_refresh2[location][met] = amount
+        if location not in list(self.local_refresh.keys()):
+            self.local_refresh[location] = {}
+        self.local_refresh[location][met] = amount
         
     def set_specific_static(self, met, amount):
         try:
@@ -874,9 +894,9 @@ class layout:
         if met not in self.all_exchanged_mets:
             raise Exception('met is not in the list of exchangeable mets')
         self.__static_flag = True
-        if location not in list(self.local_static2.keys()):
-            self.local_static2[location] = {}
-        self.local_static2[location][met] = amount
+        if location not in list(self.local_static.keys()):
+            self.local_static[location] = {}
+        self.local_static[location][met] = amount
             
             
     def add_typical_trace_metabolites(self, amount = 1000.0):
@@ -913,10 +933,8 @@ class layout:
         self.__write_media_chunk(lyt)
         self.__write_diffusion_chunk(lyt)
         self.__write_local_media_chunk(lyt)
-        #self.__write_refresh_chunk(lyt)
-        self.__write_refresh2_chunk(lyt)
-        #self.__write_static_chunk(lyt)
-        self.__write_static2_chunk(lyt)
+        self.__write_refresh_chunk(lyt)
+        self.__write_static_chunk(lyt)
         lyt.write(r'  //' + '\n')
 
         self.__write_initial_pop_chunk(lyt)
@@ -960,18 +978,18 @@ class layout:
             lyt.write('    //\n')
             
                 
-    def __write_refresh2_chunk(self, lyt):
+    def __write_refresh_chunk(self, lyt):
         if self.__refresh_flag:
             lyt.write('    media_refresh ' +
                       ' '.join([str(x) for x in self.media.
                                 g_refresh.tolist()]) +
                       '\n')
-            locs = list(self.local_refresh2.keys())
+            locs = list(self.local_refresh.keys())
             if len(locs) > 0:
                 for loc in locs:
                     met_amounts_in_order = [0] * len(self.all_exchanged_mets)
-                    for met in list(self.local_refresh2[loc].keys()):
-                        met_amounts_in_order[self.__get_met_number(met)] = self.local_refresh2[loc][met]
+                    for met in list(self.local_refresh[loc].keys()):
+                        met_amounts_in_order[self.__get_met_number(met)] = self.local_refresh[loc][met]
                     met_amounts_in_order.insert(0, loc[1])
                     met_amounts_in_order.insert(0, loc[0])
                     lyt.write('      ' +
@@ -979,23 +997,23 @@ class layout:
                           '\n')
             lyt.write(r'    //' + '\n') 
             
-    def __write_static2_chunk(self, lyt):
+    def __write_static_chunk(self, lyt):
         if self.__static_flag:
             g_static_line = [None]*(len(self.media)*2)
             g_static_line[::2] = self.media.g_static
             g_static_line[1::2] = self.media.g_static_val
             lyt.write('    static_media ' +
                       ' '.join([str(x) for x in g_static_line]) + '\n')
-            locs = list(self.local_static2.keys())
+            locs = list(self.local_static.keys())
             if len(locs) > 0:
                 for loc in locs:
                     # this is 2 * len because there is a pair of values for each met
                     # the first value is a flag--0 if not static, 1 if static
                     # the second value is the amount if it is static
                     met_amounts_in_order = [0] * 2 * len(self.all_exchanged_mets)
-                    for met in list(self.local_static2[loc].keys()):
+                    for met in list(self.local_static[loc].keys()):
                         met_amounts_in_order[self.__get_met_number(met) * 2] = 1 # the flag
-                        met_amounts_in_order[self.__get_met_number(met) * 2 + 1 ] = self.local_static2[loc][met]
+                        met_amounts_in_order[self.__get_met_number(met) * 2 + 1 ] = self.local_static[loc][met]
                     met_amounts_in_order.insert(0, loc[1])
                     met_amounts_in_order.insert(0, loc[0])
                     lyt.write('      ' +
@@ -1016,34 +1034,7 @@ class layout:
                               str(self.media.diff_c[i]) + '\n')
             lyt.write(r'    //' + '\n')        
             
-    def __write_refresh_chunk(self, lyt):
-        """ used by write_layout to write the global media refresh information to the open lyt file """
-        if self.__refresh_flag:
-            lyt.write('    media_refresh ' +
-                      ' '.join([str(x) for x in self.media.
-                                g_refresh.tolist()]) +
-                      '\n')
-            for i in range(0, len(self.local_refresh)):
-                lyt.write('      ' +
-                          ' '.join([str(x) for x in self.local_refresh[i]]) +
-                          '\n')
-            lyt.write(r'    //' + '\n')   
-            
-    def __write_static_chunk(self, lyt):
-        """ used by write_layout to write the global static media information to the open lyt file """        
-        g_static_line = [None]*(len(self.media)*2)
-        g_static_line[::2] = self.media.g_static
-        g_static_line[1::2] = self.media.g_static_val
-        lyt.write('    static_media ' +
-                  ' '.join([str(x) for x in g_static_line]) + '\n')
-        
-        for i in range(0, len(self.local_static)):
-            lyt.write('      ' +
-                      ' '.join([str(x) for x in self.local_static[i]]) +
-                      '\n')
-        lyt.write(r'    //' + '\n')
-        lyt.write(r'  //' + '\n')
-        
+
     def __write_initial_pop_chunk(self, lyt):
         """ writes the initial pop to the open lyt file and adds the closing //s """
         if (self.initial_pop_type == 'custom'):
