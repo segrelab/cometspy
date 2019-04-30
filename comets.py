@@ -552,10 +552,13 @@ class layout:
         self.default_g_static_val = 0
         self.default_g_refresh = 0
         
+        self.barriers = []
+        
         self.__local_media_flag = False
         self.__diffusion_flag = False
         self.__refresh_flag = False
         self.__static_flag = False
+        self.__barrier_flag = False
         
         if input_obj is None:
             print("building empty layout model\nmodels will need to be added with layout.add_model()")
@@ -847,6 +850,31 @@ class layout:
     def display_current_media(self):
         print(self.media[self.media['init_amount'] != 0.0])
         
+    def add_barriers(self, barriers):
+        # first see if they provided only one barrier not in a nested list, and if
+        # so, put it into a list
+        if len(barriers) == 2:
+            if isinstance(barriers[0], int):
+                barriers = [barriers]
+        # now check each barrier and make sure it has 2 ints that fit within the grid size
+        for b in barriers:
+            try:
+                if len(b) != 2 or b[0] >= self.grid[0] or b[1] >= self.grid[1]:
+                    raise ValueError
+                self.barriers.append((int(b[0]), int(b[1])))
+            except ValueError:
+                print('ERROR ADDING BARRIERS in add_barriers\n')
+                print("expecting barriers to be a list of tuples of coordinates which fit within the current grid")
+                print("  such as  layout.grid = [5,5]")
+                print("           barriers = [(0,0),(1,1),(2,2),(4,4)]")
+                print("           layout.add_barriers(barriers)")
+        if len(self.barriers) > 0:
+            self.__barrier_flag = True
+            self.barriers = list(set(self.barriers))
+
+            
+        
+        
         
     def set_specific_metabolite(self, met, amount):
         try:
@@ -935,6 +963,7 @@ class layout:
         self.__write_local_media_chunk(lyt)
         self.__write_refresh_chunk(lyt)
         self.__write_static_chunk(lyt)
+        self.__write_barrier_chunk(lyt)
         lyt.write(r'  //' + '\n')
 
         self.__write_initial_pop_chunk(lyt)
@@ -1034,6 +1063,14 @@ class layout:
                               str(self.media.diff_c[i]) + '\n')
             lyt.write(r'    //' + '\n')        
             
+
+    def __write_barrier_chunk(self, lyt):
+        """ used by write_layout to write the barrier section to the open lyt file """
+        if self.__barrier_flag:
+            lyt.write('    barrier\n')
+            for barrier in self.barriers:
+                lyt.write('      {} {}\n'.format(barrier[0], barrier[1]))
+            lyt.write('    //\n')
 
     def __write_initial_pop_chunk(self, lyt):
         """ writes the initial pop to the open lyt file and adds the closing //s """
@@ -1515,18 +1552,19 @@ class comets:
                 os.remove(biomass_out_file)
             
         # Read evolution-related logs
-        if self.parameters.all_params['evolution']:
-            evo_out_file = 'biomass_log_' + hex(id(self))
-            self.evolution = pd.read_csv(evo_out_file,
-                                         header=None, delimiter=r'\s+',
-                                         names=['Cycle', 'x', 'y',
-                                                'species', 'biomass'])
-            genotypes_out_file = 'GENOTYPES_biomass_log_' + hex(id(self))
-            self.genotypes = pd.read_csv(genotypes_out_file,
-                                         header=None, delimiter=r'\s+',
-                                         names=['Ancestor',
-                                                'Mutation',
-                                                'Species'])
+        if 'evolution' in list(self.parameters.all_params.keys()):
+            if self.parameters.all_params['evolution']:
+                evo_out_file = 'biomass_log_' + hex(id(self))
+                self.evolution = pd.read_csv(evo_out_file,
+                                             header=None, delimiter=r'\s+',
+                                             names=['Cycle', 'x', 'y',
+                                                    'species', 'biomass'])
+                genotypes_out_file = 'GENOTYPES_biomass_log_' + hex(id(self))
+                self.genotypes = pd.read_csv(genotypes_out_file,
+                                             header=None, delimiter=r'\s+',
+                                             names=['Ancestor',
+                                                    'Mutation',
+                                                    'Species'])
             
         print('Done!')
 
