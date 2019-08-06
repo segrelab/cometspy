@@ -90,7 +90,7 @@ class model:
                     self.read_comets_model(model)
                 else:
                     self.read_cobra_model(model)
-                    
+                                        
     def get_reaction_names(self):
         return(list(self.reactions['REACTION_NAMES']))
                     
@@ -516,7 +516,7 @@ class model:
             f.write(r'//' + '\n')
 
 
-class layout:  
+class layout:
     '''
     Generates a COMETS layout either by reading from a file or by building one
     from a list of COBRA models. Or, with no arguments, build an empty layout.
@@ -578,7 +578,7 @@ class layout:
                 input_obj = [input_obj]  # probably just one cobra model
             self.models = input_obj
             self.update_models()
-            
+
     def read_comets_layout(self, input_obj):
 
         # .. load layout file
@@ -604,7 +604,8 @@ class layout:
         or .xml format (sbml cobra compliant)
         
         '''            
-        # right now, assume all models in layouts are strings leading to comets model files
+        # right now, assume all models in layouts are strings leading to
+        # comets model files
         
         # models need initial pop, so lets grab that first
 
@@ -618,7 +619,8 @@ class layout:
         # TODO:  I think we should deprecate these, it makes things difficult
         # then, we could just generate these on-the-fly using the py toolbox,
         # and have the initial_pop always appear to be 'custom' type to COMETS
-        # DB totally agree 
+        # DB totally agree
+
         if (len(g_initpop) > 0 and g_initpop[0] in ['random',
                                                     'random_rect',
                                                     'filled',
@@ -631,8 +633,8 @@ class layout:
             
             # .. local initial population values
             lin_initpop += 1
-
-            # list of lists of lists. first level is per-model, then per-location
+            
+            # list of lists of lists. first level per-model, then per-location
             temp_init_pop_for_models = [[] for x in
                                         range(len(f_lines[0].split()[1:]))]
         
@@ -652,7 +654,7 @@ class layout:
                                     temp_init_pop_for_models[j] = [[ipop_spec[0],
                                                                     ipop_spec[1],
                                                                     ipop_spec[j+2]]]
-                                else:                                    
+                                else:
                                     temp_init_pop_for_models[j].append([ipop_spec[0],
                                                                         ipop_spec[1],
                                                                         ipop_spec[j+2]])
@@ -710,6 +712,34 @@ class layout:
             except UnallocatedMetabolite:
                 print('\n ERROR UnallocatedMetabolite: Some diffusion ' +
                       'values correspond to unallocated metabolites')
+                            
+        self.__local_media_flag = False
+        if 'MEDIA' in set(filedata_string.upper().strip().split()):
+            self.__local_media_flag = True
+            lin_media = [x for x in range(len(f_lines)) if f_lines[x].strip().split()[0].upper() == 'MEDIA'][0]+1
+            lin_media_end = next(x for x in end_blocks if x > lin_media)
+            try:
+                for i in range(lin_media, lin_media_end):
+                    media_spec = [float(x) for x in f_lines[i].split()]
+                    if len(media_spec) != len(self.media.metabolite)+2:
+                        raise CorruptLine
+                    elif (media_spec[0] >= self.grid[0] or
+                          media_spec[1] >= self.grid[1]):
+                        raise OutOfGrid
+                    else:
+                        loc = (int(media_spec[0]), int(media_spec[1]))
+                        self.local_media[loc] = {}
+                        media_spec = media_spec[2:]
+                        for j in range(len(media_spec)):
+                            if media_spec[j] != 0:
+                                self.local_media[loc][self.all_exchanged_mets[j]] = media_spec[j]
+            except CorruptLine:
+                print('\n ERROR CorruptLine: Some local "media" lines ' +
+                      'have a wrong number of entries')
+            except OutOfGrid:
+                print('\n ERROR OutOfGrid: Some local "media" lines ' +
+                      'have coordinates that fall outside of the ' +
+                      '\ndefined ' + 'grid')
 
         self.__local_media_flag = False
         if 'MEDIA' in set(filedata_string.upper().strip().split()):
@@ -779,7 +809,7 @@ class layout:
                         for j in range(len(refr_spec)):
                             if refr_spec[j] != 0:
                                 self.local_refresh[loc][self.all_exchanged_mets[j]] = refr_spec[j]
-                    
+
             except CorruptLine:
                 print('\n ERROR CorruptLine: Some local "refresh" lines ' +
                       'have a wrong number of entries')
@@ -833,7 +863,7 @@ class layout:
                       'values at some lines')
             except OutOfGrid:
                 print('\n ERROR OutOfGrid: Some local "static" lines have ' +
-                      ' coordinates that fall outside of the defined grid')          
+                      ' coordinates that fall outside of the defined grid')
         
     def get_model_ids(self):
         ids = [x.id for x in self.models]
@@ -1062,6 +1092,7 @@ class layout:
     def __write_diffusion_chunk(self, lyt):
         """ used by write_layout to write the metab-specific
         diffusion data to the open lyt file """
+
         if self.__diffusion_flag:
             lyt.write('    diffusion_constants ' +
                       str(self.global_diff) +
@@ -1087,7 +1118,7 @@ class layout:
                       ' '.join([str(x) for x in self.initial_pop]) +
                       '\n')
         lyt.write(r'  //' + '\n')
-        lyt.write(r'//' + '\n')        
+        lyt.write(r'//' + '\n')
 
     def update_models(self):
         self.build_initial_pop()
@@ -1100,7 +1131,7 @@ class layout:
         n_models = len(self.models)
         initial_pop = []
         for i, model in enumerate(self.models):
-            if not isinstance(model.initial_pop[0], list): # in case this wasnt a nested list
+            if not isinstance(model.initial_pop[0], list):  # in case this wasnt a nested list
                 model.initial_pop = [model.initial_pop]
             for pop in model.initial_pop:
                 curr_line = [0] * (n_models + 2)
@@ -1111,8 +1142,8 @@ class layout:
         self.initial_pop = initial_pop
         
     def add_new_mets_to_media(self):
-        ## usually run right after build_exchange mets, to add any new mets
-        ## to the media data.frame
+        # usually run right after build_exchange mets, to add any new mets
+        # to the media data.frame
         
         for met in self.all_exchanged_mets:
             if met not in self.media['metabolite'].values:
@@ -1148,7 +1179,7 @@ class layout:
                       self.all_exchanged_mets[x] == met][0]
         return(met_number)
 
-    
+
 class params:
     '''
     Class storing COMETS parameters
