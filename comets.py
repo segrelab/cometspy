@@ -984,8 +984,8 @@ class layout:
                 self.media = pd.concat([self.media,
                                         newrow],
                                        axis=0, sort=False)
-                print('Warning: The added metabolite (' + met + ') is not' +
-                      'able to be taken up by any of the current models')
+                # print('Warning: The added metabolite (' + met + ') is not' +
+                #      'able to be taken up by any of the current models')
 
     def write_layout(self, outfile):
         ''' Write the layout in a file'''
@@ -1235,7 +1235,7 @@ class params:
                             # 'biomassMotionStyle': 'Diffusion' +
                             # '2D(Crank-Nicolson)', TODO: this not working
                            'numExRxnSubsteps': 5,
-                           'costlyGenome': True,
+                           'costlyGenome': False,
                            'geneFractionalCost': 1e-4,
                            'evolution': False,
                            'mutRate': 1e-5,
@@ -1485,11 +1485,11 @@ class comets:
         ''' checks to see if there is a file at each location in classpath
         pieces. Saves the pieces where there is no file and returns them as a
         dictionary, where the key is the common name of the class library and
-        the value is the path '''
-        broken_pieces = {}
+        the value is the path '''  # 
+        broken_pieces = {}         # 
         for key, value in self.classpath_pieces.items():
-            if not os.path.isfile(value):
-                broken_pieces[key] = value    
+            if not os.path.isfile(value):  # 
+                broken_pieces[key] = value
         return(broken_pieces)
         
     def set_classpath(self, libraryname, path):
@@ -1562,9 +1562,21 @@ class comets:
                                    [float(x)
                                     for x in re.search(r'\[(.*)\]',
                                                        i).group(1).split()])
+            
             if delete_files:
                 os.remove(self.parameters.all_params['FluxLogName'])
-                
+
+        # Read media logs
+        if self.parameters.all_params['writeMediaLog']:
+            self.media = pd.read_csv(self.parameters.all_params[
+                'MediaLogName'], delim_whitespace=True, names=('metabolite',
+                                                               'cycle', 'x',
+                                                               'y',
+                                                               'conc_mmol'))
+            
+            if delete_files:
+                os.remove(self.parameters.all_params['MediaLogName'])
+
         # Read spatial biomass log
         if self.parameters.all_params['writeBiomassLog']:
             biomass_out_file = 'biomass_log_' + hex(id(self))
@@ -1601,7 +1613,7 @@ class comets:
 
 # TODO: fix read_comets_layout to always expect text addresses of comets model files
 # TODO: make sure layout loading uses the new formats for location-specific media, refresh, etc
-# TODO: read media logs (after fixing format in java)
+# SOLVED: read media logs (after fixing format in java)
 # TODO: read spatial biomass logs
 # TODO: remove comets manifest (preferably, dont write it)
 # TODO: find quicker reading solution than the pd.read_csv stringIO hack
@@ -1613,4 +1625,5 @@ class comets:
 # TODO: include all params in one file (maybe layout?) to avoid file writing
 # TODO: update media with all exchangeable metabolites from all models
 # TODO: give warning when unknown parameter is set
-
+# TODO: model biomass should be added in the layout "add_model" method, and not as a model class field 
+# TODO: make a copy function for params, layout and model 
