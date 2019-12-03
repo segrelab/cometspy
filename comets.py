@@ -1156,7 +1156,10 @@ class params:
     Class storing COMETS parameters
     '''
     def __init__(self, global_params=None, package_params=None):
-        self.all_params = {'BiomassLogName': 'biomass.txt',
+        self.all_params = {'writeSpecificMediaLog': False,
+			   'specificMediaLogRate': 1,
+                           'specificMedia': 'ac_e',
+                           'BiomassLogName': 'biomass.txt',
                            'BiomassLogRate': 1,
                            'FluxLogName': 'flux_out',
                            'FluxLogRate': 5,
@@ -1214,7 +1217,10 @@ class params:
         self.all_params = dict(sorted(self.all_params.items(),
                                       key=lambda x: x[0]))
         
-        self.all_type = {'BiomassLogName': 'global',
+        self.all_type = {'writeSpecificMediaLog': 'global',
+			   'specificMediaLogRate': 'global',
+                           'specificMedia': 'global',
+			'BiomassLogName': 'global',
                          'BiomassLogRate': 'global',
                          'FluxLogName': 'global',
                          'FluxLogRate': 'global',
