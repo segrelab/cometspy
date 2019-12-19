@@ -100,6 +100,13 @@ class model:
                                           'rxn',
                                           's_coef'])
         self.metabolites = pd.DataFrame(columns=['METABOLITE_NAMES'])
+        self.signals = pd.DataFrame(columns=['REACTION_NUMBER',
+                                             'EXCH_IND',
+                                             'BOUND',
+                                             'FUNCTION',
+                                             'PARAMETERS',
+                                             'REACTION_NAMES','EXCH'],
+                                    dtype = object)
         
         self.vmax_flag = False
         self.km_flag = False
@@ -123,7 +130,28 @@ class model:
                                         
     def get_reaction_names(self):
         return(list(self.reactions['REACTION_NAMES']))
-                    
+                   
+    def add_signal(self, rxn_num, exch_ind, bound,
+                   function, parms):
+        if str(rxn_num).lower().strip() == 'death':
+            rxn_name = 'death'
+            rxn_num = 'death'
+        else:
+            rxn_name = self.reactions.loc[self.reactions.ID == rxn_num+1, 'REACTION_NAMES']
+            rxn_num = str(rxn_num)
+
+        exch_name = list(self.get_exchange_metabolites())[exch_ind-1]
+        new_row = pd.DataFrame({'REACTION_NUMBER': rxn_num,
+                                'EXCH_IND': exch_ind,
+                                'BOUND': bound,
+                                'FUNCTION': function,
+                                'PARAMETERS': 1,  
+                                'REACTION_NAMES': rxn_name,
+                                'EXCH': exch_name},
+        index = [0],
+        dtype = object)
+        new_row.loc[0,'PARAMETERS'] = parms
+        self.signals = self.signals.append(new_row, ignore_index = True)
     def get_exchange_metabolites(self):
         """ useful for layouts to grab these and get the set of them """
         exchmets = pd.merge(self.reactions.loc[self.reactions['EXCH'], 'ID'],
@@ -537,6 +565,25 @@ class model:
                 f.write('HILL_VALUES ' +
                         str(self.default_hill) + '\n')
                 Hill.to_csv(f, mode='a', header=False, index=False)
+                f.write(r'//' + '\n')
+                
+            if self.signals.size > 0:
+                f.write('MET_REACTION_SIGNAL\n');
+                sub_signals = self.signals.drop(['REACTION_NAMES', 'EXCH'], axis = 'columns')
+                col_names = list(self.signals.drop(['REACTION_NAMES','EXCH','PARAMETERS'],
+                     axis = 'columns').columns)
+                for idx in sub_signals.index:
+                    row = sub_signals.drop(['PARAMETERS'], axis = 'columns').iloc[idx,:]
+                    n_parms = len(sub_signals.PARAMETERS[idx])
+                    curr_col_names = col_names + [str(i) for i in range(n_parms)]
+                    temp_df = pd.DataFrame(columns = curr_col_names)
+                    temp_df.loc[0,'REACTION_NUMBER'] = row.loc['REACTION_NUMBER']
+                    temp_df.loc[0,'EXCH_IND'] = row.loc['EXCH_IND']
+                    temp_df.loc[0,'BOUND'] = row.loc['BOUND']
+                    temp_df.loc[0,'FUNCTION'] = row.loc['FUNCTION']
+                    for i in range(n_parms):
+                        temp_df.loc[0,str(i)] = sub_signals.PARAMETERS[idx][i]
+                    temp_df.to_csv(f, mode = 'a', sep = ' ', header=False, index=False)
                 f.write(r'//' + '\n')
 
             f.write('OBJECTIVE_STYLE\n' + self.obj_style + '\n')
