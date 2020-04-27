@@ -681,15 +681,17 @@ class layout:
                              filedata_string)[0].count('\n') + 1
         lin_media_end = next(x for x in end_blocks if x > lin_media)
         
-        media_names = []
-        media_conc = []
         for i in range(lin_media, lin_media_end):
-            metabolite = f_lines[i].split()
-            media_names.append(metabolite[0])
-            media_conc.append(float(metabolite[1]))
-
-        self.media['metabolite'] = media_names
-        self.media['init_amount'] = media_conc
+            curr_met = f_lines[i].split()
+            if curr_met[0] in self.media['metabolite'].unique():
+                self.media.loc[self.media.metabolite == curr_met[0],
+                               'init_amount'] = float(curr_met[1])
+            else:                
+                self.media.append(pd.Series(curr_met,
+                                            index=['metabolite',
+                                                   'init_amount']),
+                                  ignore_index=True)
+        print(self.media)
         
         # '''----------- MEDIA DIFFUSION -------------------------------'''
         self.__diffusion_flag = False
@@ -716,7 +718,9 @@ class layout:
         self.__local_media_flag = False
         if 'MEDIA' in set(filedata_string.upper().strip().split()):
             self.__local_media_flag = True
-            lin_media = [x for x in range(len(f_lines)) if f_lines[x].strip().split()[0].upper() == 'MEDIA'][0]+1
+            lin_media = [x for x in range(len(f_lines))
+                         if f_lines[x].strip().split()[0].upper() ==
+                         'MEDIA'][0]+1
             lin_media_end = next(x for x in end_blocks if x > lin_media)
             try:
                 for i in range(lin_media, lin_media_end):
@@ -741,35 +745,6 @@ class layout:
                       'have coordinates that fall outside of the ' +
                       '\ndefined ' + 'grid')
 
-        self.__local_media_flag = False
-        if 'MEDIA' in set(filedata_string.upper().strip().split()):
-            self.__local_media_flag = True
-            lin_media = [x for x in range(len(f_lines)) if
-                         f_lines[x].strip().split()[0].upper() == 'MEDIA'][0]+1
-            lin_media_end = next(x for x in end_blocks if x > lin_media)
-            try:
-                for i in range(lin_media, lin_media_end):
-                    media_spec = [float(x) for x in f_lines[i].split()]
-                    if len(media_spec) != len(self.media.metabolite)+2:
-                        raise CorruptLine
-                    elif (media_spec[0] >= self.grid[0] or
-                          media_spec[1] >= self.grid[1]):
-                        raise OutOfGrid
-                    else:
-                        loc = (int(media_spec[0]), int(media_spec[1]))
-                        self.local_media[loc] = {}
-                        media_spec = media_spec[2:]
-                        for j in range(len(media_spec)):
-                            if media_spec[j] != 0:
-                                self.local_media[loc][
-                                    self.all_exchanged_mets[j]] = media_spec[j]
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Some local "media" lines ' +
-                      'have a wrong number of entries')
-            except OutOfGrid:
-                print('\n ERROR OutOfGrid: Some local "media" lines ' +
-                      'have coordinates that fall outside of the ' +
-                      '\ndefined ' + 'grid')
 
         # '''----------- MEDIA REFRESH----------------------------------'''
         # .. global refresh values
