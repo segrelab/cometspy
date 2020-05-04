@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 '''
 The Comets module serves as a Python user interface to COMETS.
@@ -111,6 +110,7 @@ class model:
         self.vmax_flag = False
         self.km_flag = False
         self.hill_flag = False
+        self.convection_flag = False
         self.default_vmax = 10
         self.default_km = 1
         self.default_hill = 1
@@ -133,6 +133,7 @@ class model:
                    
     def add_signal(self, rxn_num, exch_ind, bound,
                    function, parms):
+
         if str(rxn_num).lower().strip() == 'death':
             rxn_name = 'death'
             rxn_num = 'death'
@@ -152,6 +153,29 @@ class model:
         dtype = object)
         new_row.loc[0,'PARAMETERS'] = parms
         self.signals = self.signals.append(new_row, ignore_index = True)
+        
+    def add_convection_parameters(self, packedDensity, elasticModulus,
+                                  frictionConstant, convDiffConstant,
+                                  noiseVariance):
+        """ adds parameters for Convection 2D biomassMotionStyle.  In order,
+        the four following parameters are required: packedDensity, elasticModulus,
+        frictionConstant, convDiffConstant, noiseVariance """
+        if not isinstance(packedDensity, float):
+            raise ValueError('packed_density must be a float')
+        if not isinstance(elasticModulus, float):
+            raise ValueError('elasticModulus must be a float')
+        if not isinstance(frictionConstant, float):
+            raise ValueError('frictionConstant must be a float')
+        if not isinstance(convDiffConstant, float):
+            raise ValueError('convDiffConstant must be a float')
+        if not isinstance(noiseVariance, float):
+            raise ValueError('noiseVariance must be a float')
+        self.convection_flag = True
+        self.convection_parameters = {'packedDensity': packedDensity,
+                                      'elasticModulus': elasticModulus,
+                                      'frictionConstant': frictionConstant,
+                                      'convDiffConstant': convDiffConstant,
+                                      'noiseVariance': noiseVariance}
     def get_exchange_metabolites(self):
         """ useful for layouts to grab these and get the set of them """
         exchmets = pd.merge(self.reactions.loc[self.reactions['EXCH'], 'ID'],
@@ -463,6 +487,62 @@ class model:
             lin_opt = re.split('OPTIMIZER',
                                m_filedata_string)[0].count('\n')
             self.optimizer = m_f_lines[lin_opt].split()[1]
+        # '''--------------convection---------------------------'''
+        if 'packedDensity' in m_filedata_string:
+            lin_obj_st = re.split('packedDensity',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            packed_density = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['packedDensity'] = packed_density
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['packedDensity'] = packed_density
+        if 'elasticModulus' in m_filedata_string:
+            lin_obj_st = re.split('elasticModulus',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            elasticModulus = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['elasticModulus'] = elasticModulus
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['elasticModulus'] = elasticModulus  
+        if 'frictionConstant' in m_filedata_string:
+            lin_obj_st = re.split('frictionConstant',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            frictionConstant = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['frictionConstant'] = frictionConstant
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['frictionConstant'] = frictionConstant 
+        if 'convDiffConstant' in m_filedata_string:
+            lin_obj_st = re.split('convDiffConstant',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            convDiffConstant = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['convDiffConstant'] = convDiffConstant
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['convDiffConstant'] = convDiffConstant 
+        if 'noiseVariance' in m_filedata_string:
+            lin_obj_st = re.split('noiseVariance',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            noiseVariance = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['noiseVariance'] = noiseVariance
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['noiseVariance'] = noiseVariance
         # assign the dataframes we just built
         self.reactions = reactions
         self.metabolites = metabolites
@@ -585,7 +665,11 @@ class model:
                         temp_df.loc[0,str(i)] = sub_signals.PARAMETERS[idx][i]
                     temp_df.to_csv(f, mode = 'a', sep = ' ', header=False, index=False)
                 f.write(r'//' + '\n')
-
+                
+            if self.convection_flag:
+                for key, value in self.convection_parameters.items():
+                    f.write(key + ' ' + str(value) + '\n')
+                    f.write(r'//' + '\n')
             f.write('OBJECTIVE_STYLE\n' + self.obj_style + '\n')
             f.write(r'//' + '\n')
 
@@ -1350,8 +1434,7 @@ class params:
                            'slideshowRate': 1,
                            'slideshowLayer': 0,
                            'slideshowExt': 'png',
-                            # 'biomassMotionStyle': 'Diffusion' +
-                            # '2D(Crank-Nicolson)', TODO: this not working
+                            'biomassMotionStyle': 'Diffusion 2D(Crank-Nicolson)',
                            'numExRxnSubsteps': 5,
                            'costlyGenome': False,
                            'geneFractionalCost': 1e-4,
@@ -1564,6 +1647,9 @@ class comets:
         self.classpath_pieces['lang3'] = (self.COMETS_HOME +
                                           '/lib/commons-lang3-3.7/' +
                                           'commons-lang3-3.7.jar')
+        self.classpath_pieces['math3'] = (self.COMETS_HOME +
+                                         '/lib/commons-math3-3.6.1/' +
+                                         'commons-math3-3.6.1.jar')
         self.classpath_pieces['bin'] = (self.COMETS_HOME +
                                         '/bin/' + self.VERSION + '.jar')
     
