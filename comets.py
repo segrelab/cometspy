@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 '''
 The Comets module serves as a Python user interface to COMETS.
@@ -831,7 +832,7 @@ class layout:
 
         models = f_lines[0].split()[1:]
         if len(models) > 0:
-            for i, model_path in enumerate(models):   
+            for i, model_path in enumerate(models):
                 curr_model = model(model_path)
                 # TODO: get the initial pop information for each model, because the models own that info
                 curr_model.initial_pop = temp_init_pop_for_models[i]
@@ -1174,6 +1175,7 @@ class layout:
                                        axis=0, sort=False)
                 # print('Warning: The added metabolite (' + met + ') is not' +
                 #      'able to be taken up by any of the current models')
+        self.media = self.media.reset_index(drop=True)
 
     def write_layout(self, outfile):
         ''' Write the layout in a file'''
@@ -1389,10 +1391,13 @@ class params:
                            'SpecificMediaLogName' : 'specific_media.txt',
                            'BiomassLogName': 'biomass.txt',
                            'BiomassLogRate': 1,
+                           'biomassLogFormat': 'COMETS',
                            'FluxLogName': 'flux_out',
                            'FluxLogRate': 5,
+                           'fluxLogFormat': 'COMETS',
                            'MediaLogName': 'media_out',
                            'MediaLogRate': 5,
+                           'mediaLogFormat': 'COMETS',
                            'TotalBiomassLogName': 'total_biomass_out.txt',
                            'maxCycles': 100,
                            'saveslideshow': False,
@@ -1451,10 +1456,13 @@ class params:
                            'SpecificMediaLogName' : 'global',
 			'BiomassLogName': 'global',
                          'BiomassLogRate': 'global',
+                         'biomassLogFormat': 'global',
                          'FluxLogName': 'global',
                          'FluxLogRate': 'global',
+                         'fluxLogFormat': 'global',
                          'MediaLogName': 'global',
                          'MediaLogRate': 'global',
+                         'mediaLogFormat': 'global',
                          'TotalBiomassLogName': 'global',
                          'maxCycles': 'package',
                          'saveslideshow': 'global',
@@ -1596,7 +1604,11 @@ class comets:
 
         self.layout = layout
         self.parameters = parameters
-        
+        # If evolution is true, we dont want to write the total biomass log
+        if self.parameters.all_params['evolution']:
+            self.parameters.all_params['writeTotalBiomassLog'] = False
+            self.parameters.all_params['writeBiomassLog'] = True
+
         # dealing with output files
         self.parameters.all_params['useLogNameTimeStamp'] = False
         self.parameters.all_params['TotalBiomassLogName'] = (
@@ -1611,7 +1623,7 @@ class comets:
     def build_default_classpath_pieces(self):
         self.classpath_pieces = {}
         self.classpath_pieces['gurobi'] = (self.GUROBI_HOME +
-                                           '/lib/gurobi.jar')
+                                           '/gurobi.jar')
         self.classpath_pieces['junit'] = (self.COMETS_HOME +
                                           '/lib/junit/junit-4.12.jar')
         self.classpath_pieces['hamcrest'] = (self.COMETS_HOME +
@@ -1749,7 +1761,8 @@ class comets:
         # '''----------- READ OUTPUT ---------------------------------------'''
 
         # Read total biomass output
-        if self.parameters.all_params['writeTotalBiomassLog']:
+        if (self.parameters.all_params['writeTotalBiomassLog'] and
+            not self.parameters.all_params['evolution']):
             tbmf = readlines_file(
                 self.parameters.all_params['TotalBiomassLogName'])
             self.total_biomass = pd.DataFrame([re.split(r'\t+', x.strip())
