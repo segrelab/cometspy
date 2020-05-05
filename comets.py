@@ -58,6 +58,36 @@ def readlines_file(filename):
     return f_lines
 
 
+def chemostat(models, reservoir_media, dilution_rate):
+    """ this returns a layout object and a parameters object setup to use the
+    given models, reservoir_media, and dilution_rate in a chemostat-like 
+    experiment.  
+    
+    @argument models:  a list of comets models, with initial_pop pre-assigned
+    @argument reservoir_media: a dictionary where keys are extracellular metabolite
+            names and the values are their concentration in the media
+    @argument dilution_rate: a float between zero and 1 specifying the per-hour
+            dilution rate
+    
+    returns (layout, parameters)
+    
+    then one can either do additional edits or use these files to generate
+    a comets object
+    """
+    mylayout = layout(models)
+    
+    for key, value in reservoir_media.items():
+        mylayout.set_specific_metabolite(key, value)
+        mylayout.set_specific_refresh(key, value * dilution_rate)
+
+    parameters = params()
+    parameters.all_params['metaboliteDilutionRate'] = dilution_rate
+    parameters.all_params['deathRate'] = dilution_rate
+
+    return(mylayout, parameters)
+        
+    
+
 class model:
     def __init__(self, model=None):
         self.initial_pop = [[0, 0, 0.0]]
@@ -70,10 +100,18 @@ class model:
                                           'rxn',
                                           's_coef'])
         self.metabolites = pd.DataFrame(columns=['METABOLITE_NAMES'])
+        self.signals = pd.DataFrame(columns=['REACTION_NUMBER',
+                                             'EXCH_IND',
+                                             'BOUND',
+                                             'FUNCTION',
+                                             'PARAMETERS',
+                                             'REACTION_NAMES','EXCH'],
+                                    dtype = object)
         
         self.vmax_flag = False
         self.km_flag = False
         self.hill_flag = False
+        self.convection_flag = False
         self.default_vmax = 10
         self.default_km = 1
         self.default_hill = 1
@@ -93,7 +131,52 @@ class model:
                                         
     def get_reaction_names(self):
         return(list(self.reactions['REACTION_NAMES']))
-                    
+                   
+    def add_signal(self, rxn_num, exch_ind, bound,
+                   function, parms):
+
+        if str(rxn_num).lower().strip() == 'death':
+            rxn_name = 'death'
+            rxn_num = 'death'
+        else:
+            rxn_name = self.reactions.loc[self.reactions.ID == rxn_num+1, 'REACTION_NAMES']
+            rxn_num = str(rxn_num)
+
+        exch_name = list(self.get_exchange_metabolites())[exch_ind-1]
+        new_row = pd.DataFrame({'REACTION_NUMBER': rxn_num,
+                                'EXCH_IND': exch_ind,
+                                'BOUND': bound,
+                                'FUNCTION': function,
+                                'PARAMETERS': 1,  
+                                'REACTION_NAMES': rxn_name,
+                                'EXCH': exch_name},
+        index = [0],
+        dtype = object)
+        new_row.loc[0,'PARAMETERS'] = parms
+        self.signals = self.signals.append(new_row, ignore_index = True)
+        
+    def add_convection_parameters(self, packedDensity, elasticModulus,
+                                  frictionConstant, convDiffConstant,
+                                  noiseVariance):
+        """ adds parameters for Convection 2D biomassMotionStyle.  In order,
+        the four following parameters are required: packedDensity, elasticModulus,
+        frictionConstant, convDiffConstant, noiseVariance """
+        if not isinstance(packedDensity, float):
+            raise ValueError('packed_density must be a float')
+        if not isinstance(elasticModulus, float):
+            raise ValueError('elasticModulus must be a float')
+        if not isinstance(frictionConstant, float):
+            raise ValueError('frictionConstant must be a float')
+        if not isinstance(convDiffConstant, float):
+            raise ValueError('convDiffConstant must be a float')
+        if not isinstance(noiseVariance, float):
+            raise ValueError('noiseVariance must be a float')
+        self.convection_flag = True
+        self.convection_parameters = {'packedDensity': packedDensity,
+                                      'elasticModulus': elasticModulus,
+                                      'frictionConstant': frictionConstant,
+                                      'convDiffConstant': convDiffConstant,
+                                      'noiseVariance': noiseVariance}
     def get_exchange_metabolites(self):
         """ useful for layouts to grab these and get the set of them """
         exchmets = pd.merge(self.reactions.loc[self.reactions['EXCH'], 'ID'],
@@ -405,6 +488,62 @@ class model:
             lin_opt = re.split('OPTIMIZER',
                                m_filedata_string)[0].count('\n')
             self.optimizer = m_f_lines[lin_opt].split()[1]
+        # '''--------------convection---------------------------'''
+        if 'packedDensity' in m_filedata_string:
+            lin_obj_st = re.split('packedDensity',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            packed_density = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['packedDensity'] = packed_density
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['packedDensity'] = packed_density
+        if 'elasticModulus' in m_filedata_string:
+            lin_obj_st = re.split('elasticModulus',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            elasticModulus = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['elasticModulus'] = elasticModulus
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['elasticModulus'] = elasticModulus  
+        if 'frictionConstant' in m_filedata_string:
+            lin_obj_st = re.split('frictionConstant',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            frictionConstant = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['frictionConstant'] = frictionConstant
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['frictionConstant'] = frictionConstant 
+        if 'convDiffConstant' in m_filedata_string:
+            lin_obj_st = re.split('convDiffConstant',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            convDiffConstant = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['convDiffConstant'] = convDiffConstant
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['convDiffConstant'] = convDiffConstant 
+        if 'noiseVariance' in m_filedata_string:
+            lin_obj_st = re.split('noiseVariance',
+                                  m_filedata_string)[0].count(
+                                      '\n')
+            noiseVariance = float(m_f_lines[lin_obj_st].strip().split()[1])
+            try:
+                self.convection_parameters['noiseVariance'] = noiseVariance
+            except:
+                self.convection_flag = True
+                self.convection_parameters = {}
+                self.convection_parameters['noiseVariance'] = noiseVariance
         # assign the dataframes we just built
         self.reactions = reactions
         self.metabolites = metabolites
@@ -508,7 +647,30 @@ class model:
                         str(self.default_hill) + '\n')
                 Hill.to_csv(f, mode='a', header=False, index=False)
                 f.write(r'//' + '\n')
-
+                
+            if self.signals.size > 0:
+                f.write('MET_REACTION_SIGNAL\n');
+                sub_signals = self.signals.drop(['REACTION_NAMES', 'EXCH'], axis = 'columns')
+                col_names = list(self.signals.drop(['REACTION_NAMES','EXCH','PARAMETERS'],
+                     axis = 'columns').columns)
+                for idx in sub_signals.index:
+                    row = sub_signals.drop(['PARAMETERS'], axis = 'columns').iloc[idx,:]
+                    n_parms = len(sub_signals.PARAMETERS[idx])
+                    curr_col_names = col_names + [str(i) for i in range(n_parms)]
+                    temp_df = pd.DataFrame(columns = curr_col_names)
+                    temp_df.loc[0,'REACTION_NUMBER'] = row.loc['REACTION_NUMBER']
+                    temp_df.loc[0,'EXCH_IND'] = row.loc['EXCH_IND']
+                    temp_df.loc[0,'BOUND'] = row.loc['BOUND']
+                    temp_df.loc[0,'FUNCTION'] = row.loc['FUNCTION']
+                    for i in range(n_parms):
+                        temp_df.loc[0,str(i)] = sub_signals.PARAMETERS[idx][i]
+                    temp_df.to_csv(f, mode = 'a', sep = ' ', header=False, index=False)
+                f.write(r'//' + '\n')
+                
+            if self.convection_flag:
+                for key, value in self.convection_parameters.items():
+                    f.write(key + ' ' + str(value) + '\n')
+                    f.write(r'//' + '\n')
             f.write('OBJECTIVE_STYLE\n' + self.obj_style + '\n')
             f.write(r'//' + '\n')
 
@@ -558,10 +720,13 @@ class layout:
         self.default_g_static_val = 0
         self.default_g_refresh = 0
         
+        self.barriers = []
+        
         self.__local_media_flag = False
         self.__diffusion_flag = False
         self.__refresh_flag = False
         self.__static_flag = False
+        self.__barrier_flag = False
         
         if input_obj is None:
             print('building empty layout model\nmodels will need to be added' +
@@ -681,17 +846,15 @@ class layout:
                              filedata_string)[0].count('\n') + 1
         lin_media_end = next(x for x in end_blocks if x > lin_media)
         
+        media_names = []
+        media_conc = []
         for i in range(lin_media, lin_media_end):
-            curr_met = f_lines[i].split()
-            if curr_met[0] in self.media['metabolite'].unique():
-                self.media.loc[self.media.metabolite == curr_met[0],
-                               'init_amount'] = float(curr_met[1])
-            else:                
-                self.media.append(pd.Series(curr_met,
-                                            index=['metabolite',
-                                                   'init_amount']),
-                                  ignore_index=True)
-        print(self.media)
+            metabolite = f_lines[i].split()
+            media_names.append(metabolite[0])
+            media_conc.append(float(metabolite[1]))
+
+        self.media['metabolite'] = media_names
+        self.media['init_amount'] = media_conc
         
         # '''----------- MEDIA DIFFUSION -------------------------------'''
         self.__diffusion_flag = False
@@ -718,9 +881,7 @@ class layout:
         self.__local_media_flag = False
         if 'MEDIA' in set(filedata_string.upper().strip().split()):
             self.__local_media_flag = True
-            lin_media = [x for x in range(len(f_lines))
-                         if f_lines[x].strip().split()[0].upper() ==
-                         'MEDIA'][0]+1
+            lin_media = [x for x in range(len(f_lines)) if f_lines[x].strip().split()[0].upper() == 'MEDIA'][0]+1
             lin_media_end = next(x for x in end_blocks if x > lin_media)
             try:
                 for i in range(lin_media, lin_media_end):
@@ -745,6 +906,35 @@ class layout:
                       'have coordinates that fall outside of the ' +
                       '\ndefined ' + 'grid')
 
+        self.__local_media_flag = False
+        if 'MEDIA' in set(filedata_string.upper().strip().split()):
+            self.__local_media_flag = True
+            lin_media = [x for x in range(len(f_lines)) if
+                         f_lines[x].strip().split()[0].upper() == 'MEDIA'][0]+1
+            lin_media_end = next(x for x in end_blocks if x > lin_media)
+            try:
+                for i in range(lin_media, lin_media_end):
+                    media_spec = [float(x) for x in f_lines[i].split()]
+                    if len(media_spec) != len(self.media.metabolite)+2:
+                        raise CorruptLine
+                    elif (media_spec[0] >= self.grid[0] or
+                          media_spec[1] >= self.grid[1]):
+                        raise OutOfGrid
+                    else:
+                        loc = (int(media_spec[0]), int(media_spec[1]))
+                        self.local_media[loc] = {}
+                        media_spec = media_spec[2:]
+                        for j in range(len(media_spec)):
+                            if media_spec[j] != 0:
+                                self.local_media[loc][
+                                    self.all_exchanged_mets[j]] = media_spec[j]
+            except CorruptLine:
+                print('\n ERROR CorruptLine: Some local "media" lines ' +
+                      'have a wrong number of entries')
+            except OutOfGrid:
+                print('\n ERROR OutOfGrid: Some local "media" lines ' +
+                      'have coordinates that fall outside of the ' +
+                      '\ndefined ' + 'grid')
 
         # '''----------- MEDIA REFRESH----------------------------------'''
         # .. global refresh values
@@ -855,7 +1045,31 @@ class layout:
             
     def display_current_media(self):
         print(self.media[self.media['init_amount'] != 0.0])
+        
+    def add_barriers(self, barriers):
+        # first see if they provided only one barrier not in a nested list, and if
+        # so, put it into a list
+        if len(barriers) == 2:
+            if isinstance(barriers[0], int):
+                barriers = [barriers]
+        # now check each barrier and make sure it has 2 ints that fit within the grid size
+        for b in barriers:
+            try:
+                if len(b) != 2 or b[0] >= self.grid[0] or b[1] >= self.grid[1]:
+                    raise ValueError
+                self.barriers.append((int(b[0]), int(b[1])))
+            except ValueError:
+                print('ERROR ADDING BARRIERS in add_barriers\n')
+                print("expecting barriers to be a list of tuples of coordinates which fit within the current grid")
+                print("  such as  layout.grid = [5,5]")
+                print("           barriers = [(0,0),(1,1),(2,2),(4,4)]")
+                print("           layout.add_barriers(barriers)")
+        if len(self.barriers) > 0:
+            self.__barrier_flag = True
+            self.barriers = list(set(self.barriers))
 
+            
+        
     def set_specific_metabolite(self, met, amount):
         if met in set(self.media['metabolite']):
             self.media.loc[self.media['metabolite'] == met,
@@ -976,6 +1190,7 @@ class layout:
         self.__write_local_media_chunk(lyt)
         self.__write_refresh_chunk(lyt)
         self.__write_static_chunk(lyt)
+        self.__write_barrier_chunk(lyt)
         lyt.write(r'  //' + '\n')
 
         self.__write_initial_pop_chunk(lyt)
@@ -1078,7 +1293,16 @@ class layout:
                     lyt.write('      ' + str(i) + ' ' +
                               str(self.media.diff_c[i]) + '\n')
             lyt.write(r'    //' + '\n')        
-            
+
+    def __write_barrier_chunk(self, lyt):
+        """ used by write_layout to write the barrier section to the open lyt file """
+        if self.__barrier_flag:
+            lyt.write('    barrier\n')
+            for barrier in self.barriers:
+                lyt.write('      {} {}\n'.format(barrier[0], barrier[1]))
+            lyt.write('    //\n')
+
+
     def __write_initial_pop_chunk(self, lyt):
         """ writes the initial pop to the open
         lyt file and adds the closing //s """
@@ -1161,7 +1385,11 @@ class params:
     Class storing COMETS parameters
     '''
     def __init__(self, global_params=None, package_params=None):
-        self.all_params = {'BiomassLogName': 'biomass.txt',
+        self.all_params = {'writeSpecificMediaLog': False,
+			   'specificMediaLogRate': 1,
+                           'specificMedia': 'ac_e',
+                           'SpecificMediaLogName' : 'specific_media.txt',
+                           'BiomassLogName': 'biomass.txt',
                            'BiomassLogRate': 1,
                            'biomassLogFormat': 'COMETS',
                            'FluxLogName': 'flux_out',
@@ -1211,18 +1439,22 @@ class params:
                            'slideshowRate': 1,
                            'slideshowLayer': 0,
                            'slideshowExt': 'png',
-                           #'biomassMotionStyle': 'Diffusion' +
-                           #'2D(Crank-Nicolson)', TODO: this not working
+                            'biomassMotionStyle': 'Diffusion 2D(Crank-Nicolson)',
                            'numExRxnSubsteps': 5,
                            'costlyGenome': False,
                            'geneFractionalCost': 1e-4,
                            'evolution': False,
                            'mutRate': 1e-5,
-                           'addRate': 1e-5}
+                           'addRate': 1e-5,
+                           'metaboliteDilutionRate': 0.}
         self.all_params = dict(sorted(self.all_params.items(),
                                       key=lambda x: x[0]))
         
-        self.all_type = {'BiomassLogName': 'global',
+        self.all_type = {'writeSpecificMediaLog': 'global',
+			   'specificMediaLogRate': 'global',
+                           'specificMedia': 'global',
+                           'SpecificMediaLogName' : 'global',
+			'BiomassLogName': 'global',
                          'BiomassLogRate': 'global',
                          'biomassLogFormat': 'global',
                          'FluxLogName': 'global',
@@ -1272,13 +1504,14 @@ class params:
                          'slideshowRate': 'global',
                          'slideshowLayer': 'global',
                          'slideshowExt': 'global',
-                         #'biomassMotionStyle': 'package',
+                         'biomassMotionStyle': 'package',
                          'numExRxnSubsteps': 'package',
                          'costlyGenome': 'global',
                          'geneFractionalCost': 'global',
                          'evolution': 'package',
                          'mutRate': 'package',
-                         'addRate': 'package'}
+                         'addRate': 'package',
+                         'metaboliteDilutionRate': 'package'}
         self.all_type = dict(sorted(self.all_type.items(),
                                     key=lambda x: x[0]))
 
@@ -1315,6 +1548,11 @@ class params:
                         else:
                             self.all_params[k.strip()] = v.strip()
 
+        # Additional processing.
+        # If evolution is true, we dont want to write the total biomass log
+        if self.all_params['evolution']:
+            self.all_params['writeTotalBiomassLog'] = False
+
     ''' write parameters files; method probably only used by class comets'''
     def write_params(self, out_glb, out_pkg):
 
@@ -1333,6 +1571,7 @@ class params:
                 towrite_params[k] = 'false'
             else:
                 towrite_params[k] = str(v)
+
         with open(out_glb, 'a') as glb, open(out_pkg, 'a') as pkg:
             for k, v in towrite_params.items():
                 if self.all_type[k] == 'global':
@@ -1420,6 +1659,9 @@ class comets:
         self.classpath_pieces['lang3'] = (self.COMETS_HOME +
                                           '/lib/commons-lang3-3.7/' +
                                           'commons-lang3-3.7.jar')
+        self.classpath_pieces['math3'] = (self.COMETS_HOME +
+                                         '/lib/commons-math3-3.6.1/' +
+                                         'commons-math3-3.6.1.jar')
         self.classpath_pieces['bin'] = (self.COMETS_HOME +
                                         '/bin/' + self.VERSION + '.jar')
     
@@ -1569,18 +1811,26 @@ class comets:
                 os.remove(biomass_out_file)
             
         # Read evolution-related logs
-        if self.parameters.all_params['evolution']:
-            evo_out_file = 'biomass_log_' + hex(id(self))
-            self.evolution = pd.read_csv(evo_out_file,
-                                         header=None, delimiter=r'\s+',
-                                         names=['Cycle', 'x', 'y',
-                                                'species', 'biomass'])
-            genotypes_out_file = 'GENOTYPES_biomass_log_' + hex(id(self))
-            self.genotypes = pd.read_csv(genotypes_out_file,
-                                         header=None, delimiter=r'\s+',
-                                         names=['Ancestor',
-                                                'Mutation',
-                                                'Species'])
+        if 'evolution' in list(self.parameters.all_params.keys()):
+            if self.parameters.all_params['evolution']:
+                evo_out_file = 'biomass_log_' + hex(id(self))
+                self.evolution = pd.read_csv(evo_out_file,
+                                             header=None, delimiter=r'\s+',
+                                             names=['Cycle', 'x', 'y',
+                                                    'species', 'biomass'])
+                genotypes_out_file = 'GENOTYPES_biomass_log_' + hex(id(self))
+                self.genotypes = pd.read_csv(genotypes_out_file,
+                                             header=None, delimiter=r'\s+',
+                                             names=['Ancestor',
+                                                    'Mutation',
+                                                    'Species'])
+                
+        # Read specific media output
+        if self.parameters.all_params['writeSpecificMediaLog']:
+            spec_med_file = self.parameters.all_params['SpecificMediaLogName']
+            self.specific_media = pd.read_csv(spec_med_file, delimiter=r'\s+')
+            if delete_files:
+                os.remove(self.parameters.all_params['SpecificMediaLogName'])
             
         # clean workspace
         if delete_files:
