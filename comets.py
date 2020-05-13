@@ -881,7 +881,9 @@ class layout:
         self.__local_media_flag = False
         if 'MEDIA' in set(filedata_string.upper().strip().split()):
             self.__local_media_flag = True
-            lin_media = [x for x in range(len(f_lines)) if f_lines[x].strip().split()[0].upper() == 'MEDIA'][0]+1
+            lin_media = [x for x in range(len(f_lines))
+                         if f_lines[x].strip().split()[0].upper() ==
+                         'MEDIA'][0]+1
             lin_media_end = next(x for x in end_blocks if x > lin_media)
             try:
                 for i in range(lin_media, lin_media_end):
@@ -1444,8 +1446,8 @@ class params:
                            'costlyGenome': False,
                            'geneFractionalCost': 1e-4,
                            'evolution': False,
-                           'mutRate': 1e-5,
-                           'addRate': 1e-5,
+                           'mutRate': 0,
+                           'addRate': 0,
                            'metaboliteDilutionRate': 0.}
         self.all_params = dict(sorted(self.all_params.items(),
                                       key=lambda x: x[0]))
@@ -1552,6 +1554,7 @@ class params:
         # If evolution is true, we dont want to write the total biomass log
         if self.all_params['evolution']:
             self.all_params['writeTotalBiomassLog'] = False
+            self.all_params['writeBiomassLog'] = True
 
     ''' write parameters files; method probably only used by class comets'''
     def write_params(self, out_glb, out_pkg):
@@ -1604,11 +1607,7 @@ class comets:
 
         self.layout = layout
         self.parameters = parameters
-        # If evolution is true, we dont want to write the total biomass log
-        if self.parameters.all_params['evolution']:
-            self.parameters.all_params['writeTotalBiomassLog'] = False
-            self.parameters.all_params['writeBiomassLog'] = True
-
+        
         # dealing with output files
         self.parameters.all_params['useLogNameTimeStamp'] = False
         self.parameters.all_params['TotalBiomassLogName'] = (
@@ -1761,8 +1760,7 @@ class comets:
         # '''----------- READ OUTPUT ---------------------------------------'''
 
         # Read total biomass output
-        if (self.parameters.all_params['writeTotalBiomassLog'] and
-            not self.parameters.all_params['evolution']):
+        if self.parameters.all_params['writeTotalBiomassLog']:
             tbmf = readlines_file(
                 self.parameters.all_params['TotalBiomassLogName'])
             self.total_biomass = pd.DataFrame([re.split(r'\t+', x.strip())
