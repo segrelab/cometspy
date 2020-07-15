@@ -9,7 +9,7 @@ setup(
   author='The COMETSPy Core Team',
   author_email='djordje.bajic@yale.edu',
   url='https://github.com/segrelab/cometspy',
-  download_url='https://github.com/segrelab/cometspy/archive/v0.3.3.tar.gz',  # New releases here!! 
+  download_url='https://github.com/segrelab/cometspy/archive/v0.3.4.tar.gz',  # New releases here!! 
   keywords=['SOME', 'MEANINGFULL', 'KEYWORDS'],   # Keywords that define your package best
   install_requires=[
       # I get to this in a second
