@@ -9,7 +9,7 @@ import numpy as np
 import re
 import math
 from cometspy.comets import read_file, CorruptLine, UnallocatedMetabolite, OutOfGrid
-from cometspy import model
+from cometspy.model import model
 
 
 class layout:

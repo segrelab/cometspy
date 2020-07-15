@@ -5,7 +5,7 @@ For more information see https://segrelab.github.io/comets-manual/
 
 import pandas as pd
 import os
-from comets import isfloat
+from cometspy.comets import isfloat
 
 
 class params:

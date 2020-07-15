@@ -8,8 +8,8 @@ import subprocess as sp
 import pandas as pd
 import os
 import numpy as np
-from cometspy import layout
-from cometspy import params
+from cometspy.layout import layout
+from cometspy.params import params
 
 __author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon"
 __copyright__ = "Copyright 2019, The COMETS Consortium"
