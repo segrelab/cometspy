@@ -15,8 +15,7 @@ setup(
       # I get to this in a second
       'numpy',
       'cobra',
-      'pandas',
-      'math'],
+      'pandas'],
   classifiers=[
       'Development Status :: 4 - Beta',  # "3 - Alpha", "4 - Beta", "5 - Production/Stable"
       'Intended Audience :: Science/Research',      # Define that your audience are developers
