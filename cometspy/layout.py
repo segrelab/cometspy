@@ -8,8 +8,8 @@ import os
 import numpy as np
 import re
 import math
-from comets import read_file, CorruptLine, OutOfGrid, UnallocatedMetabolite
-import model
+from cometspy.comets import read_file, CorruptLine, UnallocatedMetabolite, OutOfGrid
+from cometspy import model
 
 
 class layout:

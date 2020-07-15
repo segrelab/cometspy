@@ -3,13 +3,13 @@ from distutils.core import setup
 setup(
   name='cometspy',
   packages=['cometspy'],
-  version='0.3.2',
+  version='0.3.3',
   license='MIT',
   description='The Python interface to COMETS',
   author='The COMETSPy Core Team',
   author_email='djordje.bajic@yale.edu',
   url='https://github.com/segrelab/cometspy',
-  download_url='https://github.com/segrelab/cometspy/archive/v0.3.0.tar.gz',  # New releases here!! 
+  download_url='https://github.com/segrelab/cometspy/archive/v0.3.2.tar.gz',  # New releases here!! 
   keywords=['SOME', 'MEANINGFULL', 'KEYWORDS'],   # Keywords that define your package best
   install_requires=[
       # I get to this in a second
