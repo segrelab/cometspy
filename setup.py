@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
   name='cometspy',
   packages=['cometspy'],
-  version='0.3.1',
+  version='0.3.2',
   license='MIT',
   description='The Python interface to COMETS',
   author='The COMETSPy Core Team',
