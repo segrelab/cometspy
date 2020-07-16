@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 '''
-The Comets module serves as a Python user interface to COMETS.
+The model module handles COMETS models
 For more information see https://segrelab.github.io/comets-manual/
 '''
 
@@ -9,7 +11,13 @@ import numpy as np
 import re
 import cobra
 import io
-from comets import read_file
+
+
+def read_file(filename):
+    f = open(filename, 'r')
+    f_lines = f.read()
+    f.close()
+    return f_lines
 
 
 class model:

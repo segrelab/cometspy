@@ -1,11 +1,20 @@
+# -*- coding: utf-8 -*-
+
 '''
-The Comets module serves as a Python user interface to COMETS.
+The params module handles COMETS simulation parameters.
 For more information see https://segrelab.github.io/comets-manual/
 '''
 
 import pandas as pd
 import os
-from cometspy.comets import isfloat
+
+
+def isfloat(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
 
 
 class params:

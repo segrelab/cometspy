@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 '''
-The Comets module serves as a Python user interface to COMETS.
+The comets module runs COMETS simulations and stores output. 
 For more information see https://segrelab.github.io/comets-manual/
 '''
 
@@ -31,21 +33,6 @@ class OutOfGrid(Exception):
 
 class UnallocatedMetabolite(Exception):
     pass
-
-
-def isfloat(value):
-    try:
-        float(value)
-        return True
-    except ValueError:
-        return False
-
-
-def read_file(filename):
-    f = open(filename, 'r')
-    f_lines = f.read()
-    f.close()
-    return f_lines
 
 
 def readlines_file(filename):

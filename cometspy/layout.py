@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+
 '''
-The Comets module serves as a Python user interface to COMETS.
+The layout module handles COMETS simulation layouts, including 
+media and spatial arrangement. 
 For more information see https://segrelab.github.io/comets-manual/
 '''
 
@@ -8,8 +11,15 @@ import os
 import numpy as np
 import re
 import math
-from cometspy.comets import read_file, CorruptLine, UnallocatedMetabolite, OutOfGrid
+from cometspy.comets import CorruptLine, UnallocatedMetabolite, OutOfGrid
 from cometspy.model import model
+
+
+def read_file(filename):
+    f = open(filename, 'r')
+    f_lines = f.read()
+    f.close()
+    return f_lines
 
 
 class layout:
