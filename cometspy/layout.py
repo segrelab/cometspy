@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 '''
-The layout module handles COMETS simulation layouts, including 
-media and spatial arrangement. 
+The layout module handles COMETS simulation layouts, including
+media and spatial arrangement.
 For more information see https://segrelab.github.io/comets-manual/
 '''
 
@@ -11,7 +11,7 @@ import os
 import numpy as np
 import re
 import math
-from cometspy.comets import CorruptLine, UnallocatedMetabolite, OutOfGrid
+
 from cometspy.model import model
 
 
@@ -187,13 +187,11 @@ class layout:
                 end_blocks.append(i)
 
         # '''----------- GRID ------------------------------------------'''
-        try:
-            self.grid = [int(i) for i in f_lines[2].split()[1:]]
-            if len(self.grid) < 2:
-                raise CorruptLine
-        except CorruptLine:
-            print('\n ERROR CorruptLine: Only ' + str(len(self.grid)) +
-                  ' dimension(s) specified for world grid')
+        self.grid = [int(i) for i in f_lines[2].split()[1:]]
+        if len(self.grid) < 2:            
+            print('\n Warning: Grid must contain only two values, but it \n' +
+                  ' currently contains ' + len(self.grid) +
+                  '\nCheck your layout file.')
 
         # '''----------- MODELS ----------------------------------------'''
         '''
@@ -235,33 +233,27 @@ class layout:
             temp_init_pop_for_models = [[] for x in
                                         range(len(f_lines[0].split()[1:]))]
 
-            try:
-                for i in range(lin_initpop, lin_initpop_end):
-                    ipop_spec = [float(x) for x in
-                                 f_lines[i].split()]
-                    if len(ipop_spec)-2 != len(temp_init_pop_for_models):
-                        raise CorruptLine
-                    if (ipop_spec[0] >= self.grid[0] or
-                            ipop_spec[1] >= self.grid[1]):
-                        raise OutOfGrid
-                    else:
-                        for j in range(len(ipop_spec)-2):
-                            if ipop_spec[j+2] != 0.0:
-                                if len(temp_init_pop_for_models[j]) == 0:
-                                    temp_init_pop_for_models[j] = [[ipop_spec[0],
+            for i in range(lin_initpop, lin_initpop_end):
+                ipop_spec = [float(x) for x in
+                             f_lines[i].split()]
+                if len(ipop_spec)-2 != len(temp_init_pop_for_models):
+                    print('\nWarning: Some initial population lines are corrupt.\n' +
+                          'Check your layout file')
+                if (ipop_spec[0] >= self.grid[0] or ipop_spec[1] >= self.grid[1]):
+                    print('\nWarning: Some initial population values fall outside' +
+                          '\nof the defined grid size. Check your layout file.')
+                else:
+                    for j in range(len(ipop_spec)-2):
+                        if ipop_spec[j+2] != 0.0:
+                            if len(temp_init_pop_for_models[j]) == 0:
+                                temp_init_pop_for_models[j] = [[ipop_spec[0],
+                                                                ipop_spec[1],
+                                                                ipop_spec[j+2]]]
+                            else:
+                                temp_init_pop_for_models[j].append([ipop_spec[0],
                                                                     ipop_spec[1],
-                                                                    ipop_spec[j+2]]]
-                                else:
-                                    temp_init_pop_for_models[j].append([ipop_spec[0],
-                                                                        ipop_spec[1],
-                                                                        ipop_spec[j+2]])
-
-            except CorruptLine:
-                print('Problem at some initial population lines')
-            except OutOfGrid:
-                print('Some initial population values' +
-                      ' fall outside of the defined grid')
-
+                                                                    ipop_spec[j+2]])
+                                
         models = f_lines[0].split()[1:]
         if len(models) > 0:
             for i, model_path in enumerate(models):
@@ -298,17 +290,15 @@ class layout:
 
             self.global_diff = float(re.findall(r'\S+', f_lines[lin_diff].
                                                 strip())[1])
-            try:
-                for i in range(lin_diff+1, lin_diff_end):
-                    diff_spec = [float(x) for x in f_lines[i].split()]
-                    if diff_spec[0] > len(self.media.metabolite)-1:
-                        raise UnallocatedMetabolite
-                    else:
-                        self.media.loc[int(diff_spec[0]),
-                                       'diff_c'] = diff_spec[1]
-            except UnallocatedMetabolite:
-                print('\n ERROR UnallocatedMetabolite: Some diffusion ' +
-                      'values correspond to unallocated metabolites')
+            
+            for i in range(lin_diff+1, lin_diff_end):
+                diff_spec = [float(x) for x in f_lines[i].split()]
+                if diff_spec[0] > len(self.media.metabolite)-1:
+                    print('\n Warning: Corrupt line ' + str(i) + ' in diffusion' +
+                          'values. \nLine not written. Check your layout file.')
+                else:
+                    self.media.loc[int(diff_spec[0]),
+                                   'diff_c'] = diff_spec[1]
 
         self.__local_media_flag = False
         if 'MEDIA' in set(filedata_string.upper().strip().split()):
@@ -317,59 +307,25 @@ class layout:
                          if f_lines[x].strip().split()[0].upper() ==
                          'MEDIA'][0]+1
             lin_media_end = next(x for x in end_blocks if x > lin_media)
-            try:
-                for i in range(lin_media, lin_media_end):
-                    media_spec = [float(x) for x in f_lines[i].split()]
-                    if len(media_spec) != len(self.media.metabolite)+2:
-                        raise CorruptLine
-                    elif (media_spec[0] >= self.grid[0] or
-                          media_spec[1] >= self.grid[1]):
-                        raise OutOfGrid
-                    else:
-                        loc = (int(media_spec[0]), int(media_spec[1]))
-                        self.local_media[loc] = {}
-                        media_spec = media_spec[2:]
-                        for j in range(len(media_spec)):
-                            if media_spec[j] != 0:
-                                self.local_media[loc][
-                                    self.all_exchanged_mets[j]] = media_spec[j]
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Some local "media" lines ' +
-                      'have a wrong number of entries')
-            except OutOfGrid:
-                print('\n ERROR OutOfGrid: Some local "media" lines ' +
-                      'have coordinates that fall outside of the ' +
-                      '\ndefined ' + 'grid')
 
-        self.__local_media_flag = False
-        if 'MEDIA' in set(filedata_string.upper().strip().split()):
-            self.__local_media_flag = True
-            lin_media = [x for x in range(len(f_lines)) if
-                         f_lines[x].strip().split()[0].upper() == 'MEDIA'][0]+1
-            lin_media_end = next(x for x in end_blocks if x > lin_media)
-            try:
-                for i in range(lin_media, lin_media_end):
-                    media_spec = [float(x) for x in f_lines[i].split()]
-                    if len(media_spec) != len(self.media.metabolite)+2:
-                        raise CorruptLine
-                    elif (media_spec[0] >= self.grid[0] or
-                          media_spec[1] >= self.grid[1]):
-                        raise OutOfGrid
-                    else:
-                        loc = (int(media_spec[0]), int(media_spec[1]))
-                        self.local_media[loc] = {}
-                        media_spec = media_spec[2:]
-                        for j in range(len(media_spec)):
-                            if media_spec[j] != 0:
-                                self.local_media[loc][
-                                    self.all_exchanged_mets[j]] = media_spec[j]
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Some local "media" lines ' +
-                      'have a wrong number of entries')
-            except OutOfGrid:
-                print('\n ERROR OutOfGrid: Some local "media" lines ' +
-                      'have coordinates that fall outside of the ' +
-                      '\ndefined ' + 'grid')
+            for i in range(lin_media, lin_media_end):
+                media_spec = [float(x) for x in f_lines[i].split()]
+                if len(media_spec) != len(self.media.metabolite)+2:
+                    print('\nWarning: Some local "media" lines are corrupt\n ' +
+                          '(wrong number of entries). Check your layout file.')
+                elif (media_spec[0] >= self.grid[0] or
+                      media_spec[1] >= self.grid[1]):
+                    print('\nWarning: Some local "media" lines are corrupt\n' +
+                          '(coordinates outside of the defined grid)\n' +
+                          'Check your layout file')                    
+                else:
+                    loc = (int(media_spec[0]), int(media_spec[1]))
+                    self.local_media[loc] = {}
+                    media_spec = media_spec[2:]
+                    for j in range(len(media_spec)):
+                        if media_spec[j] != 0:
+                            self.local_media[loc][
+                                self.all_exchanged_mets[j]] = media_spec[j]
 
         # '''----------- MEDIA REFRESH----------------------------------'''
         # .. global refresh values
@@ -382,80 +338,72 @@ class layout:
 
             g_refresh = [float(x) for x in f_lines[lin_refr].split()[1:]]
 
-            try:
-                if len(g_refresh) != len(media_names):
-                    raise CorruptLine
-                else:
-                    self.media['g_refresh'] = g_refresh
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Number of global refresh ' +
-                      'values does not match number of \nmedia ' +
-                      'metabolites in provided layout file')
+            if len(g_refresh) != len(media_names):
+                print('\nWarning: Some local refresh lines are corrupt\n ' +
+                      '(wrong number of entries). Check your layout file.')
+                
+            else:
+                self.media['g_refresh'] = g_refresh
 
             # .. local refresh values
             lin_refr += 1
-            try:
-                for i in range(lin_refr, lin_refr_end):
-                    refr_spec = [float(x) for x in f_lines[i].split()]
-                    if len(refr_spec) != len(self.media.metabolite)+2:
-                        raise CorruptLine
-                    elif (refr_spec[0] >= self.grid[0] or
-                          refr_spec[1] >= self.grid[1]):
-                        raise OutOfGrid
-                    else:
-                        loc = (int(refr_spec[0]), int(refr_spec[1]))
-                        self.local_refresh[loc] = {}
-                        refr_spec = refr_spec[2:]
-                        for j in range(len(refr_spec)):
-                            if refr_spec[j] != 0:
-                                self.local_refresh[loc][
-                                    self.all_exchanged_mets[j]] = refr_spec[j]
 
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Some local "refresh" lines ' +
-                      'have a wrong number of entries')
-            except OutOfGrid:
-                print('\n ERROR OutOfGrid: Some local "refresh" lines ' +
-                      'have coordinates that fall outside of the ' +
-                      '\ndefined ' + 'grid')
+            for i in range(lin_refr, lin_refr_end):
+                refr_spec = [float(x) for x in f_lines[i].split()]
+                if len(refr_spec) != len(self.media.metabolite)+2:
+                    print('\nWarning: Some local "refresh" lines are corrupt\n ' +
+                          '(wrong number of entries). Check your layout file.')
+                    
+                elif (refr_spec[0] >= self.grid[0] or
+                      refr_spec[1] >= self.grid[1]):
+                    print('\nWarning: Some local "refresh" lines are corrupt\n' +
+                          '(coordinates outside of the defined grid)\n' +
+                          'Check your layout file')
+                else:
+                    loc = (int(refr_spec[0]), int(refr_spec[1]))
+                    self.local_refresh[loc] = {}
+                    refr_spec = refr_spec[2:]
+                    for j in range(len(refr_spec)):
+                        if refr_spec[j] != 0:
+                            self.local_refresh[loc][
+                                self.all_exchanged_mets[j]] = refr_spec[j]
 
         # region-based information (substrate diffusivity,friction, layout)
         self.__region_flag = False
-        try:
-            if 'SUBSTRATE_LAYOUT' in filedata_string.upper():
-                lin_substrate = re.split('SUBSTRATE_LAYOUT',
-                                         filedata_string.upper())[0].count('\n')
-                lin_substrate_end = next(x for x in end_blocks if x > lin_substrate)
-                region_map_data = []
-                for i in range(lin_substrate+1, lin_substrate_end):
-                    region_map_data.append([int(x) for x in f_lines[i].split()])
+
+        if 'SUBSTRATE_LAYOUT' in filedata_string.upper():
+            lin_substrate = re.split('SUBSTRATE_LAYOUT',
+                                     filedata_string.upper())[0].count('\n')
+            lin_substrate_end = next(x for x in end_blocks if x > lin_substrate)
+            region_map_data = []
+            for i in range(lin_substrate+1, lin_substrate_end):
+                region_map_data.append([int(x) for x in f_lines[i].split()])
                 region_map_data = np.array(region_map_data, dtype=int)
                 if region_map_data.shape != tuple(self.grid):
-                    raise CorruptLine
+                    print('\nWarning: Some substrate_layout lines are ' +
+                          ' longer or shorter than the grid width, or there are more' +
+                          ' lines than the grid length. Check your layout file.' +
+                          'Check your layout file.')
                 self.__region_flag = True
                 self.region_map = region_map_data
-        except CorruptLine:
-            print('\n ERROR CorruptLine: Some substrate_layout lines are ' +
-                  ' longer or shorter than the grid width, or there are more' +
-                  ' lines than the grid length')
 
-        try:
-            if 'SUBSTRATE_DIFFUSIVITY' in filedata_string.upper():
-                lin_substrate = re.split('SUBSTRATE_DIFFUSIVITY',
-                                         filedata_string.upper())[0].count('\n')
-                lin_substrate_end = next(x for x in end_blocks if x > lin_substrate)
-                self.region_parameters = {}
-                region = 1
-                for i in range(lin_substrate+1, lin_substrate_end):
-                    self.region_parameters[region] = [None, None]
-                    self.region_parameters[region][0] = [float(x)
-                                                         for x in f_lines[i].split()]
-                    if len(self.region_parameters[region][0]) != len(self.media.metabolite):
-                        raise CorruptLine
-                    region += 1
-        except CorruptLine:
-            print('\n ERROR CorruptLine: Some substrate_diffusivity lines are ' +
-                  ' longer or shorter than the number of metabolites')
+        if 'SUBSTRATE_DIFFUSIVITY' in filedata_string.upper():
+            lin_substrate = re.split('SUBSTRATE_DIFFUSIVITY',
+                                     filedata_string.upper())[0].count('\n')
+            lin_substrate_end = next(x for x in end_blocks if x > lin_substrate)
+            self.region_parameters = {}
+            region = 1
+            for i in range(lin_substrate+1, lin_substrate_end):
+                self.region_parameters[region] = [None, None]
+                self.region_parameters[region][0] = [float(x)
+                                                     for x in f_lines[i].split()]
+                if len(self.region_parameters[
+                        region][0]) != len(self.media.metabolite):
+                    print('\nWarning: Some substrate_diffusivity lines are ' +
+                          ' longer or shorter than the number of metabolites\n' +
+                          'Check your layout file.')
+                region += 1
+
         if 'SUBSTRATE_FRICTION' in filedata_string.upper():
             lin_substrate = re.split('SUBSTRATE_FRICTION',
                                      filedata_string.upper())[0].count('\n')
@@ -475,43 +423,36 @@ class layout:
             lin_stat_end = next(x for x in end_blocks if x > lin_static)
 
             g_static = [float(x) for x in f_lines[lin_static].split()[1:]]
-            try:
-                if len(g_static) != 2*len(self.media.metabolite):
-                    raise CorruptLine
-                else:
-                    self.media.loc[:, 'g_static'] = [int(x)
-                                                     for x in g_static[0::2]]
-                    self.media.loc[:, 'g_static_val'] = [float(x) for x in
-                                                         g_static[1::2]]
-            except CorruptLine:
-                print('\nERROR CorruptLine: Wrong number of global ' +
-                      'static values')
+
+            if len(g_static) != 2*len(self.media.metabolite):
+                print('\nWarning: Wrong number of global static values .\n' +
+                      'Check your layout file')
+                
+            else:
+                self.media.loc[:, 'g_static'] = [int(x)
+                                                 for x in g_static[0::2]]
+                self.media.loc[:, 'g_static_val'] = [float(x) for x in
+                                                     g_static[1::2]]
 
             # .. local static values
             lin_static += 1
-            try:
-                for i in range(lin_static, lin_stat_end):
-                    stat_spec = [float(x) for x in f_lines[i].split()]
-                    if len(stat_spec) != (2*len(self.media.metabolite))+2:
-                        raise CorruptLine
-                    elif (stat_spec[0] >= self.grid[0] or
-                          stat_spec[1] >= self.grid[1]):
-                        raise OutOfGrid
-                    else:
-                        loc = (int(stat_spec[0]), int(stat_spec[1]))
-                        self.local_static[loc] = {}
-                        stat_spec = stat_spec[2:]
-                        for j in range(int(len(stat_spec)/2)):
-                            if stat_spec[j*2] != 0:
-                                self.local_static[loc][
-                                    self.all_exchanged_mets[j]] = stat_spec[j*2+1]
-
-            except CorruptLine:
-                print('\n ERROR CorruptLine: Wrong number of local static ' +
-                      'values at some lines')
-            except OutOfGrid:
-                print('\n ERROR OutOfGrid: Some local "static" lines have ' +
-                      ' coordinates that fall outside of the defined grid')
+            for i in range(lin_static, lin_stat_end):
+                stat_spec = [float(x) for x in f_lines[i].split()]
+                if len(stat_spec) != (2*len(self.media.metabolite))+2:
+                    print('\nWarning: Wrong number of local static values at some\n' +
+                          'lines. Check your layout file.')
+                elif (stat_spec[0] >= self.grid[0] or
+                      stat_spec[1] >= self.grid[1]):
+                    print('\nWarning: Some local "static" lines have coordinates\n' +
+                          'that fall outside of the defined grid. Check your layout file')
+                else:
+                    loc = (int(stat_spec[0]), int(stat_spec[1]))
+                    self.local_static[loc] = {}
+                    stat_spec = stat_spec[2:]
+                    for j in range(int(len(stat_spec)/2)):
+                        if stat_spec[j*2] != 0:
+                            self.local_static[loc][
+                                self.all_exchanged_mets[j]] = stat_spec[j*2+1]
 
     def get_model_ids(self):
         ids = [x.id for x in self.models]
@@ -523,8 +464,8 @@ class layout:
 
     def write_model_files(self, working_dir=""):
         '''writes each model file'''
-        for model in self.models:
-            model.write_comets_model(working_dir)
+        for m in self.models:
+            m.write_comets_model(working_dir)
 
     def display_current_media(self):
         print(self.media[self.media['init_amount'] != 0.0])
