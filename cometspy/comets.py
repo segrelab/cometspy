@@ -42,37 +42,6 @@ def readlines_file(filename):
     return f_lines
 
 
-def chemostat(models, reservoir_media, dilution_rate):
-    """ Builds typical layout and parameters for a chemostat simulation
-
-    Returns a layout object and a parameters object with the given
-    models, reservoir_media, and dilution_rate in a chemostat-like
-    experiment. The layout and parameters can be then further modified
-    to adress specific needs.
-
-    Args:
-      models:  a list of comets models, with initial_pop pre-assigned
-      reservoir_media: a dictionary where keys are extracellular
-        metabolite names and the values are their concentration in the media
-      dilution_rate: a float between zero and 1 specifying the per-hour
-        dilution rate
-
-    Returns:
-      layout
-      parameters
-
-    """
-    mylayout = layout(models)
-
-    for key, value in reservoir_media.items():
-        mylayout.set_specific_metabolite(key, value)
-        mylayout.set_specific_refresh(key, value * dilution_rate)
-
-    parameters = params()
-    parameters.all_params['metaboliteDilutionRate'] = dilution_rate
-    parameters.all_params['deathRate'] = dilution_rate
-
-    return(mylayout, parameters)
 
 
 class comets:
