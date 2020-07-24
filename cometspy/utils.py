@@ -6,6 +6,10 @@ The utils module contains helper functions for running COMETS simulations
 For more information see https://segrelab.github.io/comets-manual/
 """
 
+from .layout import layout
+from .params import params
+import random
+
 def pick_random_locations(n, xrange, yrange, forbidden_locs = set()):
     pickable_locs = [(x,y) for x in range(xrange[0], xrange[1]) for y in range(yrange[0], yrange[1])]
     pickable_locs = list(set(pickable_locs).difference(set(forbidden_locs)))
@@ -20,7 +24,7 @@ def pick_random_locations(n, xrange, yrange, forbidden_locs = set()):
 def grow_rocks(n, xrange, yrange, mean_size):
     grow_points = n * mean_size - n
     locs = pick_random_locations(n, xrange, yrange)
-    if n*mean_size > (xrange[1]-xrange[0]) * (yrange[1]-yrange[0]):
+    if (n*mean_size) > ((xrange[1]-xrange[0]) * (yrange[1]-yrange[0])):
         print("more rocks asked for than space possible, try again")
         return
     while grow_points > 0:
@@ -50,23 +54,7 @@ def grow_rocks(n, xrange, yrange, mean_size):
     return(locs)
 
 def chemostat(models, reservoir_media, dilution_rate):
-    """ this returns a layout object and a parameters object setup to use the
-    given models, reservoir_media, and dilution_rate in a chemostat-like
-    experiment
-
-    @argument models:  a list of comets models, with initial_pop pre-assigned
-    @argument reservoir_media: a dictionary where keys are extracellular
-    metabolite names and the values are their concentration in the media
-    @argument dilution_rate: a float between zero and 1 specifying the per-hour
-    dilution rate
-
-    returns (layout, parameters)
-
-    then one can either do additional edits or use these files to generate
-    a comets object
-    """
     mylayout = layout(models)
-
     for key, value in reservoir_media.items():
         mylayout.set_specific_metabolite(key, value)
         mylayout.set_specific_refresh(key, value * dilution_rate)
@@ -74,5 +62,3 @@ def chemostat(models, reservoir_media, dilution_rate):
     parameters = params()
     parameters.all_params['metaboliteDilutionRate'] = dilution_rate
     parameters.all_params['deathRate'] = dilution_rate
-
-    return(mylayout, parameters)

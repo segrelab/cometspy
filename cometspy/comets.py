@@ -271,6 +271,9 @@ class comets:
                                            header=None, delimiter=r'\s+',
                                            names=['cycle', 'x', 'y',
                                                   'species', 'biomass'])
+                # cut off extension added by toolbox
+                self.biomass['species'] = [sp[:-4] if '.cmd' in sp else sp for sp in self.biomass.species]
+
                 if delete_files:
                     os.remove(biomass_out_file)
 
@@ -343,14 +346,15 @@ class comets:
     def get_biomass_image(self, model_id, cycle):
         if not self.parameters.all_params['writeBiomassLog']:
             raise ValueError("biomass log was not recorded during simulation")
-        if model_id not in [m.id for m in self.layout.models]:
-            raise NameError("model " + model_id + " is not one of the model ids")
+        if model_id not in list(np.unique(self.biomass['species'])):
+            raise NameError("model " + model.id + " is not one of the model ids")
         if cycle not in list(np.unique(self.biomass['cycle'])):
             raise ValueError('biomass was not saved at the desired cycle. try another.')
         im = np.zeros((self.layout.grid[0], self.layout.grid[1]))
-        aux = self.biomass.loc[self.biomass['cycle'] == cycle, :]
+        aux = self.biomass.loc[np.logical_and(self.biomass['cycle'] == cycle,
+                                    self.biomass['species'] == model_id), :]
         for index, row in aux.iterrows():
-            im[int(row['x']-1), int(row['y']-1)] = row[model_id]
+            im[int(row['x']-1), int(row['y']-1)] = row['biomass']
         return(im)
 
     def get_flux_image(self, model_id, reaction_id, cycle):
