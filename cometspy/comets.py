@@ -42,37 +42,6 @@ def readlines_file(filename):
     return f_lines
 
 
-def chemostat(models, reservoir_media, dilution_rate):
-    """ Builds typical layout and parameters for a chemostat simulation
-
-    Returns a layout object and a parameters object with the given
-    models, reservoir_media, and dilution_rate in a chemostat-like
-    experiment. The layout and parameters can be then further modified
-    to adress specific needs.
-
-    Args:
-      models:  a list of comets models, with initial_pop pre-assigned
-      reservoir_media: a dictionary where keys are extracellular
-        metabolite names and the values are their concentration in the media
-      dilution_rate: a float between zero and 1 specifying the per-hour
-        dilution rate
-
-    Returns:
-      layout
-      parameters
-
-    """
-    mylayout = layout(models)
-
-    for key, value in reservoir_media.items():
-        mylayout.set_specific_metabolite(key, value)
-        mylayout.set_specific_refresh(key, value * dilution_rate)
-
-    parameters = params()
-    parameters.all_params['metaboliteDilutionRate'] = dilution_rate
-    parameters.all_params['deathRate'] = dilution_rate
-
-    return(mylayout, parameters)
 
 
 class comets:
@@ -302,6 +271,9 @@ class comets:
                                            header=None, delimiter=r'\s+',
                                            names=['cycle', 'x', 'y',
                                                   'species', 'biomass'])
+                # cut off extension added by toolbox
+                self.biomass['species'] = [sp[:-4] if '.cmd' in sp else sp for sp in self.biomass.species]
+
                 if delete_files:
                     os.remove(biomass_out_file)
 
@@ -374,14 +346,15 @@ class comets:
     def get_biomass_image(self, model_id, cycle):
         if not self.parameters.all_params['writeBiomassLog']:
             raise ValueError("biomass log was not recorded during simulation")
-        if model_id not in [m.id for m in self.layout.models]:
-            raise NameError("model " + model_id + " is not one of the model ids")
+        if model_id not in list(np.unique(self.biomass['species'])):
+            raise NameError("model " + model.id + " is not one of the model ids")
         if cycle not in list(np.unique(self.biomass['cycle'])):
             raise ValueError('biomass was not saved at the desired cycle. try another.')
         im = np.zeros((self.layout.grid[0], self.layout.grid[1]))
-        aux = self.biomass.loc[self.biomass['cycle'] == cycle, :]
+        aux = self.biomass.loc[np.logical_and(self.biomass['cycle'] == cycle,
+                                    self.biomass['species'] == model_id), :]
         for index, row in aux.iterrows():
-            im[int(row['x']-1), int(row['y']-1)] = row[model_id]
+            im[int(row['x']-1), int(row['y']-1)] = row['biomass']
         return(im)
 
     def get_flux_image(self, model_id, reaction_id, cycle):

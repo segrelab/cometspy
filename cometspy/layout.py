@@ -893,6 +893,23 @@ class layout:
                 curr_line[i+2] = pop[2]
                 initial_pop.append(curr_line)
         self.initial_pop = initial_pop
+        self._resolve_initial_pop_line_dups()
+        
+    def _resolve_initial_pop_line_dups(self):
+        # sometimes each model has the same x,y, this resolves that
+        init_pop = self.initial_pop
+        init_pop_dict = {}
+        for row in init_pop:
+            if tuple(row[0:2]) in init_pop_dict.keys():
+                init_pop_dict[tuple(row[0:2])] += np.array(row[2:])
+            else:
+                init_pop_dict[tuple(row[0:2])] = np.array(row[2:])
+        init_pop_fixed = []
+        for key, value in init_pop_dict.items():
+            loc = list(key)
+            loc.extend(list(value))
+            init_pop_fixed.append(loc)
+        self.initial_pop = init_pop_fixed
 
     def add_new_mets_to_media(self):
         # usually run right after build_exchange mets, to add any new mets

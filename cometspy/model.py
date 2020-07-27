@@ -158,6 +158,18 @@ class model:
             raise ValueError('noiseVariance must be a float')
         self.noise_variance_flag = True
         self.noise_variance = noiseVariance
+        
+    def ensure_sinks_are_not_exchanges(self):
+        """ many BiGG models have sink reactions which look like exchanges (i.e. they
+        are unbalanced).  This function sets any reaction which ends in _c to be not an exchange"""
+        rxn_names = [rxn for rxn in self.reactions.REACTION_NAMES.to_list() if rxn[-2:] == '_c']
+        for rxn in rxn_names:
+            self.reactions.loc[self.reactions.REACTION_NAMES == rxn, 'EXCH'] = False
+            self.reactions.loc[self.reactions.REACTION_NAMES == rxn, 'EXCH_IND'] = 0
+
+    def open_exchanges(self, lower_bound = -1000, upper_bound = 1000):
+        self.reactions.loc[self.reactions.EXCH,'LB'] = lower_bound
+        self.reactions.loc[self.reactions.EXCH,'UB'] = upper_bound
 
     def get_exchange_metabolites(self):
         """ useful for layouts to grab these and get the set of them """
