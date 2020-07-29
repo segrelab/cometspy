@@ -1,2 +1,24 @@
-# COMETS Python Toolbox
-Python interface for running COMETS simulations and analyzing the results
+
+
+[![Current PyPI version](https://img.shields.io/pypi/v/cometspy.svg)(https://pypi.org/project/cometspy/)
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/cometspy.svg)(https://pypi.org/project/cometspy/)
+[![Join the chat at https://gitter.im/segrelab/comets](https://badges.gitter.im/segrelab/comets.png)](https://gitter.im/segrelab/comets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![GitHub release](https://img.shields.io/github/release/segrelab/cometspy/all.svg)](https://GitHub.com/segrelab/cometspy/releases/)
+
+# COMETSPy - The Python Interface for COMETS
+COMETSPY is the Python interface for running [COMETS](https://GitHub.com/segrelab/comets) simulations. COMETS is built and maintained by the COMETSPy Core Team. 
+
+# Documentation
+Documentation on how to use COMETS with COMETSPy is found at [comets-manual.readthedocs.io](https://comets-manual.readthedocs.io/en/latest/).
+
+# Installation
+Use pip to install COMETSPy from PyPI:
+
+```py
+pip3 install cometspy
+```
+
+# Cite us
+
+# Contributing
+Contributions are welcome and appreciated. Questions and discussions can be raised on [Gitter](https://gitter.im/segrelab/comets). Issues should be discussed in this forum before they are raised on GitHub. For other questions contact us on email comets@bu.edu.

@@ -3,13 +3,13 @@ from distutils.core import setup
 setup(
   name='cometspy',
   packages=['cometspy'],
-  version='0.3.6',
-  license='MIT',
+  version='0.3.7',
+  license='GPL',
   description='The Python interface to COMETS',
   author='The COMETSPy Core Team',
   author_email='djordje.bajic@yale.edu',
   url='https://github.com/segrelab/cometspy',
-  download_url='https://github.com/segrelab/cometspy/archive/v0.3.6.tar.gz',  # New releases here!! 
+  download_url='https://github.com/segrelab/cometspy/archive/v0.3.7.tar.gz',  # New releases here!! 
   keywords=['metabolism', 'dynamic', 'flux', 'balance', 'analysis', 'spatial'],
   install_requires=[
       # I get to this in a second
