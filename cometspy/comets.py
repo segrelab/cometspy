@@ -9,6 +9,7 @@ import re
 import subprocess as sp
 import pandas as pd
 import os
+import glob
 import numpy as np
 from cometspy.layout import layout
 from cometspy.params import params
@@ -17,22 +18,10 @@ __author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon"
 __copyright__ = "Copyright 2019, The COMETS Consortium"
 __credits__ = ["Djordje Bajic", "Jean Vila", "Jeremy Chacon"]
 __license__ = "MIT"
-__version__ = "0.3.0"
+__version__ = "0.3.7"
 __maintainer__ = "Djordje Bajic"
 __email__ = "djordje.bajic@yale.edu"
 __status__ = "Beta"
-
-
-class CorruptLine(Exception):
-    pass
-
-
-class OutOfGrid(Exception):
-    pass
-
-
-class UnallocatedMetabolite(Exception):
-    pass
 
 
 def readlines_file(filename):
@@ -40,8 +29,6 @@ def readlines_file(filename):
     f_lines = f.readlines()
     f.close()
     return f_lines
-
-
 
 
 class comets:
@@ -56,8 +43,9 @@ class comets:
         self.working_dir = os.getcwd() + '/' + working_dir
         self.GUROBI_HOME = os.environ['GUROBI_HOME']
         self.COMETS_HOME = os.environ['COMETS_HOME']
-
-        self.VERSION = 'comets_evo'
+        
+        self.VERSION = os.path.splitext(os.listdir(os.environ['COMETS_HOME'] +
+                                                   '/bin')[0])[0]
 
         # set default classpaths, which users may change
         self.build_default_classpath_pieces()
@@ -84,44 +72,60 @@ class comets:
         self.classpath_pieces = {}
         self.classpath_pieces['gurobi'] = (self.GUROBI_HOME +
                                            '/gurobi.jar')
-        self.classpath_pieces['junit'] = (self.COMETS_HOME +
-                                          '/lib/junit/junit-4.12.jar')
-        self.classpath_pieces['hamcrest'] = (self.COMETS_HOME +
-                                             '/lib/junit/hamcrest-core-1.3.jar')
-        self.classpath_pieces['jogl_all'] = (self.COMETS_HOME +
-                                             '/lib/jogl/jogamp-all-' +
-                                             'platforms/jar/jogl-all.jar')
-        self.classpath_pieces['gluegen_rt'] = (self.COMETS_HOME +
-                                               '/lib/jogl/jogamp-all-' +
-                                               'platforms/jar/gluegen-rt.jar')
-        self.classpath_pieces['gluegen'] = (self.COMETS_HOME +
-                                            '/lib/jogl/jogamp-all-' +
-                                            'platforms/jar/gluegen.jar')
-        self.classpath_pieces['gluegen_rt_natives'] = (self.COMETS_HOME +
-                                                       '/lib/jogl/jogamp-' +
-                                                       'all-platforms/jar/' +
-                                                       'gluegen-rt-natives-' +
-                                                       'linux-amd64.jar')
-        self.classpath_pieces['jogl_all_natives'] = (self.COMETS_HOME +
-                                                     '/lib/jogl/' +
-                                                     'jogamp-all-platforms/' +
-                                                     'jar/jogl-all-natives-' +
-                                                     'linux-amd64.jar')
-        self.classpath_pieces['jmatio'] = (self.COMETS_HOME +
-                                           '/lib/JMatIO/lib/jamtio.jar')
-        self.classpath_pieces['jmat'] = (self.COMETS_HOME +
-                                         '/lib/JMatIO/JMatIO-041212/' +
-                                         'lib/jmatio.jar')
-        self.classpath_pieces['concurrent'] = (self.COMETS_HOME +
-                                               '/lib/colt/lib/concurrent.jar')
-        self.classpath_pieces['colt'] = (self.COMETS_HOME +
-                                         '/lib/colt/lib/colt.jar')
-        self.classpath_pieces['lang3'] = (self.COMETS_HOME +
-                                          '/lib/commons-lang3-3.7/' +
-                                          'commons-lang3-3.7.jar')
-        self.classpath_pieces['math3'] = (self.COMETS_HOME +
-                                          '/lib/commons-math3-3.6.1/' +
-                                          'commons-math3-3.6.1.jar')
+
+        self.classpath_pieces['junit'] = glob.glob(self.COMETS_HOME +
+                                                   '/lib/junit' + '/**/*junit*',
+                                                   recursive=True)[0]
+        self.classpath_pieces['hamcrest'] = glob.glob(self.COMETS_HOME +
+                                                      '/lib' + '/**/*hamcrest*',
+                                                      recursive=True)[0]
+
+        self.classpath_pieces['jogl_all'] = glob.glob(self.COMETS_HOME +
+                                                      '/lib' + '/**/jogl-all.jar',
+                                                      recursive=True)[0]
+        self.classpath_pieces['gluegen_rt'] = glob.glob(self.COMETS_HOME +
+                                                      '/lib' + '/**/gluegen-rt.jar',
+                                                      recursive=True)[0]
+        self.classpath_pieces['gluegen'] = glob.glob(self.COMETS_HOME +
+                                                      '/lib' + '/**/gluegen.jar',
+                                                      recursive=True)[0]
+        self.classpath_pieces['gluegen_rt_natives'] = glob.glob(
+            self.COMETS_HOME + '/lib' + '/**/gluegen-rt-natives-linux-amd64.jar'),
+        recursive=True)[0]        
+        self.classpath_pieces['jogl_all_natives'] = glob.glob(
+            self.COMETS_HOME + '/lib' + '/**/jogl-all-natives-linux-amd64.jar'),
+        recursive=True)[0]
+
+        self.classpath_pieces['jmatio'] = glob.glob(self.COMETS_HOME +
+                                                      '/lib' + '/**/jamtio.jar',
+                                                      recursive=True)[0]
+        self.classpath_pieces['jmat'] = glob.glob(self.COMETS_HOME +
+                                                      '/lib' + '/**/jmatio.jar',
+                                                      recursive=True)[0]
+
+        self.classpath_pieces['concurrent'] = glob.glob(self.COMETS_HOME +
+                                                      '/lib' + '/**/concurrent.jar',
+                                                      recursive=True)[0]
+        self.classpath_pieces['colt'] = glob.glob(self.COMETS_HOME +
+                                                      '/lib' + '/**/colt.jar',
+                                                      recursive=True)[0]
+
+        __lang3 = glob.glob(self.COMETS_HOME +
+                            '/lib' + '/**/commons-lang3*jar',
+                            recursive=True)
+        self.classpath_pieces['lang3'] = [i for i in __lang3
+                                          if 'test' not in i
+                                          and 'sources' not in i][0]
+
+        __math3 = glob.glob(self.COMETS_HOME +
+                            '/lib' + '/**/commons-math3*jar',
+                            recursive=True)
+        self.classpath_pieces['math3'] = [i for i in __math3
+                                          if 'test' not in i
+                                          and 'sources' not in i
+                                          and 'tools' not in i
+                                          and 'javadoc' not in i][0]
+
         self.classpath_pieces['bin'] = (self.COMETS_HOME +
                                         '/bin/' + self.VERSION + '.jar')
 
