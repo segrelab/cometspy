@@ -1,23 +1,25 @@
 from distutils.core import setup
 from os import path
 
-# read the contents of your README file
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md')) as f:
-    long_description = f.read()
-
 setup(
     name='cometspy',
     packages=['cometspy'],
-    version='0.3.8',
+    version='0.3.9',
     license='GPL',
     description='The Python interface to COMETS',
-    long_description=long_description,
+    long_description='''
+COMETSPY is the Python interface for running [COMETS](https://GitHub.com/segrelab/comets)
+ simulations. COMETS is built and maintained by the COMETSPy Core Team.
+
+# Documentation
+Documentation on how to use COMETS with COMETSPy is found at
+ [comets-manual.readthedocs.io](https://comets-manual.readthedocs.io/en/latest/).
+''',
     long_description_content_type='text/markdown',    
     author='The COMETSPy Core Team',
     author_email='djordje.bajic@yale.edu',
     url='https://github.com/segrelab/cometspy',
-    download_url='https://github.com/segrelab/cometspy/archive/v0.3.8.tar.gz',  # New releases here!! 
+    download_url='https://github.com/segrelab/cometspy/archive/v0.3.9.tar.gz',  # New releases here!! 
     keywords=['metabolism', 'dynamic', 'flux', 'balance', 'analysis', 'spatial', 'evolution'],
     install_requires=[
         # I get to this in a second
@@ -32,5 +34,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
 )
