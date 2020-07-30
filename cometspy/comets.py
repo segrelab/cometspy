@@ -69,7 +69,7 @@ class comets:
     def build_default_classpath_pieces(self):
         self.classpath_pieces = {}
         self.classpath_pieces['gurobi'] = (self.GUROBI_HOME +
-                                           '/gurobi.jar')
+                                           '/lib/gurobi.jar')
 
         self.classpath_pieces['junit'] = glob.glob(self.COMETS_HOME +
                                                    '/lib/junit' + '/**/*junit*',
@@ -124,8 +124,12 @@ class comets:
                                           and 'tools' not in i
                                           and 'javadoc' not in i][0]
 
+        self.classpath_pieces['jdistlib'] = glob.glob(self.COMETS_HOME +
+                                                      '/lib' + '/**/*jdistlib*',
+                                                      recursive=True)[0]
         self.classpath_pieces['bin'] = (self.COMETS_HOME +
                                         '/bin/' + self.VERSION + '.jar')
+
 
     def build_and_set_classpath(self):
         ''' builds the JAVA_CLASSPATH from the pieces currently in
