@@ -7,3 +7,4 @@ cometspy/comets.py
 cometspy/layout.py
 cometspy/model.py
 cometspy/params.py
+cometspy/utils.py

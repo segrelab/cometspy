@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-
-'''
-The comets module runs COMETS simulations and stores output. 
-For more information see https://segrelab.github.io/comets-manual/
-'''
 
 import re
 import subprocess as sp
@@ -11,8 +5,13 @@ import pandas as pd
 import os
 import glob
 import numpy as np
-from cometspy.layout import layout
-from cometspy.params import params
+# from cometspy.layout import layout
+# from cometspy.params import params
+
+'''
+The comets module runs COMETS simulations and stores output. 
+For more information see https://segrelab.github.io/comets-manual/
+'''
 
 __author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon"
 __copyright__ = "Copyright 2019, The COMETS Consortium"
@@ -43,7 +42,6 @@ class comets:
         self.working_dir = os.getcwd() + '/' + working_dir
         self.GUROBI_HOME = os.environ['GUROBI_HOME']
         self.COMETS_HOME = os.environ['COMETS_HOME']
-        
         self.VERSION = os.path.splitext(os.listdir(os.environ['COMETS_HOME'] +
                                                    '/bin')[0])[0]
 
@@ -90,11 +88,11 @@ class comets:
                                                       '/lib' + '/**/gluegen.jar',
                                                       recursive=True)[0]
         self.classpath_pieces['gluegen_rt_natives'] = glob.glob(
-            self.COMETS_HOME + '/lib' + '/**/gluegen-rt-natives-linux-amd64.jar'),
-        recursive=True)[0]        
+            self.COMETS_HOME + '/lib' + '/**/gluegen-rt-natives-linux-amd64.jar',
+            recursive=True)[0]
         self.classpath_pieces['jogl_all_natives'] = glob.glob(
-            self.COMETS_HOME + '/lib' + '/**/jogl-all-natives-linux-amd64.jar'),
-        recursive=True)[0]
+            self.COMETS_HOME + '/lib' + '/**/jogl-all-natives-linux-amd64.jar',
+            recursive=True)[0]
 
         self.classpath_pieces['jmatio'] = glob.glob(self.COMETS_HOME +
                                                       '/lib' + '/**/jamtio.jar',
@@ -171,6 +169,7 @@ class comets:
         pieces. Saves the pieces where there is no file and returns them as a
         dictionary, where the key is the common name of the class library and
         the value is the path '''  #
+
         broken_pieces = {}         #
         for key, value in self.classpath_pieces.items():
             if not os.path.isfile(value):  #
