@@ -1,7 +1,6 @@
 
-
-[![Current PyPI version](https://img.shields.io/pypi/v/cometspy.svg)(https://pypi.org/project/cometspy/)
-[![Supported Python Versions](https://img.shields.io/pypi/pyversions/cometspy.svg)(https://pypi.org/project/cometspy/)
+[![Current PyPI version](https://img.shields.io/pypi/v/cometspy.svg)](https://pypi.org/project/cometspy/)
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/cometspy.svg)](https://pypi.org/project/cometspy/)
 [![Join the chat at https://gitter.im/segrelab/comets](https://badges.gitter.im/segrelab/comets.png)](https://gitter.im/segrelab/comets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub release](https://img.shields.io/github/release/segrelab/cometspy/all.svg)](https://GitHub.com/segrelab/cometspy/releases/)
 
