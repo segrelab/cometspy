@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 '''
 The model module handles COMETS models

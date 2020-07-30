@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 '''
 The params module handles COMETS simulation parameters.

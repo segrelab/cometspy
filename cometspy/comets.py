@@ -1,4 +1,9 @@
 
+'''
+The comets module runs COMETS simulations and stores output. 
+For more information see https://segrelab.github.io/comets-manual/
+'''
+
 import re
 import subprocess as sp
 import pandas as pd
@@ -7,11 +12,6 @@ import glob
 import numpy as np
 # from cometspy.layout import layout
 # from cometspy.params import params
-
-'''
-The comets module runs COMETS simulations and stores output. 
-For more information see https://segrelab.github.io/comets-manual/
-'''
 
 __author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon"
 __copyright__ = "Copyright 2019, The COMETS Consortium"

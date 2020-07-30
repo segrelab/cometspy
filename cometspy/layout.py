@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 '''
 The layout module handles COMETS simulation layouts, including
 media and spatial arrangement.
