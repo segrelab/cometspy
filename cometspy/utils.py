@@ -62,3 +62,4 @@ def chemostat(models, reservoir_media, dilution_rate):
     parameters = params()
     parameters.all_params['metaboliteDilutionRate'] = dilution_rate
     parameters.all_params['deathRate'] = dilution_rate
+    return((mylayout, parameters))
