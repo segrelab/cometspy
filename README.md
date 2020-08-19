@@ -9,7 +9,7 @@ COMETSPY is the Python interface for running [COMETS](https://GitHub.com/segrela
 
 COMETSPy is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-CometsPy is developed with non-commercial use in mind and is presented as-is. To inquire about collaborations or commercial usage and development, please contact us at <comets@bu,edu>.
+CometsPy is developed with non-commercial use in mind and is presented as-is. To inquire about collaborations or commercial usage and development, please contact us at <comets@bu.edu>.
 
 # Documentation
 Documentation on how to use COMETS with COMETSPy is found at [comets-manual.readthedocs.io](https://comets-manual.readthedocs.io/en/latest/).
