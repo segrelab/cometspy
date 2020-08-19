@@ -635,8 +635,8 @@ class layout:
         """ writes the top 3 lines  to the open lyt file"""
 
         model_file_line = "{}.cmd".format(".cmd ".join(self.get_model_ids())).split(" ")
-        model_file_line = [_ + " " for _ in model_file_line]
-        model_file_line = working_dir + working_dir.join(model_file_line)
+        model_file_line = "".join(["./" + _ + " " for _ in model_file_line])
+        #model_file_line = working_dir + working_dir.join(model_file_line)
         model_file_line = "model_file " + model_file_line + "\n"
         lyt.write(model_file_line)
         lyt.write('  model_world\n')
