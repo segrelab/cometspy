@@ -43,14 +43,14 @@ class comets:
         # define instance variables
         self.working_dir = os.getcwd() + '/' + working_dir
         try:
-            self.GUROBI_HOME = os.environ['COMETS_GUROBI_HOME']
+            self.GUROBI_HOME = os.environ['GUROBI_COMETS_HOME']
             os.environ['GUROBI_HOME'] = self.GUROBI_HOME
         except:
             try:
                 self.GUROBI_HOME = os.environ['GUROBI_HOME']
             except:
                 self.GUROBI_HOME = ''
-                print("could not find environmental variable COMETS_GUROBI_HOME or GUROBI_HOME")
+                print("could not find environmental variable GUROBI_COMETS_HOME or GUROBI_HOME")
                 print("COMETS will not work with GUROBI until this is solved. ")
                 print("Here is a solution:")
                 print("    1. import os and set os.environ['GUROBI_HOME'] then try to make a comets object again")
