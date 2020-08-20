@@ -31,6 +31,12 @@ class params:
         else:
             print('Parameter ' + name + ' does not exist')
 
+    def get_param(self, name):
+        if name in self.all_params:
+            return self.all_params[name]
+        else:
+            print('Parameter ' + name + ' does not exist')
+           
     def __init__(self, global_params=None, package_params=None):
         self.all_params = {'writeSpecificMediaLog': False,
                            'specificMediaLogRate': 1,
