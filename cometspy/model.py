@@ -602,13 +602,13 @@ class model:
 
             f.write('SMATRIX  ' + str(len(self.metabolites)) +
                     '  ' + str(len(self.reactions)) + '\n')
-            smat.to_csv(f, mode='a', header=False, index=False)
+            smat.to_csv(f, mode='a', line_terminator = '\n', header=False, index=False)
             f.write(r'//' + '\n')
 
             f.write('BOUNDS ' +
                     str(self.default_bounds[0]) + ' ' +
                     str(self.default_bounds[1]) + '\n')
-            bnd.to_csv(f, mode='a', header=False, index=False)
+            bnd.to_csv(f, mode='a', line_terminator = '\n', header=False, index=False)
             f.write(r'//' + '\n')
 
             f.write('OBJECTIVE\n' +
@@ -616,11 +616,11 @@ class model:
             f.write(r'//' + '\n')
 
             f.write('METABOLITE_NAMES\n')
-            met_n.to_csv(f, mode='a', header=False, index=False)
+            met_n.to_csv(f, mode='a', line_terminator = '\n', header=False, index=False)
             f.write(r'//' + '\n')
 
             f.write('REACTION_NAMES\n')
-            rxn_n.to_csv(f, mode='a', header=False, index=False)
+            rxn_n.to_csv(f, mode='a', line_terminator = '\n', header=False, index=False)
             f.write(r'//' + '\n')
 
             f.write('EXCHANGE_REACTIONS\n')
@@ -630,19 +630,19 @@ class model:
             if self.vmax_flag:
                 f.write('VMAX_VALUES ' +
                         str(self.default_vmax) + '\n')
-                Vmax.to_csv(f, mode='a', header=False, index=False)
+                Vmax.to_csv(f, mode='a', line_terminator = '\n', header=False, index=False)
                 f.write(r'//' + '\n')
 
             if self.km_flag:
                 f.write('KM_VALUES ' +
                         str(self.default_km) + '\n')
-                Km.to_csv(f, mode='a', header=False, index=False)
+                Km.to_csv(f, mode='a', line_terminator = '\n', header=False, index=False)
                 f.write(r'//' + '\n')
 
             if self.hill_flag:
                 f.write('HILL_VALUES ' +
                         str(self.default_hill) + '\n')
-                Hill.to_csv(f, mode='a', header=False, index=False)
+                Hill.to_csv(f, mode='a', line_terminator = '\n', header=False, index=False)
                 f.write(r'//' + '\n')
 
             if self.light_flag:
@@ -672,7 +672,7 @@ class model:
                     temp_df.loc[0, 'FUNCTION'] = row.loc['FUNCTION']
                     for i in range(n_parms):
                         temp_df.loc[0, str(i)] = sub_signals.PARAMETERS[idx][i]
-                    temp_df.to_csv(f, mode='a', sep=' ', header=False, index=False)
+                    temp_df.to_csv(f, mode='a', line_terminator = '\n', sep=' ', header=False, index=False)
                 f.write(r'//' + '\n')
 
             if self.convection_flag:

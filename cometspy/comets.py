@@ -10,6 +10,8 @@ import pandas as pd
 import os
 import glob
 import numpy as np
+import platform
+
 # from cometspy.layout import layout
 # from cometspy.params import params
 
@@ -40,7 +42,20 @@ class comets:
 
         # define instance variables
         self.working_dir = os.getcwd() + '/' + working_dir
-        self.GUROBI_HOME = os.environ['GUROBI_HOME']
+        try:
+            self.GUROBI_HOME = os.environ['GUROBI_COMETS_HOME']
+            os.environ['GUROBI_HOME'] = self.GUROBI_HOME
+        except:
+            try:
+                self.GUROBI_HOME = os.environ['GUROBI_HOME']
+            except:
+                self.GUROBI_HOME = ''
+                print("could not find environmental variable GUROBI_COMETS_HOME or GUROBI_HOME")
+                print("COMETS will not work with GUROBI until this is solved. ")
+                print("Here is a solution:")
+                print("    1. import os and set os.environ['GUROBI_HOME'] then try to make a comets object again")
+                print("       e.g.   import os")
+                print("              os.environ['GUROBI_HOME'] = 'C:\\\\gurobi902\\\\win64'")          
         self.COMETS_HOME = os.environ['COMETS_HOME']
         self.VERSION = os.path.splitext(os.listdir(os.environ['COMETS_HOME'] +
                                                    '/bin')[0])[0]
@@ -135,7 +150,13 @@ class comets:
         ''' builds the JAVA_CLASSPATH from the pieces currently in
         self.classpath_pieces '''
         paths = list(self.classpath_pieces.values())
-        classpath = ':'.join(paths)
+        if platform.system() == 'Windows':
+            classpath = ';'.join(paths)
+            classpath = '\"' + classpath + '\"'
+            self.JAVA_LIB = '\"' + self.GUROBI_HOME + '/lib;' + self.GUROBI_HOME+ '/bin;'+ self.COMETS_HOME+ '/lib/jogl/jogamp-all-platforms/lib'+ '\"'
+
+        else:
+            classpath = ':'.join(paths)
         self.JAVA_CLASSPATH = classpath
 
     def test_classpath_pieces(self):
@@ -143,6 +164,8 @@ class comets:
         pieces. If not, warns the user that comets will not work without the
         libraries. Tells the user to either edit those pieces (if in linux)
         or just set the classpath directly'''
+        if platform.system() == 'Windows':
+            return # Windows uses the script, so classpath doesn't matter as long as env variable set
         broken_pieces = self.get_broken_classpath_pieces()
         if len(broken_pieces) == 0:
             pass  # yay! class files are where we hoped
@@ -213,13 +236,19 @@ class comets:
             f.writelines('load_layout ' + self.working_dir +
                          '.current_layout')
 
+
+        if platform.system() == 'Windows':
+            self.cmd = ('\"' + self.COMETS_HOME +
+                     '\\comets_scr' + '\" \"' +
+                    c_script +
+                    '\"')
+        else:
         # simulate
-        self.cmd = ('java -classpath ' + self.JAVA_CLASSPATH +
+            self.cmd = ('java -classpath ' + self.JAVA_CLASSPATH +
                     # ' -Djava.library.path=' + self.D_JAVA_LIB_PATH +
                     ' edu.bu.segrelab.comets.Comets -loader' +
                     ' edu.bu.segrelab.comets.fba.FBACometsLoader' +
                     ' -script ' + c_script)
-
         p = sp.Popen(self.cmd, shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
 
         self.run_output, self.run_errors = p.communicate()
