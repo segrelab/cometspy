@@ -49,13 +49,16 @@ class comets:
             try:
                 self.GUROBI_HOME = os.environ['GUROBI_HOME']
             except:
-                self.GUROBI_HOME = ''
-                print("could not find environmental variable GUROBI_COMETS_HOME or GUROBI_HOME")
-                print("COMETS will not work with GUROBI until this is solved. ")
-                print("Here is a solution:")
-                print("    1. import os and set os.environ['GUROBI_HOME'] then try to make a comets object again")
-                print("       e.g.   import os")
-                print("              os.environ['GUROBI_HOME'] = 'C:\\\\gurobi902\\\\win64'")          
+                try:
+                    self.GUROBI_HOME = os.environ['COMETS_GUROBI_HOME']
+                except:                      
+                    self.GUROBI_HOME = ''
+                    print("could not find environmental variable GUROBI_COMETS_HOME or GUROBI_HOME or COMETS_GUROBI_HOME")
+                    print("COMETS will not work with GUROBI until this is solved. ")
+                    print("Here is a solution:")
+                    print("    1. import os and set os.environ['GUROBI_HOME'] then try to make a comets object again")
+                    print("       e.g.   import os")
+                    print("              os.environ['GUROBI_HOME'] = 'C:\\\\gurobi902\\\\win64'")          
         self.COMETS_HOME = os.environ['COMETS_HOME']
         self.VERSION = os.path.splitext(os.listdir(os.environ['COMETS_HOME'] +
                                                    '/bin')[0])[0]
@@ -248,7 +251,7 @@ class comets:
                     # ' -Djava.library.path=' + self.D_JAVA_LIB_PATH +
                     ' edu.bu.segrelab.comets.Comets -loader' +
                     ' edu.bu.segrelab.comets.fba.FBACometsLoader' +
-                    ' -script ' + c_script)
+                    ' -script "' + c_script + '"')
         p = sp.Popen(self.cmd, shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
 
         self.run_output, self.run_errors = p.communicate()
