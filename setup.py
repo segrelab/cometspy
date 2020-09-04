@@ -16,14 +16,11 @@ setup(
         # I get to this in a second
         'numpy',
         'cobra',
-        'pandas'],
+        'pandas>=1.0.0'],
     classifiers=[
         'Development Status :: 4 - Beta',  # "3 - Alpha", "4 - Beta", "5 - Production/Stable"
         'Intended Audience :: Science/Research',      # Define that your audience are developers
-        'License :: OSI Approved :: MIT License',   # Again, pick a license
-        'Programming Language :: Python :: 3',      # Supported pyhton versions
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
