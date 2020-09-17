@@ -76,8 +76,8 @@ class model:
             rxn_name = 'death'
             rxn_num = 'death'
         else:
-            rxn_name = self.reactions.loc[self.reactions.ID == rxn_num+1,
-                                          'REACTION_NAMES']
+            rxn_name = self.reactions.loc[self.reactions.ID == rxn_num,
+                                          'REACTION_NAMES'].item()
             rxn_num = str(rxn_num)
 
         exch_name = list(self.get_exchange_metabolites())[exch_ind-1]
