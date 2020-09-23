@@ -79,7 +79,10 @@ class model:
             rxn_name = self.reactions.loc[self.reactions.ID == rxn_num,
                                           'REACTION_NAMES'].item()
             rxn_num = str(rxn_num)
-
+	# note: rxn_num matches the pandas DataFrame in this object.
+	#       however, COMETS actually wants that rxn_num - 1, which
+	#       is why it does that during the saving process, and why
+	#	you will see it that way in saved model files.
         exch_name = list(self.get_exchange_metabolites())[exch_ind-1]
         new_row = pd.DataFrame({'REACTION_NUMBER': rxn_num,
                                 'EXCH_IND': exch_ind,
@@ -666,6 +669,9 @@ class model:
                     n_parms = len(sub_signals.PARAMETERS[idx])
                     curr_col_names = col_names + [str(i) for i in range(n_parms)]
                     temp_df = pd.DataFrame(columns=curr_col_names)
+                    if row.loc['REACTION_NUMBER'] != 'death':
+                        # this is to deal with the off-by-one difference between the pandas table and java
+                        row.loc['REACTION_NUMBER'] = str(int(row.loc['REACTION_NUMBER']) - 1)
                     temp_df.loc[0, 'REACTION_NUMBER'] = row.loc['REACTION_NUMBER']
                     temp_df.loc[0, 'EXCH_IND'] = row.loc['EXCH_IND']
                     temp_df.loc[0, 'BOUND'] = row.loc['BOUND']
