@@ -464,6 +464,10 @@ class layout:
         '''writes each model file'''
         for m in self.models:
             m.write_comets_model(working_dir)
+            
+    def delete_model_files(self, working_dir):
+        for m in self.models:
+            m.delete_comets_model(working_dir)
 
     def display_current_media(self):
         print(self.media[self.media['init_amount'] != 0.0])
@@ -616,7 +620,7 @@ class layout:
             os.remove(outfile)
 
         lyt = open(outfile, 'a')
-        self.__write_models_and_world_grid_chunk(lyt, working_dir)
+        self.__write_models_and_world_grid_chunk(lyt)
         self.__write_media_chunk(lyt)
         self.__write_diffusion_chunk(lyt)
         self.__write_local_media_chunk(lyt)
@@ -631,12 +635,11 @@ class layout:
         self.__write_ext_rxns_chunk(lyt)
         lyt.close()
 
-    def __write_models_and_world_grid_chunk(self, lyt, working_dir):
+    def __write_models_and_world_grid_chunk(self, lyt):
         """ writes the top 3 lines  to the open lyt file"""
 
         model_file_line = "{}.cmd".format(".cmd ".join(self.get_model_ids())).split(" ")
         model_file_line = "".join(["./" + _ + " " for _ in model_file_line])
-        #model_file_line = working_dir + working_dir.join(model_file_line)
         model_file_line = "model_file " + model_file_line + "\n"
         lyt.write(model_file_line)
         lyt.write('  model_world\n')

@@ -548,6 +548,13 @@ class model:
         self.reactions = reactions
         self.metabolites = metabolites
 
+    def delete_comets_model(self, working_dir = None):
+        path_to_delete = ""
+        if working_dir is not None:
+            path_to_delete = working_dir
+        path_to_delete = path_to_delete + self.id + '.cmd'
+        os.remove(path_to_delete)
+        
     def write_comets_model(self, working_dir=None):
 
         path_to_write = ""
