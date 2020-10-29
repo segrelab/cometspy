@@ -425,14 +425,11 @@ class comets:
 
 
 
-    
+# TODO: check for manual changes within layout that may not have triggered flags. See layout.write_layout for details
 # TODO: fix read_comets_layout to always expect text addresses of comets model files
-# TODO: read spatial biomass logs
 # TODO: remove comets manifest (preferably, dont write it)
 # TODO: find quicker reading solution than the pd.read_csv stringIO hack
-# TODO: add units when printing params
 # TODO: solve weird rounding errors when reading from comets model
-# TODO: update media with all exchangeable metabolites from all models
 # TODO: give warning when unknown parameter is set 
 # TODO: write parameters in single file
 # TODO: model biomass should be added in the layout "add_model" method, and not as a model class field

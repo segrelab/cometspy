@@ -49,7 +49,6 @@ class layout:
         # another dict with metabolite names as keys and amounts as values
         # this information sets initial, location-specific media amounts.
         self.local_media = {}
-        self.global_diff = None
         self.refresh = []
         self.local_refresh = {}
         self.local_static = {}
@@ -286,7 +285,7 @@ class layout:
                                 filedata_string)[0].count('\n')
             lin_diff_end = next(x for x in end_blocks if x > lin_diff)
 
-            self.global_diff = float(re.findall(r'\S+', f_lines[lin_diff].
+            self.default_diff_c = float(re.findall(r'\S+', f_lines[lin_diff].
                                                 strip())[1])
             
             for i in range(lin_diff+1, lin_diff_end):
@@ -494,7 +493,43 @@ class layout:
         if len(self.barriers) > 0:
             self.__barrier_flag = True
             self.barriers = list(set(self.barriers))
-
+    
+    def set_metabolite_diffusion(self, diffusion_constant):
+        try:
+            if not isinstance(diffusion_constant, float):
+                raise ValueError
+        except ValueError:
+            print("ERROR, diffusion_constant must be a float")
+            return
+        print("Warning: set_metabolite_diffusion overwrites all diffusion constants\nthis should be performed prior to setting specific metabolite diffusion")
+        self.default_diff_c = diffusion_constant
+        self.media.loc[:, "diff_c"] = diffusion_constant
+        self.__diffusion_flag = True
+        
+    def __check_if_diffusion_flag_should_be_set(self):
+        """ Internal function.  If someone directly changes the diff_c in the
+        media dataframe, cometspy will be unaware and not set __diffusion_flag = True,
+        rendering that change moot.  This function is run when doing write_layout() 
+        to flip the flag if necessary """
+        if len(np.unique(self.media.diff_c)) > 1:
+            self.__diffusion_flag = True
+        elif self.media.diff_c[0] != ly.default_diff_c:
+            self.__diffusion_flag = True
+            
+    def set_specific_metabolite_diffusion(self, met, diffusion_constant):
+        try:
+            if not isinstance(diffusion_constant, float):
+                raise ValueError
+        except ValueError:
+            print("ERROR, diffusion_constant must be a float")
+            return
+        try:
+            if len(self.media.loc[self.media.metabolite == met, "diff_c"]) != 1:
+                raise ValueError
+        except ValueError:
+            print("ERROR, met not in layout.media.metabolite list\ncannot change metabolite diffusion constant")
+        self.media.loc[self.media.metabolite == met, "diff_c"] = diffusion_constant
+        self.__diffusion_flag = True
     def set_specific_metabolite(self, met, amount, static=False):
         if met in set(self.media['metabolite']):
             self.media.loc[self.media['metabolite'] == met,
@@ -615,6 +650,11 @@ class layout:
 
     def write_layout(self, working_dir):
         ''' Write the layout in a file'''
+        
+        # right now we only check if a user manually set a diff_c.  Ideally,
+        # we should check for manual changes to everything. Alternatively,
+        # we should print all blocks no matter what. 
+        self.__check_if_diffusion_flag_should_be_set()
         outfile = working_dir + ".current_layout"
         if os.path.isfile(outfile):
             os.remove(outfile)
@@ -728,7 +768,7 @@ class layout:
 
         if self.__diffusion_flag:
             lyt.write('    diffusion_constants ' +
-                      str(self.global_diff) +
+                      str(self.default_diff_c) +
                       '\n')
             for i in range(0, len(self.media)):
                 if not math.isnan(self.media.diff_c[i]):
