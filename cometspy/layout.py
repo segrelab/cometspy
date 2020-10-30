@@ -513,7 +513,7 @@ class layout:
         to flip the flag if necessary """
         if len(np.unique(self.media.diff_c)) > 1:
             self.__diffusion_flag = True
-        elif self.media.diff_c[0] != ly.default_diff_c:
+        elif self.media.diff_c[0] != self.default_diff_c:
             self.__diffusion_flag = True
             
     def set_specific_metabolite_diffusion(self, met, diffusion_constant):
