@@ -133,6 +133,7 @@ class model:
                 specifies the function relating the metabolite conc. to the bound
             parms : list (float)
                 a list of floats for the function 
+                
         """
 
         if str(rxn_num).lower().strip() == 'death':
@@ -194,6 +195,7 @@ class model:
             >>> model.add_nonlinear_diffusion_parameters(1., 1., 2., 5., 0.5)
             >>> params = c.params()
             >>> params.set_param("biomassMotionStyle", "ConvNonlin Diffusion 2D")
+            
         """
         
         for parm in [zero, n,
@@ -222,6 +224,7 @@ class model:
                 the absorption coefficient
             abs_base : float
                 absorption baseline
+                
         """
         if (reaction not in self.reactions['REACTION_NAMES'].values):
             raise ValueError('the reaction is not present in the model')
@@ -253,7 +256,8 @@ class model:
             model = c.model(cobra.test.create_test_model("ecoli"))
             model.add_convection_parameters(1., 0.5, 2., 10.e-5)
             params = c.params()
-            params.set_param("biomassMotionStyle", "Convection 2D")        
+            params.set_param("biomassMotionStyle", "Convection 2D") 
+            
         """ 
         if not isinstance(packedDensity, float):
             raise ValueError('packed_density must be a float')
@@ -275,6 +279,7 @@ class model:
             Parameters
             ----------
             noiseVariance : float
+            
         """
         if not isinstance(noiseVariance, float):
             raise ValueError('noiseVariance must be a float')
@@ -308,6 +313,7 @@ class model:
                 default = -1000.   in units of mmol / gDW / hr
             upper_bound : float, optional
                 default = 1000.    in units of mmol / gDW / hr
+                
         """
         
         self.reactions.loc[self.reactions.EXCH,'LB'] = lower_bound
@@ -334,6 +340,7 @@ class model:
                 the new value of the reaction's lower bound in mmol / gDW / hr
             upper_bound : float
                 the new value of the reaction's upper bound in mmol / gDW / hr
+                
         """
         if reaction not in self.reactions['REACTION_NAMES'].values:
             print('reaction couldnt be found')
@@ -465,6 +472,7 @@ class model:
             >>> ecoli = cobra.test.create_test_model('ecoli')
             >>> model = c.model()
             >>> model.load_cobra_model(ecoli)
+            
         """
         self.id = curr_m.id
         # reactions and their features
@@ -581,11 +589,12 @@ class model:
             >>> path_to_model = "./iJO1366.cmd" # this must actually exist
             >>> model = c.model()
             >>> model.read_comets_model(path_to_model)
+            
         """
         self.id = os.path.splitext(os.path.basename(path))[0]
 
         # in this way, its robust to empty lines:
-        m_f_lines = [s for s in read_file(path).splitlines() if s]
+        m_f_lines = [s for s in __read_file(path).splitlines() if s]
         m_filedata_string = os.linesep.join(m_f_lines)
         ends = []
         for k in range(0, len(m_f_lines)):
@@ -991,7 +1000,7 @@ class model:
             f.write(r'//' + '\n')
 
 
-def read_file(filename: str) -> str:
+def __read_file(filename: str) -> str:
     """ helper function to read non-rectangular files.
     """
     f = open(filename, 'r')
