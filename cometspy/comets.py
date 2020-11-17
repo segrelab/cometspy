@@ -1,7 +1,12 @@
 
 '''
 The comets module runs COMETS simulations and stores output. 
-For more information see https://segrelab.github.io/comets-manual/
+
+Generally, a comets object is created just before calling run(). Afterwards,
+any saved data (e.g. total_biomass) can be accessed from the object. 
+
+
+
 '''
 
 import re
@@ -11,9 +16,6 @@ import os
 import glob
 import numpy as np
 import platform
-
-# from cometspy.layout import layout
-# from cometspy.params import params
 
 __author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon"
 __copyright__ = "Copyright 2019, The COMETS Consortium"
@@ -27,7 +29,7 @@ __email__ = "djordje.bajic@yale.edu"
 __status__ = "Beta"
 
 
-def readlines_file(filename):
+def _readlines_file(filename):
     f = open(filename, 'r')
     f_lines = f.readlines()
     f.close()
@@ -35,18 +37,88 @@ def readlines_file(filename):
 
 
 class comets:
-    '''
-    This class sets up an environment with all necessary for
-    a comets simulation to run, runs the simulation, and stores the output
-    data from it.
-    @layout:  a comets.layout object
-    @parameters: a comets.params object
-    @relative_dir: an optional argument specifying a relative location to use
-    as a working location. this folder must already exist. this is useful for
-    running many simulations and saving all output files, by using the 
-    sim.run(delete_files = False) argument
-    '''
-    def __init__(self, layout, parameters, relative_dir=''):
+    """
+    the main simulation object to run COMETS
+    
+    The comets class stores a previously-made layout and params, and 
+    interacts with COMETS to run the simulation. It also stores any
+    generated output, which could include total_biomass, biomass, 
+    media, or fluxes, as set in the params object. std_out from the COMETS
+    simulation is saved in the attribute run_output and can be useful to 
+    examine to debug errors. 
+    
+    When creating a comets object, the optional relative_dir path is useful
+    when one is to run multiple simulations simultaneously, otherwise 
+    temporary files may overwrite each other.
+
+    Parameters
+    ----------
+    
+    layout : layout
+        a cometspy.layout containing models and media information
+    parameters : params
+        a cometspy.params containing specified simulation parameters
+    relative_dir : str, optional
+        a directory to place temporary simulation files. 
+
+    Attributes
+    ----------
+    
+    layout : cometspy.layout
+        the layout containing cometspy.model[s] and media information
+    params : cometspy.params
+        the params containing simulation and default biological parameters
+    working_dir : str
+        the directory at which to save temporary sim files
+    GUROBI_HOME : str
+        the directory where GUROBI exists on the system
+    COMETS_HOME : str
+        the directory where COMETS exists on the system
+    VERSION : str
+        the version of comets, read from the files at COMETS_HOME
+    classpath_pieces : dict
+        classpath separated into library name (key) and location (value)
+    JAVA_CLASSPATH : str
+        a generated (overwritable) string containing the java classpath
+    run_output : str
+        generated object containing text from COMETS sim's std_out
+    run_errors : str
+        generated object containing text from COMETS sim's std_err
+    total_biomass : pandas.DataFrame
+        generated object containing total biomass from simulation
+    biomass : pandas.DataFrame
+        generated object containing spatially-explicit biomass from sim
+    specific_media : pandas.DataFrame
+        generated object containing information on selected media from sim
+    media : pandas.Dataframe
+        generated object containing spatially-explicit media from sim
+    fluxes_by_species : dict{model_id : pandas.DataFrame}
+        generated object containing each species' spatial-explicit fluxes
+    genotypes : pandas.DataFrame
+        generated object containing genotypes if an evolution sim was run
+
+    Examples
+    --------
+    
+    >>> # assume layout and params have already been created
+    >>> # and cometspy was imported as c
+    >>> sim = c.comets(layout, params)
+    >>> sim.run() # this could take from seconds to hours
+    >>> print(sim.run_output) # to see the std_out
+    >>> sim.total_biomass.plot(x = "cycle")
+    >>> # assume params.all_params["writeBiomassLog"] == True, and that
+    >>> # params.all_params["BiomassLogRate"] = 1000, and that
+    >>> # params.all_params["maxCycles"] = 5000
+    >>> im = sim.get_biomass_image(layout.models[0].id, 4000)
+    >>> from matplotlib import pyplot as plt
+    >>> plt.imshow(im / np.max(im))
+    
+
+    """
+    
+    def __init__(self, layout,
+                 parameters, relative_dir : str =''):
+
 
         # define instance variables
         self.working_dir = os.getcwd() + '/' + relative_dir
@@ -72,9 +144,9 @@ class comets:
                                                    '/bin')[0])[0]
 
         # set default classpaths, which users may change
-        self.build_default_classpath_pieces()
-        self.build_and_set_classpath()
-        self.test_classpath_pieces()
+        self.__build_default_classpath_pieces()
+        self.__build_and_set_classpath()
+        self.__test_classpath_pieces()
 
         # check to see if user has the libraries where expected
 
@@ -92,7 +164,10 @@ class comets:
         self.parameters.all_params['MediaLogName'] = (
             'media_log_' + hex(id(self)))
 
-    def build_default_classpath_pieces(self):
+    def __build_default_classpath_pieces(self):
+        """
+        sets up what it thinks the classpath should be
+        """
         self.classpath_pieces = {}
         self.classpath_pieces['gurobi'] = (self.GUROBI_HOME +
                                            '/lib/gurobi.jar')
@@ -157,7 +232,7 @@ class comets:
                                         '/bin/' + self.VERSION + '.jar')
 
 
-    def build_and_set_classpath(self):
+    def __build_and_set_classpath(self):
         ''' builds the JAVA_CLASSPATH from the pieces currently in
         self.classpath_pieces '''
         paths = list(self.classpath_pieces.values())
@@ -170,14 +245,14 @@ class comets:
             classpath = ':'.join(paths)
         self.JAVA_CLASSPATH = classpath
 
-    def test_classpath_pieces(self):
+    def __test_classpath_pieces(self):
         ''' checks to see if there is a file at each location in classpath
         pieces. If not, warns the user that comets will not work without the
         libraries. Tells the user to either edit those pieces (if in linux)
         or just set the classpath directly'''
         if platform.system() == 'Windows':
             return # Windows uses the script, so classpath doesn't matter as long as env variable set
-        broken_pieces = self.get_broken_classpath_pieces()
+        broken_pieces = self.__get_broken_classpath_pieces()
         if len(broken_pieces) == 0:
             pass  # yay! class files are where we hoped
         else:
@@ -202,7 +277,7 @@ class comets:
             print('       look at the current comets.JAVA_CLASSPATH ' +
                   'to see how this should look.')
 
-    def get_broken_classpath_pieces(self):
+    def __get_broken_classpath_pieces(self):
         ''' checks to see if there is a file at each location in classpath
         pieces. Saves the pieces where there is no file and returns them as a
         dictionary, where the key is the common name of the class library and
@@ -214,15 +289,63 @@ class comets:
                 broken_pieces[key] = value
         return(broken_pieces)
 
-    def set_classpath(self, libraryname, path):
-        ''' tells comets where to find required java libraries
-        e.g. comets.set_classpath(\'hamcrest\', \'/home/chaco001/
-        comets/junit/hamcrest-core-1.3.jar\')
-        Then re-builds the path'''
-        self.classpath_pieces[libraryname] = path
-        self.build_and_set_classpath()
+    def set_classpath(self, libraryname : str, path : str):
+        """
+        sets the full path to a required specified java library
+        
+        This can be used to set non-default classpaths. Note that currently,
+        it does not work for windows, because windows runs COMETS slightly
+        differently than Unix. 
 
-    def run(self, delete_files=True):
+        Parameters
+        ----------
+        
+        libraryname : str
+            the library for which the new path is being supplied. 
+        path : str
+            the full path, including file name, to the library
+
+        Examples
+        --------
+        
+        >>> sim = c.comets(layout, params)
+        >>> sim.set_classpath("jmatio", "/opt/jmatio/jmatio.jar")
+
+        """
+        self.__classpath_pieces[libraryname] = path
+        self.__build_and_set_classpath()
+
+    def run(self, delete_files : bool = True):
+        """
+        run a COMETS simulation 
+        
+        This runs the COMETS simulation specified by the layout and params
+        objects supplied to this comets object. It creates the files needed
+        for COMETS into the current directory or the optional one specified
+        when this object was created. 
+        
+        Once complete (or if an error has occurred), this tries to read 
+        simulation logs including data, as well as the std_out in the
+        run_output attribute. 
+        
+        If the optional delete_files is set to False, then temporary files and 
+        data log files are not deleted. They are deleted by default.
+
+        Parameters
+        ----------
+        
+        delete_files : bool, optional
+            Whether to delete simulation and log files. The default is True.
+
+        Examples
+        --------
+        
+        >>> sim = c.comets(layout, params)
+        >>> sim.run(delete_files = True)
+        >>> print(sim.run_output)
+        >>> print(sim.total_biomass)
+
+        """
         print('\nRunning COMETS simulation ...')
 
         # If evolution is true, write the biomass but not the total biomass log
@@ -279,7 +402,7 @@ class comets:
             # '''----------- READ OUTPUT ---------------------------------------'''
             # Read total biomass output
             if self.parameters.all_params['writeTotalBiomassLog']:
-                tbmf = readlines_file(
+                tbmf = _readlines_file(
                     self.working_dir + self.parameters.all_params['TotalBiomassLogName'])
                 self.total_biomass = pd.DataFrame([re.split(r'\t+', x.strip())
                                                    for x in tbmf],
@@ -299,7 +422,7 @@ class comets:
                                           header=None, names=range(max_rows))
                 if delete_files:
                     os.remove(self.working_dir + self.parameters.all_params['FluxLogName'])
-                self.build_readable_flux_object()
+                self.__build_readable_flux_object()
 
             # Read media logs
             if self.parameters.all_params['writeMediaLog']:
@@ -354,7 +477,7 @@ class comets:
                 os.remove(self.working_dir + 'COMETS_manifest.txt')  # todo: stop writing this in java
             print('Done!')
 
-    def build_readable_flux_object(self):
+    def __build_readable_flux_object(self):
         """ comets.fluxes is an odd beast, where the column position has a
         different meaning depending on what model the row is about. Therefore,
         this function creates separate dataframes, stored in a dictionary with
@@ -378,7 +501,47 @@ class comets:
             sub_df.columns = ["cycle", "x", "y"] + model_rxn_names
             self.fluxes_by_species[model_id] = sub_df
 
-    def get_metabolite_image(self, met, cycle):
+    def get_metabolite_image(self, met : str, cycle : int) -> np.array:
+        """
+        returns an image of metabolite concentrations at a given cycle
+        
+        This will only work if media was saved at the current cycle. This 
+        requires the following parameters to have been set:
+        
+            params.set_param("writeMediaLog",True)
+            params.set_param("MediaLogRate", n) # n is in cycles
+        
+        Notes
+        -----
+        
+        There may be a bug where cycles are + 1 what they should be. We will
+        fix this soon but for now be aware you may need to +1 your desired
+        cycle. The bug does not affect anything within the simulation.
+
+        Parameters
+        ----------
+        
+        met : str
+            the name of the metabolite
+        cycle : int
+            the cycle to get the metabolite data
+            
+        Returns
+        -------
+        
+            A 2d numpy array which can be visualized like an image. 
+
+        Examples
+        --------
+        
+        >>> sim.run()
+        >>> # assume sim.params.all_params["MediaLogRate"] = 100 and that
+        >>> # sim.params.all_params["maxCycles"] = 1000
+        >>> im = sim.get_metabolite_image("ac_e", 500)
+        >>> from matplotlib import pyplot as plt # may need to be installed
+        >>> plt.imshow(im)
+
+        """
         if not self.parameters.all_params['writeMediaLog']:
             raise ValueError("media log was not recorded during simulation")
         if met not in list(self.layout.media.metabolite):
@@ -392,7 +555,40 @@ class comets:
             im[int(row['x']-1), int(row['y']-1)] = row['conc_mmol']
         return(im)
 
-    def get_biomass_image(self, model_id, cycle):
+    def get_biomass_image(self, model_id : str, cycle : int) -> np.array:
+        """
+        returns an image of biomass concentrations at a given cycle
+        
+        This will only work if biomass was saved at the current cycle. This 
+        requires the following parameters to have been set:
+        >>> params.set_param("writeBiomassLog",True)
+        >>> params.set_param("BiomassLogRate", n) # n is in cycles
+        
+
+        Parameters
+        ----------
+        
+        model_id : str
+            the id of the model to get biomass data on
+        cycle : int
+            the cycle to get the biomass data
+            
+        Returns
+        -------
+        
+            A 2d numpy array which can be visualized like an image. 
+
+        Examples
+        --------
+        
+        >>> sim.run()
+        >>> # assume sim.params.all_params["BiomassLogRate"] = 100 and that
+        >>> # sim.params.all_params["maxCycles"] = 1000
+        >>> im = sim.get_biomass_image("iJO1366", 500) # e.g. the ecoli model
+        >>> from matplotlib import pyplot as plt # may need to be installed
+        >>> plt.imshow(im)
+
+        """
         if not self.parameters.all_params['writeBiomassLog']:
             raise ValueError("biomass log was not recorded during simulation")
         if model_id not in list(np.unique(self.biomass['species'])):
@@ -406,7 +602,43 @@ class comets:
             im[int(row['x']-1), int(row['y']-1)] = row['biomass']
         return(im)
 
-    def get_flux_image(self, model_id, reaction_id, cycle):
+    def get_flux_image(self, model_id : str, 
+                       reaction_id : str, cycle : int) -> np.array:
+        """
+        returns a 2d numpy array showing fluxes at a given cycle
+        
+        This will only work if flux was saved at the current cycle. This 
+        requires the following parameters to have been set:
+        
+            params.set_param("writeFluxLog",True)
+            params.set_param("FluxLogRate", n) # n is in cycles        
+
+        Parameters
+        ----------
+        
+        model_id : str
+            the id of the model about which to get fluxes
+        reaction_id : str
+            the id of the reaction about which to get fluxes
+        cycle : int
+            the cycle at which to get fluxes
+
+        Returns
+        -------
+        a 2d numpy array which can be visualized like an image
+        
+        Examples
+        --------
+        
+        >>> sim.run()
+        >>> # assume sim.params.all_params["FluxLogRate"] = 100 and that
+        >>> # sim.params.all_params["maxCycles"] = 1000
+        >>> # assume a model used was iJO1366
+        >>> im = sim.get_flux_image("iJO1366", "EX_ac_e", 500) 
+        >>> from matplotlib import pyplot as plt # may need to be installed
+        >>> plt.imshow(im)
+
+        """
         if not self.parameters.all_params['writeFluxLog']:
             raise ValueError("flux log was not recorded during simulation")
         if model_id not in [m.id for m in self.layout.models]:

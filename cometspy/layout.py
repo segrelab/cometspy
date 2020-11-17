@@ -14,8 +14,11 @@ class layout:
     '''
     object containing model and environmental definitions for a COMETS sim.
     
-    Generates a COMETS layout. Typically, it will be given a list of COMETS 
-    models for the only parameter. Subsequently, methods like 
+    The layout object is an essential object needed to start a comets
+    simulation, along with a params object. For a simulation to run, the layout
+    must contain model(s). Typically, the layout will be created after
+    creating models, and these models will be given in a list during layout
+    creation. Subsequently, methods like 
     set_specific_metabolite() will be used to create environmental media 
     definitions.  Additionally, spatial information can be assigned, such as
     the spatial dimensions in lattice units (layout.grid), spatial barriers,
@@ -637,6 +640,9 @@ class layout:
             m.write_comets_model(working_dir)
             
     def delete_model_files(self, working_dir):
+        """
+        deletes model files in specified directory
+        """
         for m in self.models:
             m.delete_comets_model(working_dir)
 
@@ -660,11 +666,13 @@ class layout:
 
         Parameters
         ----------
+        
         barriers : list(tuple)
             A list containing tuples of integers of x,y locations.
 
         Examples
         --------
+        
         >>> # make a diagonal line of barriers
         >>> l = c.layout([model1, model2]) # assumes model1,2 are made
         >>> l.grid = [5,5]
@@ -1370,8 +1378,27 @@ class layout:
 
         Parameters
         ----------
+        
         model : cometspy.model
             a cometspy.model with an initial_pop
+            
+        Examples
+        --------
+        
+        >>> import cobra.test
+        >>> import cometspy as c
+        >>> layout = c.layout()
+        >>> ecoli = cobra.test.create_test_model("ecoli")
+        >>> salmonella = cobra.test.create_test_model("salmonella")
+        >>> ecoli = c.model(ecoli)
+        >>> salmonella = c.model(salmonella)
+        >>> ecoli.open_exchanges()
+        >>> salmonella.open_exchanges()
+        >>> ecoli.initial_pop = [0, 0, 1.e-7]
+        >>> salmonella.initial_pop = [0, 0, 1.e-7]
+        >>> layout.add_model(ecoli)
+        >>> layout.add_model(salmonella)
+        
 
         """
         self.models.append(model)
