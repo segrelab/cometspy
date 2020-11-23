@@ -631,6 +631,7 @@ class layout:
             The directory where the files will be written.
 
         """
+        self.__check_if_initial_pops_in_range()
         self.write_layout(working_dir)
         self.write_model_files(working_dir)
 
@@ -1404,6 +1405,22 @@ class layout:
         self.models.append(model)
         self.update_models()
 
+    def __check_if_initial_pops_in_range(self):
+        """
+        checks if initial pops for each model are in the grid or raises error
+        
+        A common error is users setting model.initial_pop but not setting
+        layout.grid.  Since they occur in different places, this method is 
+        useful for a check before running.
+
+        """
+        for m in self.models:
+            for founder in m.initial_pop:
+                if (founder[0] < 0) or (founder[1] > (self.grid[1]-1)):
+                    message = "the initial pop of a model is outside of layout.grid."
+                    message += f" Either increase layout.grid or adjust {m.id}'s initial_pop"
+                    raise ValueError(message)
+                    
     def __get_met_number(self, met):
         """ returns the met number (of the external mets) given a name """
         met_number = [x for x in range(len(self.all_exchanged_mets)) if

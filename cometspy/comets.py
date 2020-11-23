@@ -312,7 +312,7 @@ class comets:
         >>> sim.set_classpath("jmatio", "/opt/jmatio/jmatio.jar")
 
         """
-        self.__classpath_pieces[libraryname] = path
+        self.classpath_pieces[libraryname] = path
         self.__build_and_set_classpath()
 
     def run(self, delete_files : bool = True):
@@ -394,88 +394,86 @@ class comets:
         else:
             self.run_errors = "STDERR empty."
 
-        # Give warning if simulation had nonzero exit
-        if ('Error' in self.run_output):
-            print(self.run_output)
-        else:
-            
-            # '''----------- READ OUTPUT ---------------------------------------'''
-            # Read total biomass output
-            if self.parameters.all_params['writeTotalBiomassLog']:
-                tbmf = _readlines_file(
-                    self.working_dir + self.parameters.all_params['TotalBiomassLogName'])
-                self.total_biomass = pd.DataFrame([re.split(r'\t+', x.strip())
-                                                   for x in tbmf],
-                                                  columns=['cycle'] +
-                                                  self.layout.get_model_ids())
-                self.total_biomass = self.total_biomass.astype('float')
-                if delete_files:
-                    os.remove(self.working_dir + self.parameters.all_params['TotalBiomassLogName'])
-
-            # Read flux
-            if self.parameters.all_params['writeFluxLog']:
-
-                max_rows = 4 + max([len(m.reactions) for m in self.layout.models])
-
-                self.fluxes = pd.read_csv(self.working_dir + self.parameters.all_params['FluxLogName'],
-                                          delim_whitespace=True,
-                                          header=None, names=range(max_rows))
-                if delete_files:
-                    os.remove(self.working_dir + self.parameters.all_params['FluxLogName'])
-                self.__build_readable_flux_object()
-
-            # Read media logs
-            if self.parameters.all_params['writeMediaLog']:
-                self.media = pd.read_csv(self.working_dir + self.parameters.all_params[
-                    'MediaLogName'], delim_whitespace=True, names=('metabolite',
-                                                                   'cycle', 'x',
-                                                                   'y',
-                                                                   'conc_mmol'))
-
-                if delete_files:
-                    os.remove(self.working_dir + self.parameters.all_params['MediaLogName'])
-
-            # Read spatial biomass log
-            if self.parameters.all_params['writeBiomassLog']:
-                biomass_out_file = self.working_dir + 'biomass_log_' + hex(id(self))
-                self.biomass = pd.read_csv(biomass_out_file,
-                                           header=None, delimiter=r'\s+',
-                                           names=['cycle', 'x', 'y',
-                                                  'species', 'biomass'])
-                # cut off extension added by toolbox
-                self.biomass['species'] = [sp[:-4] if '.cmd' in sp else sp for sp in self.biomass.species]
-
-                if delete_files:
-                    os.remove(biomass_out_file)
-
-            # Read evolution-related logs
-            if 'evolution' in list(self.parameters.all_params.keys()):
-                if self.parameters.all_params['evolution']:
-                    genotypes_out_file = self.working_dir + 'GENOTYPES_biomass_log_' + hex(id(self))
-                    self.genotypes = pd.read_csv(genotypes_out_file,
-                                                 header=None, delimiter=r'\s+',
-                                                 names=['Ancestor',
-                                                        'Mutation',
-                                                        'Species'])
-                    if delete_files:
-                        os.remove(self.working_dir + genotypes_out_file)
-
-            # Read specific media output
-            if self.parameters.all_params['writeSpecificMediaLog']:
-                spec_med_file = self.working_dir + self.parameters.all_params['SpecificMediaLogName']
-                self.specific_media = pd.read_csv(spec_med_file, delimiter=r'\s+')
-                if delete_files:
-                    os.remove(self.working_dir + self.parameters.all_params['SpecificMediaLogName'])
-
-            # clean workspace
+        # Raise RuntimeError if simulation had nonzero exit
+        self.__analyze_run_output()
+        
+        # '''----------- READ OUTPUT ---------------------------------------'''
+        # Read total biomass output
+        if self.parameters.all_params['writeTotalBiomassLog']:
+            tbmf = _readlines_file(
+                self.working_dir + self.parameters.all_params['TotalBiomassLogName'])
+            self.total_biomass = pd.DataFrame([re.split(r'\t+', x.strip())
+                                               for x in tbmf],
+                                              columns=['cycle'] +
+                                              self.layout.get_model_ids())
+            self.total_biomass = self.total_biomass.astype('float')
             if delete_files:
-                self.layout.delete_model_files(self.working_dir)
-                os.remove(c_global)
-                os.remove(c_package)
-                os.remove(c_script)
-                os.remove(self.working_dir + '.current_layout')
-                os.remove(self.working_dir + 'COMETS_manifest.txt')  # todo: stop writing this in java
-            print('Done!')
+                os.remove(self.working_dir + self.parameters.all_params['TotalBiomassLogName'])
+
+        # Read flux
+        if self.parameters.all_params['writeFluxLog']:
+
+            max_rows = 4 + max([len(m.reactions) for m in self.layout.models])
+
+            self.fluxes = pd.read_csv(self.working_dir + self.parameters.all_params['FluxLogName'],
+                                      delim_whitespace=True,
+                                      header=None, names=range(max_rows))
+            if delete_files:
+                os.remove(self.working_dir + self.parameters.all_params['FluxLogName'])
+            self.__build_readable_flux_object()
+
+        # Read media logs
+        if self.parameters.all_params['writeMediaLog']:
+            self.media = pd.read_csv(self.working_dir + self.parameters.all_params[
+                'MediaLogName'], delim_whitespace=True, names=('metabolite',
+                                                               'cycle', 'x',
+                                                               'y',
+                                                               'conc_mmol'))
+
+            if delete_files:
+                os.remove(self.working_dir + self.parameters.all_params['MediaLogName'])
+
+        # Read spatial biomass log
+        if self.parameters.all_params['writeBiomassLog']:
+            biomass_out_file = self.working_dir + 'biomass_log_' + hex(id(self))
+            self.biomass = pd.read_csv(biomass_out_file,
+                                       header=None, delimiter=r'\s+',
+                                       names=['cycle', 'x', 'y',
+                                              'species', 'biomass'])
+            # cut off extension added by toolbox
+            self.biomass['species'] = [sp[:-4] if '.cmd' in sp else sp for sp in self.biomass.species]
+
+            if delete_files:
+                os.remove(biomass_out_file)
+
+        # Read evolution-related logs
+        if 'evolution' in list(self.parameters.all_params.keys()):
+            if self.parameters.all_params['evolution']:
+                genotypes_out_file = self.working_dir + 'GENOTYPES_biomass_log_' + hex(id(self))
+                self.genotypes = pd.read_csv(genotypes_out_file,
+                                             header=None, delimiter=r'\s+',
+                                             names=['Ancestor',
+                                                    'Mutation',
+                                                    'Species'])
+                if delete_files:
+                    os.remove(self.working_dir + genotypes_out_file)
+
+        # Read specific media output
+        if self.parameters.all_params['writeSpecificMediaLog']:
+            spec_med_file = self.working_dir + self.parameters.all_params['SpecificMediaLogName']
+            self.specific_media = pd.read_csv(spec_med_file, delimiter=r'\s+')
+            if delete_files:
+                os.remove(self.working_dir + self.parameters.all_params['SpecificMediaLogName'])
+
+        # clean workspace
+        if delete_files:
+            self.layout.delete_model_files(self.working_dir)
+            os.remove(c_global)
+            os.remove(c_package)
+            os.remove(c_script)
+            os.remove(self.working_dir + '.current_layout')
+            os.remove(self.working_dir + 'COMETS_manifest.txt')  # todo: stop writing this in java
+        print('Done!')
 
     def __build_readable_flux_object(self):
         """ comets.fluxes is an odd beast, where the column position has a
@@ -500,6 +498,49 @@ class comets:
             sub_df = sub_df.drop(sub_df.columns[3], axis=1)
             sub_df.columns = ["cycle", "x", "y"] + model_rxn_names
             self.fluxes_by_species[model_id] = sub_df
+            
+    def __analyze_run_output(self):
+        if "End of simulation" in self.run_output:
+            return
+        else:
+            print("Error: COMETS simulation did not complete\n")
+            print("     examine comets.run_output for the full java trace\n")
+            print("     if we detect a common reason, it will be stated in the RuntimeError at the bottom")
+            
+            if "Could not find or load main class edu.bu.segrelab.comets.Comets" in self.run_output:
+                message = "Could not find or load main class edu.bu.segrelab.comets.Comets\n"
+                message += "check if comets.version and comets.classpath_pieces['bin'] \n"
+                message += "point to an actual comets.jar file\n"
+                message += "this problem may be associated with a malformed\n"
+                message += "os.environ['COMETS_HOME'] environmental variable\n"
+                message += "that can be overwritten by, for example, \n"
+                message += ">>> import os\n"
+                message += ">>> os.environ['COMETS_HOME'] = '/home/comets/'"
+                raise RuntimeError(f"COMETS simulation did not complete:\n {message}")
+
+            loc = self.run_output.find("NoClassDefFoundError")
+            if loc != -1:
+                error_string = self.run_output[(loc+22):(loc+100)]
+                missing_class = error_string.split("\n")[0]
+                if missing_class[0:6] == "gurobi":
+                    message = "JAVA could not find gurobi.\n"
+                    message += "try the following: \n"
+                    message += ">>> import os\n"
+                    message += ">>> os.environ['GUROBI_COMETS_HOME']\n"
+                    message += "if there is nothing there try setting that variable\n"
+                    message += "to the location of gurobi.jar, for example:\n"
+                    message += ">>> os.environ['GUROBI_COMETS_HOME'] = '/opt/gurobi900/linux64'"
+                else:
+                    message = f"JAVA could not find a needed class: {missing_class}\n"
+                    message += "make sure it is in your java classpath\n"
+                    message += "this can be changed with comets.set_classpath()\n"
+                    message += "if in Unix. In Windows, it suggests that something changed\n"
+                    message += "with the dependencies installed alongside COMETS"
+                raise RuntimeError(f"COMETS simulation did not complete:\n {message}")
+              
+            message = "undetected reason. examine comets.run_output for JAVA trace"
+            raise RuntimeError(f"COMETS simulation did not complete:\n {message}")
+            
 
     def get_metabolite_image(self, met : str, cycle : int) -> np.array:
         """
