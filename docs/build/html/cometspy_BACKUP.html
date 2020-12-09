@@ -81,12 +81,11 @@
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">cometspy auto-generated API</a><ul>
-<li><a class="reference internal" href="#module-cometspy">Module contents</a></li>
-<li><a class="reference internal" href="#module-cometspy.model">cometspy.model module</a></li>
-<li><a class="reference internal" href="#module-cometspy.params">cometspy.params module</a></li>
-<li><a class="reference internal" href="#module-cometspy.layout">cometspy.layout module</a></li>
-<li><a class="reference internal" href="#module-cometspy.comets">cometspy.comets module</a></li>
-<li><a class="reference internal" href="#module-cometspy.utils">cometspy.utils module</a></li>
+<li><a class="reference internal" href="#the-model-class">The <code class="docutils literal notranslate"><span class="pre">model</span></code> class</a></li>
+<li><a class="reference internal" href="#the-layout-class">The <code class="docutils literal notranslate"><span class="pre">layout</span></code> class</a></li>
+<li><a class="reference internal" href="#the-params-class">The <code class="docutils literal notranslate"><span class="pre">params</span></code> class</a></li>
+<li><a class="reference internal" href="#the-comets-class">The <code class="docutils literal notranslate"><span class="pre">comets</span></code> class</a></li>
+<li><a class="reference internal" href="#the-utils-class">The <code class="docutils literal notranslate"><span class="pre">utils</span></code> class</a></li>
 </ul>
 </li>
 </ul>
@@ -123,7 +122,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/cometspy.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/cometspy_BACKUP.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -135,50 +134,11 @@
             
   <div class="section" id="cometspy-auto-generated-api">
 <h1>cometspy auto-generated API<a class="headerlink" href="#cometspy-auto-generated-api" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-cometspy">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cometspy" title="Permalink to this headline">¶</a></h2>
-<p><em>a python package for making and running COMETS simulations.</em></p>
-<p>cometspy is a straight-forward python interface to the COMETS program. 
-Use for dynamic flux-balance analysis, with multiple models, heterogenous 
-spatio-temporal environments, and evolution.</p>
-<p><strong>To use this package, you must also have the actual COMETS program installed.</strong></p>
-<ul class="simple">
-<li>For more information on COMETS, see <a class="reference external" href="https://runcomets.org">https://runcomets.org</a></li>
-<li>For COMETS development, see <a class="reference external" href="https://github.com/segrelab/comets">https://github.com/segrelab/comets</a></li>
-<li>For development of this package, see <a class="reference external" href="http://github.com/segrelab/cometspy">http://github.com/segrelab/cometspy</a></li>
-</ul>
-<p><strong>cometspy workflow:</strong></p>
-<p>models -&gt; layout, layout + params -&gt; comets, comets.run()</p>
-<p><strong>cometspy hello.world</strong></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a model from a cobra model, open exchange reactions, and give a pop</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tb</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-4</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a layout with the model, and give it three nutrients</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">m</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;glc__D_e&quot;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;nh4_e&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">static</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;pi_e&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">static</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make params and change one default</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a simulation and run it!</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># saved data objects are pandas.DataFrames, and therefore can be plotted</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># sim.total_biomass.plot(x = &quot;cycle&quot;)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="module-cometspy.model">
-<span id="cometspy-model-module"></span><h2>cometspy.model module<a class="headerlink" href="#module-cometspy.model" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-model-class">
+<h2>The <code class="docutils literal notranslate"><span class="pre">model</span></code> class<a class="headerlink" href="#the-model-class" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="cometspy.model.model">
-<em class="property">class </em><code class="descclassname">cometspy.model.</code><code class="descname">model</code><span class="sig-paren">(</span><em><span class="n">model</span><span class="p">:</span> <span class="n">cobra.core.model.Model</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model">
+<em class="property">class </em><code class="descclassname">cometspy.</code><code class="descname">model</code><span class="sig-paren">(</span><em><span class="n">model</span><span class="p">:</span> <span class="n">cobra.core.model.Model</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>a COMETS metabolic model to use in a layout</p>
 <p>A model contains information including the stoichiometric matrix,
@@ -251,71 +211,11 @@ or None.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.add_convection_parameters" title="cometspy.model.model.add_convection_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_convection_parameters</span></code></a>([packedDensity,&nbsp;…])</td>
-<td>sets the parameters for biomass spread to use convection</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.add_light" title="cometspy.model.model.add_light"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_light</span></code></a>(reaction,&nbsp;abs_coefficient,&nbsp;abs_base)</td>
-<td>Causes a reaction to function in response to light</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.add_neutral_drift_parameter" title="cometspy.model.model.add_neutral_drift_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_neutral_drift_parameter</span></code></a>(neutralDriftSigma)</td>
-<td>sets the neutralDriftSigma parameter</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.add_noise_variance_parameter" title="cometspy.model.model.add_noise_variance_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_noise_variance_parameter</span></code></a>(noiseVariance)</td>
-<td>sets the noise variance parameter</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.add_nonlinear_diffusion_parameters" title="cometspy.model.model.add_nonlinear_diffusion_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nonlinear_diffusion_parameters</span></code></a>([zero,&nbsp;…])</td>
-<td>sets the model to use non-linear diffusion biomass spread.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.add_signal" title="cometspy.model.model.add_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_signal</span></code></a>(rxn_num,&nbsp;exch_ind,&nbsp;bound,&nbsp;…)</td>
-<td>adds a signal to the reaction rxn_num that changes bounds</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.change_bounds" title="cometspy.model.model.change_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_bounds</span></code></a>(reaction,&nbsp;lower_bound,&nbsp;upper_bound)</td>
-<td>changes the bounds of the specified reaction</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.change_hill" title="cometspy.model.model.change_hill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_hill</span></code></a>(reaction,&nbsp;hill)</td>
-<td>changes the hill coefficient of the specified reaction.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.change_km" title="cometspy.model.model.change_km"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_km</span></code></a>(reaction,&nbsp;km)</td>
-<td>changes the km of the specified reaction.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.change_vmax" title="cometspy.model.model.change_vmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_vmax</span></code></a>(reaction,&nbsp;vmax)</td>
-<td>changes the vmax of the specified reaction.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.delete_comets_model" title="cometspy.model.model.delete_comets_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_comets_model</span></code></a>([working_dir])</td>
-<td>deletes a file version of this model if it exists.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.ensure_sinks_are_not_exchanges" title="cometspy.model.model.ensure_sinks_are_not_exchanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_sinks_are_not_exchanges</span></code></a>([suffix])</td>
-<td>set exchange reactions ending in suffix (default = ‘_c’) to sink</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.get_bounds" title="cometspy.model.model.get_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bounds</span></code></a>(reaction)</td>
-<td>returns a tuple (lb, ub) for the specified reaction</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.get_exchange_metabolites" title="cometspy.model.model.get_exchange_metabolites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_exchange_metabolites</span></code></a>()</td>
-<td>returns a list of the names of the exchange metabolites</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.get_reaction_names" title="cometspy.model.model.get_reaction_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_reaction_names</span></code></a>()</td>
-<td>returns a list of reaction names</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.load_cobra_model" title="cometspy.model.model.load_cobra_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_cobra_model</span></code></a>(curr_m)</td>
-<td>creates the COMETS model from the supplied cobra model</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.open_exchanges" title="cometspy.model.model.open_exchanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open_exchanges</span></code></a>([lower_bound,&nbsp;upper_bound])</td>
-<td>sets all exchange boundaries to the specifed values</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.read_cobra_model" title="cometspy.model.model.read_cobra_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_cobra_model</span></code></a>(path)</td>
-<td>reads a cobra model from a file and loads it into this model</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.read_comets_model" title="cometspy.model.model.read_comets_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_comets_model</span></code></a>(path)</td>
-<td>an alternative way to create a COMETS model by reading from a file</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.model.html#cometspy.model.model.write_comets_model" title="cometspy.model.model.write_comets_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_comets_model</span></code></a>([working_dir])</td>
-<td>writes the COMETS model object to a file</td>
-</tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt id="cometspy.model.model.add_convection_parameters">
-<code class="descname">add_convection_parameters</code><span class="sig-paren">(</span><em><span class="n">packedDensity</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">elasticModulus</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">frictionConstant</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">convDiffConstant</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_convection_parameters" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.add_convection_parameters">
+<code class="descname">add_convection_parameters</code><span class="sig-paren">(</span><em><span class="n">packedDensity</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">elasticModulus</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">frictionConstant</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">convDiffConstant</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.add_convection_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the parameters for biomass spread to use convection</p>
 <p>This also requires one set the biomassMotionStyle to 
 ‘Convection 2D’ in the comets.params object (see Example)</p>
@@ -336,8 +236,8 @@ or None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.add_light">
-<code class="descname">add_light</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">abs_coefficient</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">abs_base</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_light" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.add_light">
+<code class="descname">add_light</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">abs_coefficient</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">abs_base</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.add_light" title="Permalink to this definition">¶</a></dt>
 <dd><p>Causes a reaction to function in response to light</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -358,14 +258,14 @@ or None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.add_neutral_drift_parameter">
-<code class="descname">add_neutral_drift_parameter</code><span class="sig-paren">(</span><em><span class="n">neutralDriftSigma</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_neutral_drift_parameter" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.add_neutral_drift_parameter">
+<code class="descname">add_neutral_drift_parameter</code><span class="sig-paren">(</span><em><span class="n">neutralDriftSigma</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.add_neutral_drift_parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the neutralDriftSigma parameter</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.add_noise_variance_parameter">
-<code class="descname">add_noise_variance_parameter</code><span class="sig-paren">(</span><em><span class="n">noiseVariance</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_noise_variance_parameter" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.add_noise_variance_parameter">
+<code class="descname">add_noise_variance_parameter</code><span class="sig-paren">(</span><em><span class="n">noiseVariance</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.add_noise_variance_parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the noise variance parameter</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -381,8 +281,8 @@ or None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.add_nonlinear_diffusion_parameters">
-<code class="descname">add_nonlinear_diffusion_parameters</code><span class="sig-paren">(</span><em><span class="n">zero</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">n</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">exponent</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">hilln</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">10.0</span></em>, <em><span class="n">hillk</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.9</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_nonlinear_diffusion_parameters" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.add_nonlinear_diffusion_parameters">
+<code class="descname">add_nonlinear_diffusion_parameters</code><span class="sig-paren">(</span><em><span class="n">zero</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">n</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">exponent</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">hilln</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">10.0</span></em>, <em><span class="n">hillk</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.9</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.add_nonlinear_diffusion_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the model to use non-linear diffusion biomass spread.</p>
 <p>This also requires one set the biomassMotionStyle to 
 ‘ConvNonlin Diffusion 2D’ in the comets.params object (see Example)</p>
@@ -404,8 +304,8 @@ or None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.add_signal">
-<code class="descname">add_signal</code><span class="sig-paren">(</span><em><span class="n">rxn_num</span></em>, <em><span class="n">exch_ind</span></em>, <em><span class="n">bound</span></em>, <em><span class="n">function</span></em>, <em><span class="n">parms</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_signal" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.add_signal">
+<code class="descname">add_signal</code><span class="sig-paren">(</span><em><span class="n">rxn_num</span></em>, <em><span class="n">exch_ind</span></em>, <em><span class="n">bound</span></em>, <em><span class="n">function</span></em>, <em><span class="n">parms</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.add_signal" title="Permalink to this definition">¶</a></dt>
 <dd><p>adds a signal to the reaction rxn_num that changes bounds</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -430,8 +330,8 @@ or None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.change_bounds">
-<code class="descname">change_bounds</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">lower_bound</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">upper_bound</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_bounds" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.change_bounds">
+<code class="descname">change_bounds</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">lower_bound</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">upper_bound</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.change_bounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>changes the bounds of the specified reaction</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -452,8 +352,8 @@ or None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.change_hill">
-<code class="descname">change_hill</code><span class="sig-paren">(</span><em><span class="n">reaction</span></em>, <em><span class="n">hill</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_hill" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.change_hill">
+<code class="descname">change_hill</code><span class="sig-paren">(</span><em><span class="n">reaction</span></em>, <em><span class="n">hill</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.change_hill" title="Permalink to this definition">¶</a></dt>
 <dd><p>changes the hill coefficient of the specified reaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -472,8 +372,8 @@ or None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.change_km">
-<code class="descname">change_km</code><span class="sig-paren">(</span><em><span class="n">reaction</span></em>, <em><span class="n">km</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_km" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.change_km">
+<code class="descname">change_km</code><span class="sig-paren">(</span><em><span class="n">reaction</span></em>, <em><span class="n">km</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.change_km" title="Permalink to this definition">¶</a></dt>
 <dd><p>changes the km of the specified reaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -493,8 +393,8 @@ kinetics</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.change_vmax">
-<code class="descname">change_vmax</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">vmax</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_vmax" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.change_vmax">
+<code class="descname">change_vmax</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">vmax</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.change_vmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>changes the vmax of the specified reaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -514,8 +414,8 @@ kinetics</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.delete_comets_model">
-<code class="descname">delete_comets_model</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.delete_comets_model" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.delete_comets_model">
+<code class="descname">delete_comets_model</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.delete_comets_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>deletes a file version of this model if it exists.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -532,8 +432,8 @@ kinetics</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.ensure_sinks_are_not_exchanges">
-<code class="descname">ensure_sinks_are_not_exchanges</code><span class="sig-paren">(</span><em><span class="n">suffix</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'_c'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.ensure_sinks_are_not_exchanges" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.ensure_sinks_are_not_exchanges">
+<code class="descname">ensure_sinks_are_not_exchanges</code><span class="sig-paren">(</span><em><span class="n">suffix</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'_c'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.ensure_sinks_are_not_exchanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>set exchange reactions ending in suffix (default = ‘_c’) to sink</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -550,8 +450,8 @@ kinetics</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.get_bounds">
-<code class="descname">get_bounds</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#cometspy.model.model.get_bounds" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.get_bounds">
+<code class="descname">get_bounds</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#cometspy.model.get_bounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a tuple (lb, ub) for the specified reaction</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -568,20 +468,20 @@ kinetics</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.get_exchange_metabolites">
-<code class="descname">get_exchange_metabolites</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.model.model.get_exchange_metabolites" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.get_exchange_metabolites">
+<code class="descname">get_exchange_metabolites</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.model.get_exchange_metabolites" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a list of the names of the exchange metabolites</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.get_reaction_names">
-<code class="descname">get_reaction_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.model.model.get_reaction_names" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.get_reaction_names">
+<code class="descname">get_reaction_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.model.get_reaction_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a list of reaction names</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.load_cobra_model">
-<code class="descname">load_cobra_model</code><span class="sig-paren">(</span><em><span class="n">curr_m</span><span class="p">:</span> <span class="n">cobra.core.model.Model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.load_cobra_model" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.load_cobra_model">
+<code class="descname">load_cobra_model</code><span class="sig-paren">(</span><em><span class="n">curr_m</span><span class="p">:</span> <span class="n">cobra.core.model.Model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.load_cobra_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>creates the COMETS model from the supplied cobra model</p>
 <p>This is usually used internally when creating a COMETS model.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -599,8 +499,8 @@ kinetics</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.open_exchanges">
-<code class="descname">open_exchanges</code><span class="sig-paren">(</span><em><span class="n">lower_bound</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">- 1000.0</span></em>, <em><span class="n">upper_bound</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1000.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.open_exchanges" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.open_exchanges">
+<code class="descname">open_exchanges</code><span class="sig-paren">(</span><em><span class="n">lower_bound</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">- 1000.0</span></em>, <em><span class="n">upper_bound</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1000.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.open_exchanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets all exchange boundaries to the specifed values</p>
 <p>This method is useful when first making a COMETS model so that medium
 definitions are not carried over from cobra into COMETS.</p>
@@ -621,8 +521,8 @@ definitions are not carried over from cobra into COMETS.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.read_cobra_model">
-<code class="descname">read_cobra_model</code><span class="sig-paren">(</span><em><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.read_cobra_model" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.read_cobra_model">
+<code class="descname">read_cobra_model</code><span class="sig-paren">(</span><em><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.read_cobra_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>reads a cobra model from a file and loads it into this model</p>
 <p>This is an alternative way to initialize a COMETS model, by supplying
 it with the path to a cobra model that can be read using
@@ -642,8 +542,8 @@ cobra.io.read_sbml_model.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.read_comets_model">
-<code class="descname">read_comets_model</code><span class="sig-paren">(</span><em><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.read_comets_model" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.read_comets_model">
+<code class="descname">read_comets_model</code><span class="sig-paren">(</span><em><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.read_comets_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>an alternative way to create a COMETS model by reading from a file</p>
 <p>This allows a user to load previously-saved COMETS models. The 
 contents populate this object’s attributes.</p>
@@ -662,8 +562,8 @@ contents populate this object’s attributes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.model.model.write_comets_model">
-<code class="descname">write_comets_model</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.write_comets_model" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.model.write_comets_model">
+<code class="descname">write_comets_model</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.write_comets_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>writes the COMETS model object to a file</p>
 <p>This writes the current model object in COMETS format to file, either
 in the current working directory or in the directory specified by
@@ -687,183 +587,11 @@ examine directly or to save.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-cometspy.params">
-<span id="cometspy-params-module"></span><h2>cometspy.params module<a class="headerlink" href="#module-cometspy.params" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-layout-class">
+<h2>The <code class="docutils literal notranslate"><span class="pre">layout</span></code> class<a class="headerlink" href="#the-layout-class" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="cometspy.params.params">
-<em class="property">class </em><code class="descclassname">cometspy.params.</code><code class="descname">params</code><span class="sig-paren">(</span><em><span class="n">global_params</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em><span class="n">package_params</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>object storing simulation-related and some default biological parameters</p>
-<p>The params object is an essential object needed to start a comets
-simulation, along with a layout object containing models. The params 
-object stores simulation information such as timeStep and maxCycles, as 
-well as many default biological parameters such as defaultKm and 
-defaultDiffC (the default metabolite diffusion constant).</p>
-<p>All of the parameters are stored in a dictionary called ‘all_params’ and
-can either be adjusted directly or using set_param().</p>
-<p>When params are written to a COMETS object for COMETS to process, two
-files are generated (‘.current_global’ and ‘current_package’)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>global_params</strong><span class="classifier">str, optional</span></dt><dd><p>optional path to an existing ‘global_params’ file to load</p>
-</dd>
-<dt><strong>package_params</strong><span class="classifier">str, optional</span></dt><dd><p>optional path to an existing ‘package_params’ file to load</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a params object and change two params</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;timeStep&quot;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span> <span class="c1"># hours</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;spaceWidth&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="c1"># cm</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># view all the params</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">show_params</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># access the params directly</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">all_params</span> <span class="c1"># this is a dict</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use a params object in a comets simulation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-7</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># normally we&#39;d now alter the media in the layout</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">add_typical_trace_metabolites</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s1">&#39;lcts_e&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span> <span class="c1"># mmol</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>all_params</strong><span class="classifier">dict</span></dt><dd><p>contains every possible param as keys, with their value as the value</p>
-</dd>
-<dt><strong>params_units</strong><span class="classifier">dict</span></dt><dd><p>dictionary containing the units for each possible parameter</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.params.html#cometspy.params.params.get_param" title="cometspy.params.params.get_param"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_param</span></code></a>(name)</td>
-<td>returns the value associated with the given parameter name</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.params.html#cometspy.params.params.set_param" title="cometspy.params.params.set_param"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_param</span></code></a>(name,&nbsp;value)</td>
-<td>alters a specific parameter value</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.params.html#cometspy.params.params.show_params" title="cometspy.params.params.show_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_params</span></code></a>()</td>
-<td>utility function to show all possible parameters and their units</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.params.html#cometspy.params.params.write_params" title="cometspy.params.params.write_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_params</span></code></a>(out_glb,&nbsp;out_pkg)</td>
-<td>writes params data to the specified files</td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt id="cometspy.params.params.get_param">
-<code class="descname">get_param</code><span class="sig-paren">(</span><em><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#cometspy.params.params.get_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the value associated with the given parameter name</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>the name of the parameter whose value is desired</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt>object</dt><dd><p>the type of object depends on the parameter requested</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="py method">
-<dt id="cometspy.params.params.set_param">
-<code class="descname">set_param</code><span class="sig-paren">(</span><em><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.params.set_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>alters a specific parameter value</p>
-<p>See show_params() for a list of possible parameters to adjust.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>the name of a specific parameter to change</p>
-</dd>
-<dt><strong>value</strong><span class="classifier">variable</span></dt><dd><p>the type of the value depends on the parameter.</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">cometspy</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;writeBiomassLog&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;BiomassLogRate&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;defaultVmax&quot;</span><span class="p">,</span> <span class="mf">10.24</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt id="cometspy.params.params.show_params">
-<code class="descname">show_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.params.show_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>utility function to show all possible parameters and their units</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="cometspy.params.params.write_params">
-<code class="descname">write_params</code><span class="sig-paren">(</span><em><span class="n">out_glb</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">out_pkg</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.params.write_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>writes params data to the specified files</p>
-<p>Usually this is only used internally, though a user could use it to 
-pre-generate params files.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>out_glb</strong><span class="classifier">str</span></dt><dd><p>the path and name of the ‘global’ parameters file to be written</p>
-</dd>
-<dt><strong>out_pkg</strong><span class="classifier">str</span></dt><dd><p>the path and name of the ‘package’ parameters file to be written</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-cometspy.layout">
-<span id="cometspy-layout-module"></span><h2>cometspy.layout module<a class="headerlink" href="#module-cometspy.layout" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt id="cometspy.layout.layout">
-<em class="property">class </em><code class="descclassname">cometspy.layout.</code><code class="descname">layout</code><span class="sig-paren">(</span><em><span class="n">input_obj</span><span class="p">:</span> <span class="n">list</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout">
+<em class="property">class </em><code class="descclassname">cometspy.</code><code class="descname">layout</code><span class="sig-paren">(</span><em><span class="n">input_obj</span><span class="p">:</span> <span class="n">list</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>object containing model and environmental definitions for a COMETS sim.</p>
 <p>The layout object is an essential object needed to start a comets
@@ -944,80 +672,11 @@ COMETS layout to load.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.add_barriers" title="cometspy.layout.layout.add_barriers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_barriers</span></code></a>(barriers)</td>
-<td>adds impenetrable barriers to the layout at specified locations</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.add_external_reaction" title="cometspy.layout.layout.add_external_reaction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_external_reaction</span></code></a>(rxnName,&nbsp;metabolites,&nbsp;…)</td>
-<td>adds an extracellular reaction to the layout</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.add_model" title="cometspy.layout.layout.add_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_model</span></code></a>(model)</td>
-<td>add a cometspy model to this layout</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.add_typical_trace_metabolites" title="cometspy.layout.layout.add_typical_trace_metabolites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_typical_trace_metabolites</span></code></a>([amount,&nbsp;static])</td>
-<td>adds common BIGG-style metabolites to the environment.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.delete_model_files" title="cometspy.layout.layout.delete_model_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_model_files</span></code></a>(working_dir)</td>
-<td>deletes model files in specified directory</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.display_current_media" title="cometspy.layout.layout.display_current_media"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_current_media</span></code></a>()</td>
-<td>a utility function to show current non-zero media amounts</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.get_model_ids" title="cometspy.layout.layout.get_model_ids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_ids</span></code></a>()</td>
-<td>returns a list of the ids of the models in this layout.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.read_comets_layout" title="cometspy.layout.layout.read_comets_layout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_comets_layout</span></code></a>(input_obj)</td>
-<td>load a comets layout from a file</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_global_periodic_media" title="cometspy.layout.layout.set_global_periodic_media"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_global_periodic_media</span></code></a>(metabolite,&nbsp;…)</td>
-<td>set cyclical changes in extracellular nutrient environment</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_metabolite_diffusion" title="cometspy.layout.layout.set_metabolite_diffusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_metabolite_diffusion</span></code></a>(diffusion_constant)</td>
-<td>sets the default diffusion constant for all metabolites</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_region_map" title="cometspy.layout.layout.set_region_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_region_map</span></code></a>(region_map)</td>
-<td>set a region_map dictating different regions in a spatial simulation</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_region_parameters" title="cometspy.layout.layout.set_region_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_region_parameters</span></code></a>(region,&nbsp;diffusion,&nbsp;…)</td>
-<td>set regions-specific diffusion and friction values</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_specific_metabolite" title="cometspy.layout.layout.set_specific_metabolite"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_metabolite</span></code></a>(met,&nbsp;amount[,&nbsp;static])</td>
-<td>sets the initial (or constant) value for a metabolite across space</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_specific_metabolite_at_location" title="cometspy.layout.layout.set_specific_metabolite_at_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_metabolite_at_location</span></code></a>(met,&nbsp;…)</td>
-<td>set an initial value of a metabolite at a specific spatial location</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_specific_metabolite_diffusion" title="cometspy.layout.layout.set_specific_metabolite_diffusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_metabolite_diffusion</span></code></a>(met,&nbsp;…)</td>
-<td>sets the diffusion constant of a specific metabolite</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_specific_refresh" title="cometspy.layout.layout.set_specific_refresh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_refresh</span></code></a>(met,&nbsp;amount)</td>
-<td>set the amount to increment a metabolite continuously through time</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_specific_refresh_at_location" title="cometspy.layout.layout.set_specific_refresh_at_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_refresh_at_location</span></code></a>(met,&nbsp;…)</td>
-<td>sets the amount to adjust a metabolite at a specific location in time</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_specific_static" title="cometspy.layout.layout.set_specific_static"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_static</span></code></a>(met,&nbsp;amount)</td>
-<td>sets a metabolite to a fixed value in every location</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.set_specific_static_at_location" title="cometspy.layout.layout.set_specific_static_at_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_static_at_location</span></code></a>(met,&nbsp;…)</td>
-<td>sets a metabolite to a fixed value at a specific location</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.update_models" title="cometspy.layout.layout.update_models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_models</span></code></a>()</td>
-<td>updates layout properties when models are added / removed</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.write_layout" title="cometspy.layout.layout.write_layout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_layout</span></code></a>(working_dir)</td>
-<td>writes just the COMETS layout file to the supplied path</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.write_model_files" title="cometspy.layout.layout.write_model_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_model_files</span></code></a>([working_dir])</td>
-<td>writes each model file</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.layout.html#cometspy.layout.layout.write_necessary_files" title="cometspy.layout.layout.write_necessary_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_necessary_files</span></code></a>(working_dir)</td>
-<td>writes the layout and the model files to file</td>
-</tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt id="cometspy.layout.layout.add_barriers">
-<code class="descname">add_barriers</code><span class="sig-paren">(</span><em><span class="n">barriers</span><span class="p">:</span> <span class="n">list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_barriers" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.add_barriers">
+<code class="descname">add_barriers</code><span class="sig-paren">(</span><em><span class="n">barriers</span><span class="p">:</span> <span class="n">list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.add_barriers" title="Permalink to this definition">¶</a></dt>
 <dd><p>adds impenetrable barriers to the layout at specified locations</p>
 <p>Barriers can be used in COMETS to create impenetrable spatial
 locations, for example to simulate rocks or to make a rounded
@@ -1046,8 +705,8 @@ barriers.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.add_external_reaction">
-<code class="descname">add_external_reaction</code><span class="sig-paren">(</span><em><span class="n">rxnName</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">metabolites</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="n">stoichiometry</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_external_reaction" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.add_external_reaction">
+<code class="descname">add_external_reaction</code><span class="sig-paren">(</span><em><span class="n">rxnName</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">metabolites</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="n">stoichiometry</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.add_external_reaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>adds an extracellular reaction to the layout</p>
 <p>External reactions are reactions not tied to a growing (living) model.
 They have rates defined in certain kwargs. There is no enyme
@@ -1085,8 +744,8 @@ concentration; it is assumed fixed.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.add_model">
-<code class="descname">add_model</code><span class="sig-paren">(</span><em><span class="n">model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_model" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.add_model">
+<code class="descname">add_model</code><span class="sig-paren">(</span><em><span class="n">model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.add_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>add a cometspy model to this layout</p>
 <p>This is the preferred way to add models to existing layout.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1120,8 +779,8 @@ concentration; it is assumed fixed.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.add_typical_trace_metabolites">
-<code class="descname">add_typical_trace_metabolites</code><span class="sig-paren">(</span><em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1000.0</span></em>, <em><span class="n">static</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_typical_trace_metabolites" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.add_typical_trace_metabolites">
+<code class="descname">add_typical_trace_metabolites</code><span class="sig-paren">(</span><em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1000.0</span></em>, <em><span class="n">static</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.add_typical_trace_metabolites" title="Permalink to this definition">¶</a></dt>
 <dd><p>adds common BIGG-style metabolites to the environment. This only 
 works if your models use metabolites which are formatted like ‘ca2_e’
 and then should still only be used as a starting point.</p>
@@ -1142,26 +801,26 @@ and then should still only be used as a starting point.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.delete_model_files">
-<code class="descname">delete_model_files</code><span class="sig-paren">(</span><em><span class="n">working_dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.delete_model_files" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.delete_model_files">
+<code class="descname">delete_model_files</code><span class="sig-paren">(</span><em><span class="n">working_dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.delete_model_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>deletes model files in specified directory</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.display_current_media">
-<code class="descname">display_current_media</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.display_current_media" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.display_current_media">
+<code class="descname">display_current_media</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.display_current_media" title="Permalink to this definition">¶</a></dt>
 <dd><p>a utility function to show current non-zero media amounts</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.get_model_ids">
-<code class="descname">get_model_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.layout.layout.get_model_ids" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.get_model_ids">
+<code class="descname">get_model_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.layout.get_model_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a list of the ids of the models in this layout.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.read_comets_layout">
-<code class="descname">read_comets_layout</code><span class="sig-paren">(</span><em><span class="n">input_obj</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.read_comets_layout" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.read_comets_layout">
+<code class="descname">read_comets_layout</code><span class="sig-paren">(</span><em><span class="n">input_obj</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.read_comets_layout" title="Permalink to this definition">¶</a></dt>
 <dd><p>load a comets layout from a file</p>
 <p>If a COMETS layout file has been previously made, this function can
 load that file into the current cometspy layout object.</p>
@@ -1181,8 +840,8 @@ load that file into the current cometspy layout object.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_global_periodic_media">
-<code class="descname">set_global_periodic_media</code><span class="sig-paren">(</span><em><span class="n">metabolite</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">function</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amplitude</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">period</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">phase</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">offset</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_global_periodic_media" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_global_periodic_media">
+<code class="descname">set_global_periodic_media</code><span class="sig-paren">(</span><em><span class="n">metabolite</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">function</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amplitude</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">period</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">phase</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">offset</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_global_periodic_media" title="Permalink to this definition">¶</a></dt>
 <dd><p>set cyclical changes in extracellular nutrient environment</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1209,8 +868,8 @@ load that file into the current cometspy layout object.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_metabolite_diffusion">
-<code class="descname">set_metabolite_diffusion</code><span class="sig-paren">(</span><em><span class="n">diffusion_constant</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_metabolite_diffusion" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_metabolite_diffusion">
+<code class="descname">set_metabolite_diffusion</code><span class="sig-paren">(</span><em><span class="n">diffusion_constant</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_metabolite_diffusion" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the default diffusion constant for all metabolites</p>
 <p>Specific diffusion constants can be set subsequent to setting this.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1228,8 +887,8 @@ load that file into the current cometspy layout object.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_region_map">
-<code class="descname">set_region_map</code><span class="sig-paren">(</span><em><span class="n">region_map</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_region_map" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_region_map">
+<code class="descname">set_region_map</code><span class="sig-paren">(</span><em><span class="n">region_map</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_region_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>set a region_map dictating different regions in a spatial simulation</p>
 <p>COMETS can have different regions with different substrate diffusivities
 and frictions.  Here, you set the map defining the regions. Specifically,
@@ -1262,8 +921,8 @@ lists which can be coerced to an integer array using np.array()</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_region_parameters">
-<code class="descname">set_region_parameters</code><span class="sig-paren">(</span><em><span class="n">region</span><span class="p">:</span> <span class="n">int</span></em>, <em><span class="n">diffusion</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="n">friction</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_region_parameters" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_region_parameters">
+<code class="descname">set_region_parameters</code><span class="sig-paren">(</span><em><span class="n">region</span><span class="p">:</span> <span class="n">int</span></em>, <em><span class="n">diffusion</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="n">friction</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_region_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>set regions-specific diffusion and friction values</p>
 <p>COMETS can have different regions with different substrate 
 diffusivities and frictions.  Here, you set those parameters.</p>
@@ -1304,8 +963,8 @@ using the layout.set_region_map() function.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_specific_metabolite">
-<code class="descname">set_specific_metabolite</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">static</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_metabolite" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_specific_metabolite">
+<code class="descname">set_specific_metabolite</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">static</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_specific_metabolite" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the initial (or constant) value for a metabolite across space</p>
 <p>This is the most common way to set a metabolite concentration. It 
 sets the initial value of the named metabolite to ‘amount’ in every
@@ -1346,8 +1005,8 @@ during the simulation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_specific_metabolite_at_location">
-<code class="descname">set_specific_metabolite_at_location</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">location</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_metabolite_at_location" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_specific_metabolite_at_location">
+<code class="descname">set_specific_metabolite_at_location</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">location</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_specific_metabolite_at_location" title="Permalink to this definition">¶</a></dt>
 <dd><p>set an initial value of a metabolite at a specific spatial location</p>
 <p>In contrast to set_specific_metabolite, which sets initial values 
 universally over space, this method sets a specific metabolite 
@@ -1379,8 +1038,8 @@ initial value at one location only.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_specific_metabolite_diffusion">
-<code class="descname">set_specific_metabolite_diffusion</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">diffusion_constant</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_metabolite_diffusion" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_specific_metabolite_diffusion">
+<code class="descname">set_specific_metabolite_diffusion</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">diffusion_constant</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_specific_metabolite_diffusion" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the diffusion constant of a specific metabolite</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1405,8 +1064,8 @@ initial value at one location only.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_specific_refresh">
-<code class="descname">set_specific_refresh</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_refresh" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_specific_refresh">
+<code class="descname">set_specific_refresh</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_specific_refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>set the amount to increment a metabolite continuously through time</p>
 <p>metabolites can be “refreshed” or “dripped in” during a COMETS 
 simulation. This sets the amount added each hour, which is divided
@@ -1429,8 +1088,8 @@ in space.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_specific_refresh_at_location">
-<code class="descname">set_specific_refresh_at_location</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">location</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_refresh_at_location" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_specific_refresh_at_location">
+<code class="descname">set_specific_refresh_at_location</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">location</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_specific_refresh_at_location" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the amount to adjust a metabolite at a specific location in time</p>
 <p>Like set_specific_refresh, but for a specific lacation. This 
 Method is used to specify how much a metabolite is increased (or 
@@ -1454,8 +1113,8 @@ decreased) each hour in a specific location.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_specific_static">
-<code class="descname">set_specific_static</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_static" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_specific_static">
+<code class="descname">set_specific_static</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_specific_static" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets a metabolite to a fixed value in every location</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1474,8 +1133,8 @@ decreased) each hour in a specific location.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.set_specific_static_at_location">
-<code class="descname">set_specific_static_at_location</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">location</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_static_at_location" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.set_specific_static_at_location">
+<code class="descname">set_specific_static_at_location</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">location</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.set_specific_static_at_location" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets a metabolite to a fixed value at a specific location</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1496,8 +1155,8 @@ decreased) each hour in a specific location.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.update_models">
-<code class="descname">update_models</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.update_models" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.update_models">
+<code class="descname">update_models</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.update_models" title="Permalink to this definition">¶</a></dt>
 <dd><p>updates layout properties when models are added / removed</p>
 <p>This is usually just called internally. However, if you manually 
 change layout.models, then this method should be called to make other
@@ -1505,8 +1164,8 @@ necessary changes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.write_layout">
-<code class="descname">write_layout</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.write_layout" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.write_layout">
+<code class="descname">write_layout</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.write_layout" title="Permalink to this definition">¶</a></dt>
 <dd><p>writes just the COMETS layout file to the supplied path</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1523,14 +1182,14 @@ necessary changes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.write_model_files">
-<code class="descname">write_model_files</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.write_model_files" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.write_model_files">
+<code class="descname">write_model_files</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.write_model_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>writes each model file</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.layout.layout.write_necessary_files">
-<code class="descname">write_necessary_files</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.write_necessary_files" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.layout.write_necessary_files">
+<code class="descname">write_necessary_files</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.write_necessary_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>writes the layout and the model files to file</p>
 <p>This method is called by comets.run(). Alternatively it may be called
 directly if one wishes to inspect comets layout and model files.</p>
@@ -1554,14 +1213,171 @@ be hidden from file browsers by default.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-cometspy.comets">
-<span id="cometspy-comets-module"></span><h2>cometspy.comets module<a class="headerlink" href="#module-cometspy.comets" title="Permalink to this headline">¶</a></h2>
-<p>The comets module runs COMETS simulations and stores output.</p>
-<p>Generally, a comets object is created just before calling run(). Afterwards,
-any saved data (e.g. total_biomass) can be accessed from the object.</p>
+<div class="section" id="the-params-class">
+<h2>The <code class="docutils literal notranslate"><span class="pre">params</span></code> class<a class="headerlink" href="#the-params-class" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="cometspy.comets.comets">
-<em class="property">class </em><code class="descclassname">cometspy.comets.</code><code class="descname">comets</code><span class="sig-paren">(</span><em><span class="n">layout</span></em>, <em><span class="n">parameters</span></em>, <em><span class="n">relative_dir</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.comets.comets" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.params">
+<em class="property">class </em><code class="descclassname">cometspy.</code><code class="descname">params</code><span class="sig-paren">(</span><em><span class="n">global_params</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em><span class="n">package_params</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>object storing simulation-related and some default biological parameters</p>
+<p>The params object is an essential object needed to start a comets
+simulation, along with a layout object containing models. The params 
+object stores simulation information such as timeStep and maxCycles, as 
+well as many default biological parameters such as defaultKm and 
+defaultDiffC (the default metabolite diffusion constant).</p>
+<p>All of the parameters are stored in a dictionary called ‘all_params’ and
+can either be adjusted directly or using set_param().</p>
+<p>When params are written to a COMETS object for COMETS to process, two
+files are generated (‘.current_global’ and ‘current_package’)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>global_params</strong><span class="classifier">str, optional</span></dt><dd><p>optional path to an existing ‘global_params’ file to load</p>
+</dd>
+<dt><strong>package_params</strong><span class="classifier">str, optional</span></dt><dd><p>optional path to an existing ‘package_params’ file to load</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a params object and change two params</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;timeStep&quot;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span> <span class="c1"># hours</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;spaceWidth&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="c1"># cm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># view all the params</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">show_params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># access the params directly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">all_params</span> <span class="c1"># this is a dict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use a params object in a comets simulation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-7</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># normally we&#39;d now alter the media in the layout</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">add_typical_trace_metabolites</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s1">&#39;lcts_e&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span> <span class="c1"># mmol</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>all_params</strong><span class="classifier">dict</span></dt><dd><p>contains every possible param as keys, with their value as the value</p>
+</dd>
+<dt><strong>params_units</strong><span class="classifier">dict</span></dt><dd><p>dictionary containing the units for each possible parameter</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+</tbody>
+</table>
+<dl class="py method">
+<dt id="cometspy.params.get_param">
+<code class="descname">get_param</code><span class="sig-paren">(</span><em><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#cometspy.params.get_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the value associated with the given parameter name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>the name of the parameter whose value is desired</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>object</dt><dd><p>the type of object depends on the parameter requested</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.params.set_param">
+<code class="descname">set_param</code><span class="sig-paren">(</span><em><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.set_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>alters a specific parameter value</p>
+<p>See show_params() for a list of possible parameters to adjust.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>the name of a specific parameter to change</p>
+</dd>
+<dt><strong>value</strong><span class="classifier">variable</span></dt><dd><p>the type of the value depends on the parameter.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">cometspy</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;writeBiomassLog&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;BiomassLogRate&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;defaultVmax&quot;</span><span class="p">,</span> <span class="mf">10.24</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.params.show_params">
+<code class="descname">show_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.show_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>utility function to show all possible parameters and their units</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.params.write_params">
+<code class="descname">write_params</code><span class="sig-paren">(</span><em><span class="n">out_glb</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">out_pkg</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.write_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>writes params data to the specified files</p>
+<p>Usually this is only used internally, though a user could use it to 
+pre-generate params files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>out_glb</strong><span class="classifier">str</span></dt><dd><p>the path and name of the ‘global’ parameters file to be written</p>
+</dd>
+<dt><strong>out_pkg</strong><span class="classifier">str</span></dt><dd><p>the path and name of the ‘package’ parameters file to be written</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="the-comets-class">
+<h2>The <code class="docutils literal notranslate"><span class="pre">comets</span></code> class<a class="headerlink" href="#the-comets-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cometspy.comets">
+<em class="property">class </em><code class="descclassname">cometspy.</code><code class="descname">comets</code><span class="sig-paren">(</span><em><span class="n">layout</span></em>, <em><span class="n">parameters</span></em>, <em><span class="n">relative_dir</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.comets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>the main simulation object to run COMETS</p>
 <p>The comets class stores a previously-made layout and params, and 
@@ -1653,26 +1469,11 @@ temporary files may overwrite each other.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.comets.html#cometspy.comets.comets.get_biomass_image" title="cometspy.comets.comets.get_biomass_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_biomass_image</span></code></a>(model_id,&nbsp;cycle)</td>
-<td>returns an image of biomass concentrations at a given cycle</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.comets.html#cometspy.comets.comets.get_flux_image" title="cometspy.comets.comets.get_flux_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_flux_image</span></code></a>(model_id,&nbsp;reaction_id,&nbsp;cycle)</td>
-<td>returns a 2d numpy array showing fluxes at a given cycle</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.comets.html#cometspy.comets.comets.get_metabolite_image" title="cometspy.comets.comets.get_metabolite_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metabolite_image</span></code></a>(met,&nbsp;cycle)</td>
-<td>returns an image of metabolite concentrations at a given cycle</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="cometspy.comets.html#cometspy.comets.comets.run" title="cometspy.comets.comets.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>([delete_files])</td>
-<td>run a COMETS simulation</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="cometspy.comets.html#cometspy.comets.comets.set_classpath" title="cometspy.comets.comets.set_classpath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_classpath</span></code></a>(libraryname,&nbsp;path)</td>
-<td>sets the full path to a required specified java library</td>
-</tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt id="cometspy.comets.comets.get_biomass_image">
-<code class="descname">get_biomass_image</code><span class="sig-paren">(</span><em><span class="n">model_id</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">cycle</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="headerlink" href="#cometspy.comets.comets.get_biomass_image" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.comets.get_biomass_image">
+<code class="descname">get_biomass_image</code><span class="sig-paren">(</span><em><span class="n">model_id</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">cycle</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="headerlink" href="#cometspy.comets.get_biomass_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns an image of biomass concentrations at a given cycle</p>
 <p>This will only work if biomass was saved at the current cycle. This 
 requires the following parameters to have been set:
@@ -1709,8 +1510,8 @@ requires the following parameters to have been set:
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.comets.comets.get_flux_image">
-<code class="descname">get_flux_image</code><span class="sig-paren">(</span><em><span class="n">model_id</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">reaction_id</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">cycle</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="headerlink" href="#cometspy.comets.comets.get_flux_image" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.comets.get_flux_image">
+<code class="descname">get_flux_image</code><span class="sig-paren">(</span><em><span class="n">model_id</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">reaction_id</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">cycle</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="headerlink" href="#cometspy.comets.get_flux_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a 2d numpy array showing fluxes at a given cycle</p>
 <p>This will only work if flux was saved at the current cycle. This 
 requires the following parameters to have been set:</p>
@@ -1751,8 +1552,8 @@ params.set_param(“FluxLogRate”, n) # n is in cycles</div></blockquote>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.comets.comets.get_metabolite_image">
-<code class="descname">get_metabolite_image</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">cycle</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="headerlink" href="#cometspy.comets.comets.get_metabolite_image" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.comets.get_metabolite_image">
+<code class="descname">get_metabolite_image</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">cycle</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="headerlink" href="#cometspy.comets.get_metabolite_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns an image of metabolite concentrations at a given cycle</p>
 <p>This will only work if media was saved at the current cycle. This 
 requires the following parameters to have been set:</p>
@@ -1794,8 +1595,8 @@ cycle. The bug does not affect anything within the simulation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.comets.comets.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em><span class="n">delete_files</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.comets.comets.run" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.comets.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em><span class="n">delete_files</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.comets.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>run a COMETS simulation</p>
 <p>This runs the COMETS simulation specified by the layout and params
 objects supplied to this comets object. It creates the files needed
@@ -1828,8 +1629,8 @@ data log files are not deleted. They are deleted by default.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="cometspy.comets.comets.set_classpath">
-<code class="descname">set_classpath</code><span class="sig-paren">(</span><em><span class="n">libraryname</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.comets.comets.set_classpath" title="Permalink to this definition">¶</a></dt>
+<dt id="cometspy.comets.set_classpath">
+<code class="descname">set_classpath</code><span class="sig-paren">(</span><em><span class="n">libraryname</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.comets.set_classpath" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the full path to a required specified java library</p>
 <p>This can be used to set non-default classpaths. Note that currently,
 it does not work for windows, because windows runs COMETS slightly
@@ -1858,133 +1659,12 @@ differently than Unix.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-cometspy.utils">
-<span id="cometspy-utils-module"></span><h2>cometspy.utils module<a class="headerlink" href="#module-cometspy.utils" title="Permalink to this headline">¶</a></h2>
-<p>The utils module contains helper functions generating spatial patterns.</p>
-<dl class="py function">
-<dt id="cometspy.utils.chemostat">
-<code class="descclassname">cometspy.utils.</code><code class="descname">chemostat</code><span class="sig-paren">(</span><em><span class="n">models</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="n">reservoir_media</span><span class="p">:</span> <span class="n">dict</span></em>, <em><span class="n">dilution_rate</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#cometspy.utils.chemostat" title="Permalink to this definition">¶</a></dt>
-<dd><p>helper function to let a user skip some steps when generating a chemostat</p>
-<p>This sets relevant simulation parameters (e.g. deathRate, 
-metaboliteDilutionRate) and layout values (e.g. refresh media) based upon
-a “reservoir” definition and a dilution rate.</p>
-<p>It generates a layout that has the reservoir_media as the initial values,
-as well as set it to drip in / out based upon the dilution rate.</p>
-<p>The returned layout and params can be further modified before supplying
-to a comets object if desired.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>models</strong><span class="classifier">list(cometspy.model)</span></dt><dd><p>list of cometspy.model(s) with initial_pop set to use in the sim</p>
-</dd>
-<dt><strong>reservoir_media</strong><span class="classifier">dict</span></dt><dd><p>media definition with metabolite names as keys as mmol amounts as values</p>
-</dd>
-<dt><strong>dilution_rate</strong><span class="classifier">float</span></dt><dd><p>the dilution rate of the chemostat, in 1/hr</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt>tuple (layout, params)</dt><dd><p>a cometspy.layout object and a cometspy.params object</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cometspy.utils</span> <span class="kn">import</span> <span class="n">chemostat</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a model from a cobra model, open exchange reactions, and give a pop</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tb</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-4</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">reservoir</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;glc__D_e&#39;</span> <span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;nh4_e&#39;</span> <span class="p">:</span> <span class="mf">1000.</span><span class="p">,</span> <span class="s1">&#39;pi_e&#39;</span> <span class="p">:</span> <span class="mf">1000.</span><span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">chemostat</span><span class="p">([</span><span class="n">m</span><span class="p">],</span> <span class="n">reservoir</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt id="cometspy.utils.grow_rocks">
-<code class="descclassname">cometspy.utils.</code><code class="descname">grow_rocks</code><span class="sig-paren">(</span><em><span class="n">n</span><span class="p">:</span> <span class="n">int</span></em>, <em><span class="n">xrange</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">yrange</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">mean_size</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.utils.grow_rocks" title="Permalink to this definition">¶</a></dt>
-<dd><p>grows simple simulated rocks by adding random adjacent points from seeds</p>
-<p>n number of seed points are generated first with pick_random_locations. 
-Then, mean_size * n - n additional points are added to these seed locations. 
-For each new point, one random location out of the set of all possible 
-unoccupied locations next to occupied locations are chosen. Only 
-lattice points directly to the NSEW are considered. This process is
-repeated until all new points are assigned. This usually results in
-‘rocks’ of different shapes and sizes.</p>
-<p>This function can be very slow (&gt; 1 min) when n * mean_size &gt; 2000</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>number of seed points to generate rocks from</p>
-</dd>
-<dt><strong>xrange</strong><span class="classifier">tuple</span></dt><dd><p>x range possible, e.g. (0, 5)</p>
-</dd>
-<dt><strong>yrange</strong><span class="classifier">tuple</span></dt><dd><p>y range possible, e.g. (0, 10)</p>
-</dd>
-<dt><strong>mean_size</strong><span class="classifier">int</span></dt><dd><p>average size in lattice units of a generated rock</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt>list</dt><dd><p>list of all points generated including seed points</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="py function">
-<dt id="cometspy.utils.pick_random_locations">
-<code class="descclassname">cometspy.utils.</code><code class="descname">pick_random_locations</code><span class="sig-paren">(</span><em><span class="n">n</span><span class="p">:</span> <span class="n">int</span></em>, <em><span class="n">xrange</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">yrange</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">forbidden_locs</span><span class="p">:</span> <span class="n">set</span> <span class="o">=</span> <span class="default_value">{}</span></em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.utils.pick_random_locations" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of n x,y tuples corresponding to locations in the range given</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>number of locations desired</p>
-</dd>
-<dt><strong>xrange</strong><span class="classifier">tuple</span></dt><dd><p>the x-range (min, max) of the x range possible</p>
-</dd>
-<dt><strong>yrange</strong><span class="classifier">tuple</span></dt><dd><p>the y-range (min, max) of the y range possible</p>
-</dd>
-<dt><strong>forbidden_locs</strong><span class="classifier">set, optional</span></dt><dd><p>A list of tuples that cannot be chosen.</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt>list</dt><dd><p>a list of (x,y) values.</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cometspy.utils</span> <span class="kn">import</span> <span class="n">pick_random_locations</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="n">pick_random_locations</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span>
-</pre></div>
-</div>
+<div class="section" id="the-utils-class">
+<h2>The <code class="docutils literal notranslate"><span class="pre">utils</span></code> class<a class="headerlink" href="#the-utils-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py attribute">
+<dt id="cometspy.utils">
+<code class="descclassname">cometspy.</code><code class="descname">utils</code><a class="headerlink" href="#cometspy.utils" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#cometspy.utils" title="cometspy.utils"><code class="xref py py-class docutils literal notranslate"><span class="pre">cometspy.utils</span></code></a></p>
 </dd></dl>
 
 </div>
