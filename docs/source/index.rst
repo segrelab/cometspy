@@ -7,8 +7,8 @@ cometspy automatically generated API
 ====================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+:maxdepth: 2
+:caption: Contents:
 
 cometspy
 
