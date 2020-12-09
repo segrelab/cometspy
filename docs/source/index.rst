@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to cometspy's documentation!
+cometspy automatically generated API
 ====================================
 
 .. toctree::
@@ -11,11 +11,6 @@ Welcome to cometspy's documentation!
    :caption: Contents:
 
 cometspy
-cometspy.model
-cometspy.layout
-cometspy.params
-cometspy.comets
-cometspy.utils
 
 Indices and tables
 ==================

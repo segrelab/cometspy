@@ -1,19 +1,43 @@
-cometspy:
-=========
+cometspy auto-generated API
+===========================
 
-.. automodule:: cometspy
-   :members:
-   :undoc-members:
-   :show-inheritance:
+The ``model`` class
+*******************
+.. autoclass:: cometspy.model
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-Submodules
-----------
 
-.. toctree::
-   :maxdepth: 4
+The ``layout`` class
+********************
+.. autoclass:: cometspy.layout
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-   cometspy.comets
-   cometspy.layout
-   cometspy.model
-   cometspy.params
-   cometspy.utils
+
+The ``params`` class
+********************
+.. autoclass:: cometspy.params
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+The ``comets`` class
+********************
+.. autoclass:: cometspy.comets
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+The ``utils`` class
+*******************
+.. autoclass:: cometspy.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+   

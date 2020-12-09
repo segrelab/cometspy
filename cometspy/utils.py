@@ -17,6 +17,7 @@ def pick_random_locations(n : int,
 
     Parameters
     ----------
+
     n : int
         number of locations desired
     xrange : tuple
@@ -28,15 +29,16 @@ def pick_random_locations(n : int,
 
     Returns
     -------
+
     list
         a list of (x,y) values. 
         
-    Example
+    Examples
     --------
-    >>>from cometspy.util import pick_random_locations
-    >>>locs = pick_random_locations(3, (0, 10), (0,10))
-    >>>locs
-       [(1, 4), (6, 5), (3, 0)]
+
+    >>> from cometspy.utils import pick_random_locations
+    >>> locs = pick_random_locations(3, (0, 10), (0,10))
+    >>> locs
 
     """
     pickable_locs = [(x,y) for x in range(xrange[0], xrange[1]) for y in range(yrange[0], yrange[1])]
