@@ -1,5 +1,4 @@
 numpydoc
-sphinx-apidoc==3.3.1
 setuptools==51.0.0
 commonmark==0.9.1
 recommonmark==0.6.0
