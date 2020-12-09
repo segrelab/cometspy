@@ -1,9 +1,3 @@
-
-'''
-The model module handles COMETS models
-For more information see https://segrelab.github.io/comets-manual/
-'''
-
 import pandas as pd
 import os
 import numpy as np
@@ -12,15 +6,67 @@ import cobra
 import io
 
 
-def read_file(filename):
-    f = open(filename, 'r')
-    f_lines = f.read()
-    f.close()
-    return f_lines
-
 
 class model:
-    def __init__(self, model=None):
+    """ a COMETS metabolic model to use in a layout
+    
+        A model contains information including the stoichiometric matrix,
+        reaction boundaries and Michaelis-Menten parameters, founder populations,
+        and various attributes related to motion in space.
+        
+        A model is usually initiated by supplying a cobrapy model, and to be used
+        in a COMETS simulation must minimally be given an initial population:
+            
+        Parameters
+        ----------
+        
+        model : cobra.Model or str, optional
+            Either a cobrapy Model, a path to a .cmd COMETS model, a path to a
+            cobra sbml model which could be loaded with cobra.io.read_sbml_model()
+            or None.
+            
+        
+        Attributes
+        ----------
+            
+        initial_pop : list
+            list of lists of spatial founder pops. e.g.[[x, y, grams], [x,y,grams]]
+        id : str
+            the name of the model. should be unique. 
+        reactions : pandas.DataFrame
+            DataFrame containing reaction information including boundaries. 
+        smat : pandas.DataFrame
+            DataFrame containing the stoichiometric matrix
+        metabolites : pandas.DataFrame
+            single-column DataFrame containing the names of the metabolites
+        signals : pandas.Dataframe
+            DataFrame on reactions whose bounds depend on metabolite concentrations
+        default_vmax : float
+            default uptake vmax in mmol / gDW /hr for Michaelis-Menten kinetics
+        default_km : float
+            default half-max metabolite concentration (M) for M-M kinetics
+        default_hill : float
+            default hill coefficient for hill-like uptake kinetics
+        default_bounds : list
+            list of two floats that are the default lower and upper reaction bounds
+        obj_style : str
+            one of MAXIMIZE_OBJECTIVE_FLUX (fba) or MAX_OBJECTIVE_MIN_TOTAL (pfba)
+        optimizer : str
+            one of "GUROBI" or "GLPK". not all functionality works with GLPK
+            
+        Examples
+        --------
+        
+            >>> import cobra.test
+            >>> import cometspy as c
+            >>> ecoli = cobra.test.create_test_model("ecoli")
+            >>> model = c.model(ecoli)
+            >>> model.initial_pop = [0, 0, 1.e-12] # puts 1.e-12 gDW of biomass at 0,0
+            >>> print(model.id)
+            iJO1366
+
+    """
+    def __init__(self, model : cobra.Model =None):
         self.initial_pop = [[0, 0, 0.0]]
         self.id = None
         self.reactions = pd.DataFrame(columns=['REACTION_NAMES', 'ID',
@@ -66,11 +112,29 @@ class model:
                 else:
                     self.read_cobra_model(model)
 
-    def get_reaction_names(self):
+    def get_reaction_names(self) -> list:
+        """ returns a list of reaction names"""
         return(list(self.reactions['REACTION_NAMES']))
+
 
     def add_signal(self, rxn_num, exch_ind, bound,
                    function, parms):
+        """adds a signal to the reaction rxn_num that changes bounds
+        
+            Parameters
+            ----------
+            rxn_num : int or 'death'
+                reaction affected (int) or whether the signal causes death 'death'
+            exch_id : int
+                the number of the exchange reaction. see model.metabolites
+            bound : str  'ub' or 'lb'
+                specifies whether the upper or lower bound is affected
+            function : str 'linear' or 'bounded_linear' or 'generalized_logistic'
+                specifies the function relating the metabolite conc. to the bound
+            parms : list (float)
+                a list of floats for the function 
+                
+        """
 
         if str(rxn_num).lower().strip() == 'death':
             rxn_name = 'death'
@@ -97,50 +161,104 @@ class model:
         self.signals = self.signals.append(new_row, ignore_index=True)
 
     def add_neutral_drift_parameter(self, neutralDriftSigma):
-        """ toggles neutral drift to on (which is in the model file) and
-        sets the demographic noise parameter neutralDriftSigma) """
+        """ sets the neutralDriftSigma parameter """
         if not isinstance(neutralDriftSigma, float):
             raise ValueError("neutralDriftSigma must be a float")
         self.neutral_drift_flag = True
         self.neutralDriftSigma = neutralDriftSigma
 
     def add_nonlinear_diffusion_parameters(self,
-                                           convNonlinDiffZero=1.,
-                                           convNonlinDiffN=1.,
-                                           convNonlinDiffExponent=1.,
-                                           convNonlinDiffHillN=10.,
-                                           convNonlinDiffHillK=0.9):
-        print("Note: for non-linear diffusion parameters to function,\n"
-              + "params.all_params['biomassMotionStyle'] = 'ConvNonlin' Diffusion 2D'\n"
-              + "must also be set")
-        for parm in [convNonlinDiffZero, convNonlinDiffN,
-                     convNonlinDiffExponent, convNonlinDiffHillN,
-                     convNonlinDiffHillK]:
+                                           zero : float=1.,
+                                           n : float =1.,
+                                           exponent : float=1.,
+                                           hilln : float=10.,
+                                           hillk : float=0.9):
+        """ sets the model to use non-linear diffusion biomass spread.
+            
+            This also requires one set the biomassMotionStyle to 
+            'ConvNonlin Diffusion 2D' in the comets.params object (see Example)
+            
+            Parameters
+            ----------
+            zero : float, optional
+            n : float, optional
+            exponent : float, optional
+            hilln : float, optional
+            hillk : float, optional
+            
+            Example
+            --------
+            
+            >>> import cobra.test
+            >>> import cometspy as c
+            >>> model = c.model(cobra.test.create_test_model("ecoli"))
+            >>> model.add_nonlinear_diffusion_parameters(1., 1., 2., 5., 0.5)
+            >>> params = c.params()
+            >>> params.set_param("biomassMotionStyle", "ConvNonlin Diffusion 2D")
+            
+        """
+        
+        for parm in [zero, n,
+                     exponent, hilln,
+                     hillk]:
             if not isinstance(parm, float):
                 raise ValueError('all nonlinear diffusion terms must be float')
         self.nonlinear_diffusion_flag = True
-        self.nonlinear_diffusion_parameters = {'convNonLinDiffZero': convNonlinDiffZero,
-                                               'convNonlinDiffN': convNonlinDiffN,
-                                               'convNonlinDiffExponent': convNonlinDiffExponent,
-                                               'convNonlinDiffHillN': convNonlinDiffHillN,
-                                               'convNonlinDiffHillK': convNonlinDiffHillK}
+        self.nonlinear_diffusion_parameters = {'convNonLinDiffZero': zero,
+                                               'convNonlinDiffN': n,
+                                               'convNonlinDiffExponent': exponent,
+                                               'convNonlinDiffHillN': hilln,
+                                               'convNonlinDiffHillK': hillk}
 
-    def add_light(self, reaction, abs_coefficient, abs_base):
+    def add_light(self, reaction : str, 
+                  abs_coefficient : float, 
+                  abs_base : float):
+        """Causes a reaction to function in response to light
+            
+            Parameters
+            ----------
+            
+            reaction : str
+                the name of the reaction affected
+            abs_coefficient : float
+                the absorption coefficient
+            abs_base : float
+                absorption baseline
+                
+        """
         if (reaction not in self.reactions['REACTION_NAMES'].values):
             raise ValueError('the reaction is not present in the model')
         self.light.append([reaction, abs_coefficient, abs_base])
         self.light_flag = True
 
-    def add_convection_parameters(self, packedDensity=1.,
-                                  elasticModulus=1.,
-                                  frictionConstant=1.,
-                                  convDiffConstant=1.):
-        """ running this without named parameters sets default parameters (i.e. 1).
-        Named parameters are used to specify how convection works """
-
-        print("Note: for convection parameters to function,\n"
-              + "params.all_params['biomassMotionStyle'] = 'Convection 2D'\n"
-              + "must also be set")
+    def add_convection_parameters(self, packedDensity : float =1.,
+                                  elasticModulus : float =1.,
+                                  frictionConstant : float =1.,
+                                  convDiffConstant : float =1.):
+        """ sets the parameters for biomass spread to use convection
+        
+            This also requires one set the biomassMotionStyle to 
+            'Convection 2D' in the comets.params object (see Example)
+            
+            Parameters
+            ----------
+            
+            packedDensity : float, optional
+            elasticModulus : float, optional
+            frictionConstant : float, optional
+            convDiffConstant : float, optional
+            
+            Example
+            -------
+            
+            import cobra.test
+            import cometspy as c
+            model = c.model(cobra.test.create_test_model("ecoli"))
+            model.add_convection_parameters(1., 0.5, 2., 10.e-5)
+            params = c.params()
+            params.set_param("biomassMotionStyle", "Convection 2D") 
+            
+        """ 
         if not isinstance(packedDensity, float):
             raise ValueError('packed_density must be a float')
         if not isinstance(elasticModulus, float):
@@ -155,26 +273,54 @@ class model:
                                       'frictionConstant': frictionConstant,
                                       'convDiffConstant': convDiffConstant}
 
-    def add_noise_variance_parameter(self, noiseVariance):
+    def add_noise_variance_parameter(self, noiseVariance : float):
+        """ sets the noise variance parameter 
+        
+            Parameters
+            ----------
+            noiseVariance : float
+            
+        """
         if not isinstance(noiseVariance, float):
             raise ValueError('noiseVariance must be a float')
         self.noise_variance_flag = True
         self.noise_variance = noiseVariance
         
-    def ensure_sinks_are_not_exchanges(self):
-        """ many BiGG models have sink reactions which look like exchanges (i.e. they
-        are unbalanced).  This function sets any reaction which ends in _c to be not an exchange"""
-        rxn_names = [rxn for rxn in self.reactions.REACTION_NAMES.to_list() if rxn[-2:] == '_c']
+    def ensure_sinks_are_not_exchanges(self, suffix : str = '_c'):
+        """ set exchange reactions ending in suffix (default = '_c') to sink
+        
+            Parameters
+            ----------
+            suffix : str, optional
+                the suffix to look for in exchange reactions. default = '_c'
+
+        """
+        rxn_names = [rxn for rxn in self.reactions.REACTION_NAMES.to_list() if rxn[-2:] == suffix]
         for rxn in rxn_names:
             self.reactions.loc[self.reactions.REACTION_NAMES == rxn, 'EXCH'] = False
             self.reactions.loc[self.reactions.REACTION_NAMES == rxn, 'EXCH_IND'] = 0
 
-    def open_exchanges(self, lower_bound = -1000, upper_bound = 1000):
+    def open_exchanges(self, lower_bound : float = -1000., upper_bound : float = 1000.):
+        """ sets all exchange boundaries to the specifed values 
+            
+            This method is useful when first making a COMETS model so that medium
+            definitions are not carried over from cobra into COMETS. 
+            
+            Parameters
+            ----------
+            
+            lower_bound : float, optional
+                default = -1000.   in units of mmol / gDW / hr
+            upper_bound : float, optional
+                default = 1000.    in units of mmol / gDW / hr
+                
+        """
+        
         self.reactions.loc[self.reactions.EXCH,'LB'] = lower_bound
         self.reactions.loc[self.reactions.EXCH,'UB'] = upper_bound
 
-    def get_exchange_metabolites(self):
-        """ useful for layouts to grab these and get the set of them """
+    def get_exchange_metabolites(self) -> list:
+        """ returns a list of the names of the exchange metabolites """
         exchmets = pd.merge(self.reactions.loc[self.reactions['EXCH'], 'ID'],
                             self.smat,
                             left_on='ID', right_on='rxn',
@@ -182,7 +328,20 @@ class model:
         exchmets = self.metabolites.iloc[exchmets-1]
         return(exchmets.METABOLITE_NAMES)
 
-    def change_bounds(self, reaction, lower_bound, upper_bound):
+    def change_bounds(self, reaction : str, lower_bound : float, upper_bound : float):
+        """ changes the bounds of the specified reaction
+        
+            Parameters
+            ----------
+            
+            reaction : str
+                the name of the reaction
+            lower_bound : float
+                the new value of the reaction's lower bound in mmol / gDW / hr
+            upper_bound : float
+                the new value of the reaction's upper bound in mmol / gDW / hr
+                
+        """
         if reaction not in self.reactions['REACTION_NAMES'].values:
             print('reaction couldnt be found')
             return
@@ -191,7 +350,16 @@ class model:
         self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction,
                            'UB'] = upper_bound
 
-    def get_bounds(self, reaction):
+    def get_bounds(self, reaction : str) -> tuple:
+        """returns a tuple (lb, ub) for the specified reaction
+        
+            Parameters
+            ----------
+            
+            reaction : str
+                the name of the reaction
+        
+        """
         if reaction not in self.reactions['REACTION_NAMES'].values:
             print('reaction couldnt be found')
             return
@@ -201,7 +369,19 @@ class model:
             'REACTION_NAMES'] == reaction, 'UB'])
         return((lb, ub))
 
-    def change_vmax(self, reaction, vmax):
+    def change_vmax(self, reaction : str, vmax : float):
+        """ changes the vmax of the specified reaction. 
+        
+            Parameters
+            ----------
+            
+            reaction : str
+                the name of the reaction
+            vmax : float
+                the new vmax value for the reaction, for Monod (Michaelis-Menten)
+                kinetics
+        
+        """
         if reaction not in self.reactions['REACTION_NAMES'].values:
             print('reaction couldnt be found')
             return
@@ -210,6 +390,18 @@ class model:
             'REACTION_NAMES'] == reaction, 'V_MAX'] = vmax
 
     def change_km(self, reaction, km):
+        """ changes the km of the specified reaction. 
+        
+            Parameters
+            ----------
+            
+            reaction : str
+                the name of the reaction
+            km : float
+                the new km value for the reaction, for Monod (Michaelis-Menten)
+                kinetics
+        
+        """
         if reaction not in self.reactions['REACTION_NAMES'].values:
             print('reaction couldnt be found')
             return
@@ -218,6 +410,17 @@ class model:
             'REACTION_NAMES'] == reaction, 'KM'] = km
 
     def change_hill(self, reaction, hill):
+        """ changes the hill coefficient of the specified reaction. 
+        
+            Parameters
+            ----------
+            
+            reaction : str
+                the name of the reaction
+            hill : float
+                the new hill coef. for the reaction, for Hill-like kinetics
+        
+        """
         if reaction not in self.reactions['REACTION_NAMES'].values:
             print('reaction couldnt be found')
             return
@@ -225,11 +428,52 @@ class model:
         self.reactions.loc[self.reactions[
             'REACTION_NAMES'] == reaction, 'HILL'] = hill
 
-    def read_cobra_model(self, path):
+    def read_cobra_model(self, path : str):
+        """ reads a cobra model from a file and loads it into this model 
+            
+            This is an alternative way to initialize a COMETS model, by supplying
+            it with the path to a cobra model that can be read using
+            cobra.io.read_sbml_model.
+            
+            Parameters
+            ----------
+            
+            path : str
+                path to a cobra model in sbml format
+            
+            Example
+            -------
+            
+            >>> import cometspy as c
+            >>> path_to_file = "./my_new_model.xml"
+            >>> model = c.model()
+            >>> model.read_cobra_model(path_to_file)
+        
+        """
         curr_m = cobra.io.read_sbml_model(path)
         self.load_cobra_model(curr_m)
 
-    def load_cobra_model(self, curr_m):
+    def load_cobra_model(self, curr_m : cobra.Model):
+        """ creates the COMETS model from the supplied cobra model
+        
+            This is usually used internally when creating a COMETS model. 
+            
+            Parameters
+            ----------
+            
+            curr_m : cobra.Model
+                the cobra model object to be converted to the COMETS model object
+                
+            Example
+            -------
+            
+            >>> import cometspy as c
+            >>> import cobra.test
+            >>> ecoli = cobra.test.create_test_model('ecoli')
+            >>> model = c.model()
+            >>> model.load_cobra_model(ecoli)
+            
+        """
         self.id = curr_m.id
         # reactions and their features
         reaction_list = curr_m.reactions
@@ -326,11 +570,31 @@ class model:
         if hasattr(curr_m, 'comets_obj_style'):
             self.obj_style = curr_m.comets_obj_style
 
-    def read_comets_model(self, path):
+    def read_comets_model(self, path : str):
+        """ an alternative way to create a COMETS model by reading from a file
+        
+            This allows a user to load previously-saved COMETS models. The 
+            contents populate this object's attributes.
+            
+            Parameters
+            ----------
+            
+            path : str
+                the path to the COMETS model file
+                
+            Example
+            -------
+            
+            >>> import cometspy as c
+            >>> path_to_model = "./iJO1366.cmd" # this must actually exist
+            >>> model = c.model()
+            >>> model.read_comets_model(path_to_model)
+            
+        """
         self.id = os.path.splitext(os.path.basename(path))[0]
 
         # in this way, its robust to empty lines:
-        m_f_lines = [s for s in read_file(path).splitlines() if s]
+        m_f_lines = [s for s in __read_file(path).splitlines() if s]
         m_filedata_string = os.linesep.join(m_f_lines)
         ends = []
         for k in range(0, len(m_f_lines)):
@@ -548,8 +812,37 @@ class model:
         self.reactions = reactions
         self.metabolites = metabolites
 
-    def write_comets_model(self, working_dir=None):
-
+    def delete_comets_model(self, working_dir = None):
+        """ deletes a file version of this model if it exists.
+        
+            Parameters
+            ----------
+            
+                working_dir : str, optional
+                    the directory where the comets model file exists
+                
+        """
+        path_to_delete = ""
+        if working_dir is not None:
+            path_to_delete = working_dir
+        path_to_delete = path_to_delete + self.id + '.cmd'
+        os.remove(path_to_delete)
+        
+    def write_comets_model(self, working_dir : str =None):
+        """ writes the COMETS model object to a file 
+            
+            This writes the current model object in COMETS format to file, either
+            in the current working directory or in the directory specified by
+            the optional parameter working_dir.  It is mostly used by the comets
+            object to run simulations, though a user may with to write these to 
+            examine directly or to save. 
+            
+            Parameters
+            ----------
+            working_dir : str, optional
+                a directory path to put COMETS files.  for example "./data_files/"
+                
+        """
         path_to_write = ""
         if working_dir is not None:
             path_to_write = working_dir
@@ -706,3 +999,11 @@ class model:
             f.write('OPTIMIZER ' + self.optimizer + '\n')
             f.write(r'//' + '\n')
 
+
+def __read_file(filename: str) -> str:
+    """ helper function to read non-rectangular files.
+    """
+    f = open(filename, 'r')
+    f_lines = f.read()
+    f.close()
+    return f_lines
