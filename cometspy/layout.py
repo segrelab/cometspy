@@ -1,9 +1,3 @@
-'''
-The layout module handles COMETS simulation layouts, including
-media and spatial arrangement.
-For more information see https://segrelab.github.io/comets-manual/
-'''
-
 import pandas as pd
 import os
 import numpy as np
@@ -13,27 +7,78 @@ import math
 from cometspy.model import model
 
 
-def read_file(filename):
-    f = open(filename, 'r')
-    f_lines = f.read()
-    f.close()
-    return f_lines
+
 
 
 class layout:
     '''
-    Generates a COMETS layout either by reading from a file or by building one
-    from a list of COBRA models. Or, with no arguments, build an empty layout.
+    object containing model and environmental definitions for a COMETS sim.
+    
+    The layout object is an essential object needed to start a comets
+    simulation, along with a params object. For a simulation to run, the layout
+    must contain model(s). Typically, the layout will be created after
+    creating models, and these models will be given in a list during layout
+    creation. Subsequently, methods like 
+    set_specific_metabolite() will be used to create environmental media 
+    definitions.  Additionally, spatial information can be assigned, such as
+    the spatial dimensions in lattice units (layout.grid), spatial barriers,
+    etc.
+    
+    Parameters
+    ----------
+    
+    input_obj : list(cometspy.model) or str, optional
+        either a list of cometspy models, or a path to a previously-written
+        COMETS layout to load. 
+        
+    Examples
+    --------
+    
+    >>> import cometspy as c
+    >>> import cobra.test
+    >>> e_cobra = cobra.test.create_test_model('textbook')
+    >>> e = c.model(e_cobra)
+    >>> e.open_exchanges() 
+    >>> l = c.layout([e])
+    >>> # use the media from the textbook in the COMETS media
+    >>> for key in e_cobra.medium.keys():
+    >>>     l.set_specific_metabolite(key[3:], 10.)
+    >>> l.display_current_media()
 
-    To read a layout from a file, give the path as a string:
+    Attributes
+    ----------
+    models : list(cometspy.model)
+        a list of cometspy models. do not modify directly. use add_model()
+    grid : list of size two
+        the number of boxes in the x and y direction. default = [1, 1]
+    media : pandas.DataFrame
+        info on met initial values and diffusion. see set_specific_metabolite
+    refresh : list
+        info on met added per time. see set_specific_refresh
+    local_media : dict
+        info on spatial-explicit media. see set_specific_metabolite_at_location
+    local_refresh : dict
+        info on met added per time to loc. see set_specific_refresh_at_location
+    local_static : dict
+        info on constant met value at loc. see set_specific_static_at_location
+    default_diff_c : float
+        the baseline diffusion constant for all metabolites
+    barriers : list(tuple)
+        list of impenetrable locations. see add_barriers
+    region_map : numpy.array or None
+        integer array specifying regions. see set_region_map
+    region_parameters : dict
+        region-specific default diffusion params. see set_region_parameters
+    reactions : list
+        list of extracellular reactions. see add_external_reaction
+    periodic_media : list
+        list of media undergoing periodic cycles. see set_global_periodic_media
+    
+        
 
-        layout = comets.layout("./path/to/layout/layoutfile.txt")
-
-    To build a layout from a list of models, give the models in a list:
-        ijo = cobra.test.load
 
     '''
-    def __init__(self, input_obj=None):
+    def __init__(self, input_obj : list = None):
 
         # define an empty layout that can be filled later
         self.models = []
@@ -49,7 +94,6 @@ class layout:
         # another dict with metabolite names as keys and amounts as values
         # this information sets initial, location-specific media amounts.
         self.local_media = {}
-        self.global_diff = None
         self.refresh = []
         self.local_refresh = {}
         self.local_static = {}
@@ -95,17 +139,46 @@ class layout:
             self.models = input_obj
             self.update_models()
 
-    def set_region_parameters(self, region, diffusion, friction):
+    def set_region_parameters(self, region : int, 
+                              diffusion : list, 
+                              friction : float):
         """
-        COMETS can have different regions with different substrate diffusivities
-        and frictions.  Here, you set those parameters. For example, if a layout
-        had three different substrates, and you wanted to define their diffusion
-        for region 1, you would use:
+        set regions-specific diffusion and friction values
+        
+        COMETS can have different regions with different substrate 
+        diffusivities and frictions.  Here, you set those parameters. 
 
-            layout.set_region_parameters(1, [1e-6, 1e-6, 1e-6], 1.0)
-
-        This does not affect a simulation unless a region map is also set, using
-        the layout.set_region_map() function.
+        This does not affect a simulation unless a region map is also set, 
+        using the layout.set_region_map() function.
+        
+        Parameters
+        ----------
+        
+        region : int
+            the region (set by set_region_map) that uses the other parameters
+        diffusion : list(float)
+            a list containing diffusion constants (cm2/s) for each metabolite
+        friction : float
+            a single value for the friction observed in this region
+            
+        Examples
+        --------
+        
+        >>> # this example assumes you have already created a cometspy model
+        >>> # called "e" and have imported cometspy as c and numpy as np
+        >>> # Here we are making a 2x2 world with two regions in which region
+        >>> # 1 metabolites have diffusion constant 1.e-6 cm2/s and in region
+        >>> # 2 metabolites have diffusion constant 1.e-7 cm2/s, and in both
+        >>> # cases mets have default friction constant 1.
+        >>> l = c.layout([e])
+        >>> l.grid = [2,2]
+        >>> region_map = np.array([[1, 1], [2, 2]], dtype = int)
+        >>> l.set_region_map(region_map)
+        >>> n_mets = length(l.media) # how many metabolites there are
+        >>> l.set_region_parameters(1, [1.e-6] * n_mets, 1.)
+        >>> l.set_region_parameters(1, [1.e-7] * n_mets, 1.)
+        
+        
         """
         if not self.__region_flag:
             print("Warning: You are setting region parameters but a region" +
@@ -113,8 +186,10 @@ class layout:
                   "parameters will be unused")
         self.region_parameters[region] = [diffusion, friction]
 
-    def set_region_map(self, region_map):
+    def set_region_map(self, region_map : np.array):
         """
+        set a region_map dictating different regions in a spatial simulation
+
         COMETS can have different regions with different substrate diffusivities
         and frictions.  Here, you set the map defining the regions. Specifically,
         you provide either:
@@ -125,6 +200,16 @@ class layout:
         incrementing only, that define the different grid areas.  These are
         intimately connected to region_parameters, which are set with
         layout.set_region_parameters()
+        
+        Parameters
+        ----------
+        region_map : numpy.array(int) or list(list)
+            a 2d array of size layout.grid containing integers, or a list of
+            lists which can be coerced to an integer array using np.array()
+            
+        Examples
+        --------
+        see set_region_parameters for an example
         """
         if isinstance(region_map, list):
             region_map = np.array(region_map)
@@ -137,7 +222,41 @@ class layout:
         self.__region_flag = True
 
     def add_external_reaction(self,
-                              rxnName, metabolites, stoichiometry, **kwargs):
+                              rxnName : str, 
+                              metabolites : list, 
+                              stoichiometry : list, **kwargs):
+        """
+        adds an extracellular reaction to the layout
+        
+        External reactions are reactions not tied to a growing (living) model.
+        They have rates defined in certain kwargs. There is no enyme
+        concentration; it is assumed fixed. 
+
+        Parameters
+        ----------
+        rxnName : str
+            name of the external reaction
+        metabolites : list(str)
+            list of metabolite names (strs)
+        stoichiometry : list(float)
+            stoichiometry of the metabolites. must be same order as metabolites
+        **kwargs : ['Kcat' or 'Km' or 'K']
+            rate parameters. Either Kcat and Km, or K must be set. 
+            
+        Examples
+        --------
+        
+        >>> # set an external reaction that converts lactose into glucose + gal
+        >>> # assumes import cometspy as c and a model called m has been made
+        >>> rxn_name = 'lactase'
+        >>> metabolites = ['lcts_e', 'glc__D_e', 'gal_e']
+        >>> stoichiometry = [-1., 1., 1.]
+        >>> K = 0.2 # mmol / hr
+        >>> l = c.layout([m]) # m is a cometspy.model that has exchanges for the mets above
+        >>> l.add_external_reaction(rxn_name, metabolites, stoichiometry,
+                                    K = K)
+
+        """
 
         ext_rxn = {'Name': rxnName,
                    'metabolites': metabolites,
@@ -160,8 +279,29 @@ class layout:
         self.__ext_rxns_flag = True
 
     def set_global_periodic_media(self,
-                                  metabolite, function,
-                                  amplitude, period, phase, offset):
+                                  metabolite : str, function : str,
+                                  amplitude : float, period : float, 
+                                  phase : float, offset : float):
+        """
+        set cyclical changes in extracellular nutrient environment
+
+        Parameters
+        ----------
+        metabolite : str
+            name of the metabolite under a cycle
+        function : str, one of ['step', 'sin', 'cos', 'half_sin', 'half_cos']
+            name of function that defines changing metabolite concentration
+        amplitude : float
+            amplitude of the function in mmol
+        period : float
+            duration of the function period in hr
+        phase : float
+            horizontal phase of the period (hr)
+        offset : float
+            vertical offset of the function (mmol)
+
+
+        """
 
         if (metabolite not in self.media['metabolite'].values):
             raise ValueError('the metabolite is not present in the media')
@@ -174,10 +314,23 @@ class layout:
                                     phase, offset])
         self.__periodic_media_flag = True
 
-    def read_comets_layout(self, input_obj):
+    def read_comets_layout(self, input_obj : str):
+        """
+        load a comets layout from a file
+        
+        If a COMETS layout file has been previously made, this function can
+        load that file into the current cometspy layout object.
+        
+        This is an unusual way of working with cometspy with rare uses.
 
+        Parameters
+        ----------
+        input_obj : str
+            the path to the existing COMETS layout file to be loaded
+
+        """
         # .. load layout file
-        f_lines = [s for s in read_file(input_obj).splitlines() if s]
+        f_lines = [s for s in __read_file(input_obj).splitlines() if s]
         filedata_string = os.linesep.join(f_lines)
         end_blocks = []
         for i in range(0, len(f_lines)):
@@ -286,7 +439,7 @@ class layout:
                                 filedata_string)[0].count('\n')
             lin_diff_end = next(x for x in end_blocks if x > lin_diff)
 
-            self.global_diff = float(re.findall(r'\S+', f_lines[lin_diff].
+            self.default_diff_c = float(re.findall(r'\S+', f_lines[lin_diff].
                                                 strip())[1])
             
             for i in range(lin_diff+1, lin_diff_end):
@@ -452,11 +605,33 @@ class layout:
                             self.local_static[loc][
                                 self.all_exchanged_mets[j]] = stat_spec[j*2+1]
 
-    def get_model_ids(self):
+    def get_model_ids(self) -> list:
+        """
+        returns a list of the ids of the models in this layout.
+
+        """
         ids = [x.id for x in self.models]
         return(ids)
 
-    def write_necessary_files(self, working_dir):
+    def write_necessary_files(self, working_dir : str):
+        """
+        writes the layout and the model files to file
+        
+        This method is called by comets.run(). Alternatively it may be called
+        directly if one wishes to inspect comets layout and model files.
+        
+        A path must be specified if called directly.
+        
+        Note: the layout file will be called ".current_layout" and therefore
+        be hidden from file browsers by default.
+
+        Parameters
+        ----------
+        working_dir : str, 
+            The directory where the files will be written.
+
+        """
+        self.__check_if_initial_pops_in_range()
         self.write_layout(working_dir)
         self.write_model_files(working_dir)
 
@@ -464,11 +639,47 @@ class layout:
         '''writes each model file'''
         for m in self.models:
             m.write_comets_model(working_dir)
+            
+    def delete_model_files(self, working_dir):
+        """
+        deletes model files in specified directory
+        """
+        for m in self.models:
+            m.delete_comets_model(working_dir)
 
     def display_current_media(self):
+        """
+        a utility function to show current non-zero media amounts
+
+        """
         print(self.media[self.media['init_amount'] != 0.0])
 
-    def add_barriers(self, barriers):
+    def add_barriers(self, barriers : list):
+        """
+        adds impenetrable barriers to the layout at specified locations
+        
+        Barriers can be used in COMETS to create impenetrable spatial
+        locations, for example to simulate rocks or to make a rounded
+        simulation. Neither biomass nor metabolites can diffuse through
+        barriers.
+        
+        In COMETS, locations are zero-ordered.
+
+        Parameters
+        ----------
+        
+        barriers : list(tuple)
+            A list containing tuples of integers of x,y locations.
+
+        Examples
+        --------
+        
+        >>> # make a diagonal line of barriers
+        >>> l = c.layout([model1, model2]) # assumes model1,2 are made
+        >>> l.grid = [5,5]
+        >>> l.add_barriers([(0,0),(1,1),(2,2),(3,3),(4,4)])
+
+        """
         # first see if they provided only one barrier not in a nested list, and if
         # so, put it into a list
         if len(barriers) == 2:
@@ -490,8 +701,112 @@ class layout:
         if len(self.barriers) > 0:
             self.__barrier_flag = True
             self.barriers = list(set(self.barriers))
+    
+    def set_metabolite_diffusion(self, diffusion_constant : float):
+        """
+        sets the default diffusion constant for all metabolites
+        
+        Specific diffusion constants can be set subsequent to setting this.
 
-    def set_specific_metabolite(self, met, amount, static=False):
+        Parameters
+        ----------
+        diffusion_constant : float
+            the diffusion constant, in cm2 / s, that all metabolites use
+
+        """
+        try:
+            if not isinstance(diffusion_constant, float):
+                raise ValueError
+        except ValueError:
+            print("ERROR, diffusion_constant must be a float")
+            return
+        print("Warning: set_metabolite_diffusion overwrites all diffusion constants\nthis should be performed prior to setting specific metabolite diffusion")
+        self.default_diff_c = diffusion_constant
+        self.media.loc[:, "diff_c"] = diffusion_constant
+        self.__diffusion_flag = True
+        
+    def __check_if_diffusion_flag_should_be_set(self):
+        """ Internal function.  If someone directly changes the diff_c in the
+        media dataframe, cometspy will be unaware and not set __diffusion_flag = True,
+        rendering that change moot.  This function is run when doing write_layout() 
+        to flip the flag if necessary """
+        if len(np.unique(self.media.diff_c)) > 1:
+            self.__diffusion_flag = True
+        elif self.media.diff_c[0] != self.default_diff_c:
+            self.__diffusion_flag = True
+            
+    def set_specific_metabolite_diffusion(self, met : str, 
+                                          diffusion_constant : float):
+        """
+        sets the diffusion constant of a specific metabolite
+
+        Parameters
+        ----------
+        met : str
+            name of the metabolite
+        diffusion_constant : float
+            the diffusion constant, in cm2/s, of the named metabolite
+
+        Examples
+        --------
+        >>> l = c.layout([m])
+        >>> l.set_specific_metabolite_diffusion("ac_e", 5.2e-6)
+        >>> l.set_specific_metabolite_diffusion("gal_e", 4.e-6)
+
+
+        """
+        try:
+            if not isinstance(diffusion_constant, float):
+                raise ValueError
+        except ValueError:
+            print("ERROR, diffusion_constant must be a float")
+            return
+        try:
+            if len(self.media.loc[self.media.metabolite == met, "diff_c"]) != 1:
+                raise ValueError
+        except ValueError:
+            print("ERROR, met not in layout.media.metabolite list\ncannot change metabolite diffusion constant")
+        self.media.loc[self.media.metabolite == met, "diff_c"] = diffusion_constant
+        self.__diffusion_flag = True
+        
+    def set_specific_metabolite(self, met : str, amount : float, 
+                                static : bool =False):
+        """
+        sets the initial (or constant) value for a metabolite across space
+        
+        This is the most common way to set a metabolite concentration. It 
+        sets the initial value of the named metabolite to 'amount' in every
+        location. Optionally, if static = True, this concentration is fixed
+        during the simulation.
+
+        Parameters
+        ----------
+        met : str
+            name of the metabolite
+        amount : float
+            initial value for the metabolite in each box, in mmol
+        static : bool, optional
+            DEFAULT = False. If True, the 'amount' is fixed over time.
+
+        Examples
+        --------
+        
+        >>> l = c.layout([model])
+        >>> l.set_specific_metabolite("glc__D_e", 0.005)
+        >>> l.set_specific_metabolite("o2_e", 15, static = True)
+        >>> # a common thing to do is populate this from the cobra model, as 
+        >>> # shown here:
+        >>> import cobra.test
+        >>> import cometspy as c
+        >>> cobra_model = cobra.test.create_test_model("textbook")
+        >>> model = c.model(cobra_model)
+        >>> model.open_exchanges()
+        >>> l = c.layout([model])
+        >>> for key, value in cobra_model.medium.items():
+        >>>     l.set_specific_metabolite(key[3:], value)
+
+
+        """
         if met in set(self.media['metabolite']):
             self.media.loc[self.media['metabolite'] == met,
                            'init_amount'] = amount
@@ -514,12 +829,36 @@ class layout:
             print('Warning: The added metabolite (' + met + ') is not' +
                   'able to be taken up by any of the current models')
 
-    def set_specific_metabolite_at_location(self, met, location, amount):
-        """ allows the user to specify a metabolite going to a specific location
-        in a specific amount.  useful for generating non-homogenous
-        environments. The met should be the met name (e.g. 'o2_e') the
-        location should be a tuple (e.g. (0, 5)), and the amount should be
-        a float / number"""
+    def set_specific_metabolite_at_location(self, met : str, 
+                                            location : tuple, 
+                                            amount : float):
+        """
+        set an initial value of a metabolite at a specific spatial location
+        
+        In contrast to set_specific_metabolite, which sets initial values 
+        universally over space, this method sets a specific metabolite 
+        initial value at one location only.
+
+        Parameters
+        ----------
+        met : str
+            name of the metabolite
+        location : tuple
+            a tuple of integers specifying a specific location, e.g. (3,2)
+        amount : float
+            the initial value for the metabolite at the location, in mmol
+
+        Examples
+        --------
+        >>> l = c.layout([model])
+        >>> l.grid = [10,1]
+        >>> l.set_specific_metabolite_at_location("glc__D_e", (9,0), 0.005)
+
+        Notes
+        -----
+        Remember that COMETS locations are zero-ordered.
+        
+        """
         if met not in self.all_exchanged_mets:
             raise Exception('met is not in the list of exchangeable mets')
         self.__local_media_flag = True
@@ -527,16 +866,54 @@ class layout:
             self.local_media[location] = {}
         self.local_media[location][met] = amount
 
-    def set_specific_refresh(self, met, amount):
+    def set_specific_refresh(self, met : str, amount : float):
+        """
+        set the amount to increment a metabolite continuously through time
+        
+        metabolites can be "refreshed" or "dripped in" during a COMETS 
+        simulation. This sets the amount added each hour, which is divided
+        up by the number of time steps. It applies that refresh to all boxes
+        in space.
+        
+
+        Parameters
+        ----------
+        met : str
+            name of the metabolite refreshed
+        amount : float
+            the amount added to (or subtracted from) each box, in mmol / hr.
+
+
+        """
         if met in self.media['metabolite'].values:
             self.media.loc[self.media['metabolite'] == met,
                            'g_refresh'] = amount
             self.__refresh_flag = True
         else:
-            print("the specified metabolite " + met +
+            raise Exception("the specified metabolite " + met +
                   "is not in the medium; add it first!")
 
-    def set_specific_refresh_at_location(self, met, location, amount):
+    def set_specific_refresh_at_location(self, met : str, 
+                                         location : tuple, 
+                                         amount : float):
+        """
+        sets the amount to adjust a metabolite at a specific location in time
+        
+        Like set_specific_refresh, but for a specific lacation. This 
+        Method is used to specify how much a metabolite is increased (or 
+        decreased) each hour in a specific location.
+
+        Parameters
+        ----------
+        met : str
+            the name of the metabolite
+        location : tuple
+            the (x, y) location to adjust, with x and y of type int
+        amount : float
+            the amount added to (or subtracted from) the box, in mmol / hr
+
+
+        """
         if met not in self.all_exchanged_mets:
             raise Exception('met is not in the list of exchangeable mets')
         self.__refresh_flag = True
@@ -544,7 +921,18 @@ class layout:
             self.local_refresh[location] = {}
         self.local_refresh[location][met] = amount
 
-    def set_specific_static(self, met, amount):
+    def set_specific_static(self, met : str, amount : float):
+        """
+        sets a metabolite to a fixed value in every location
+
+        Parameters
+        ----------
+        met : str
+            name of the metabolite
+        amount : float
+            the amount, in mmol, that is in each box at each time step
+
+        """
         if met in self.media['metabolite'].values:
             self.media.loc[self.media['metabolite'] == met,
                            'g_static'] = 1
@@ -555,7 +943,23 @@ class layout:
             print("the specified metabolite " + met +
                   "is not in the medium; add it first!")
 
-    def set_specific_static_at_location(self, met, location, amount):
+    def set_specific_static_at_location(self, met : str, 
+                                        location : tuple, 
+                                        amount : float):
+        """
+        sets a metabolite to a fixed value at a specific location
+
+        Parameters
+        ----------
+        met : str
+            name of the metabolite
+        location : tuple
+            the (x, y) location of the fixed metabolite amount. x, y are int
+        amount : float
+            the amount, in mmol, that is in each box at each time step
+
+
+        """
         if met not in self.all_exchanged_mets:
             raise Exception('met is not in the list of exchangeable mets')
         self.__static_flag = True
@@ -563,7 +967,22 @@ class layout:
             self.local_static[location] = {}
         self.local_static[location][met] = amount
 
-    def add_typical_trace_metabolites(self, amount=1000.0, static=True):
+    def add_typical_trace_metabolites(self, amount : float=1000.0, 
+                                      static : bool =True):
+        """
+        adds common BIGG-style metabolites to the environment. This only 
+        works if your models use metabolites which are formatted like 'ca2_e'
+        and then should still only be used as a starting point. 
+
+        Parameters
+        ----------
+        amount : float, optional
+            the amount, in mmol, of these metabolites. Default is 1000.0.
+        static : bool, optional
+            The default is True. If false, these metabolites are depletable. 
+
+
+        """
         trace_metabolites = ['ca2_e',
                              'cl_e',
                              'cobalt2_e',
@@ -605,18 +1024,29 @@ class layout:
                 self.media = pd.concat([self.media,
                                         newrow],
                                        axis=0, sort=False)
-                # print('Warning: The added metabolite (' + met + ') is not' +
-                #      'able to be taken up by any of the current models')
         self.media = self.media.reset_index(drop=True)
 
-    def write_layout(self, working_dir):
-        ''' Write the layout in a file'''
+    def write_layout(self, working_dir : str):
+        """
+        writes just the COMETS layout file to the supplied path
+
+        Parameters
+        ----------
+        working_dir : str
+            the path to the directory where .current_layout will be written
+
+
+        """
+        # right now we only check if a user manually set a diff_c.  Ideally,
+        # we should check for manual changes to everything. Alternatively,
+        # we should print all blocks no matter what. 
+        self.__check_if_diffusion_flag_should_be_set()
         outfile = working_dir + ".current_layout"
         if os.path.isfile(outfile):
             os.remove(outfile)
 
         lyt = open(outfile, 'a')
-        self.__write_models_and_world_grid_chunk(lyt, working_dir)
+        self.__write_models_and_world_grid_chunk(lyt)
         self.__write_media_chunk(lyt)
         self.__write_diffusion_chunk(lyt)
         self.__write_local_media_chunk(lyt)
@@ -631,12 +1061,11 @@ class layout:
         self.__write_ext_rxns_chunk(lyt)
         lyt.close()
 
-    def __write_models_and_world_grid_chunk(self, lyt, working_dir):
+    def __write_models_and_world_grid_chunk(self, lyt):
         """ writes the top 3 lines  to the open lyt file"""
 
         model_file_line = "{}.cmd".format(".cmd ".join(self.get_model_ids())).split(" ")
         model_file_line = "".join(["./" + _ + " " for _ in model_file_line])
-        #model_file_line = working_dir + working_dir.join(model_file_line)
         model_file_line = "model_file " + model_file_line + "\n"
         lyt.write(model_file_line)
         lyt.write('  model_world\n')
@@ -725,7 +1154,7 @@ class layout:
 
         if self.__diffusion_flag:
             lyt.write('    diffusion_constants ' +
-                      str(self.global_diff) +
+                      str(self.default_diff_c) +
                       '\n')
             for i in range(0, len(self.media)):
                 if not math.isnan(self.media.diff_c[i]):
@@ -872,11 +1301,18 @@ class layout:
         lyt.write(r'//' + '\n')
 
     def update_models(self):
-        self.build_initial_pop()
-        self.build_exchanged_mets()
-        self.add_new_mets_to_media()
+        """ updates layout properties when models are added / removed
+        
+        This is usually just called internally. However, if you manually 
+        change layout.models, then this method should be called to make other
+        necessary changes. 
+        
+        """
+        self.__build_initial_pop()
+        self.__build_exchanged_mets()
+        self.__add_new_mets_to_media()
 
-    def build_initial_pop(self):
+    def __build_initial_pop(self):
         # This counts how many models there are.  then it goes through
         # each model, and makes a new initial pop line of the right length
         n_models = len(self.models)
@@ -891,9 +1327,9 @@ class layout:
                 curr_line[i+2] = pop[2]
                 initial_pop.append(curr_line)
         self.initial_pop = initial_pop
-        self._resolve_initial_pop_line_dups()
+        self.__resolve_initial_pop_line_dups()
         
-    def _resolve_initial_pop_line_dups(self):
+    def __resolve_initial_pop_line_dups(self):
         # sometimes each model has the same x,y, this resolves that
         init_pop = self.initial_pop
         init_pop_dict = {}
@@ -909,7 +1345,7 @@ class layout:
             init_pop_fixed.append(loc)
         self.initial_pop = init_pop_fixed
 
-    def add_new_mets_to_media(self):
+    def __add_new_mets_to_media(self):
         # usually run right after build_exchange mets, to add any new mets
         # to the media data.frame
 
@@ -925,7 +1361,7 @@ class layout:
                 self.media = pd.concat([self.media, new_row],
                                        ignore_index=True, sort=True)
 
-    def build_exchanged_mets(self):
+    def __build_exchanged_mets(self):
         # goes through each model, grabs its exchange met names, and bundles
         # them into a single list
         all_exchanged_mets = []
@@ -934,17 +1370,65 @@ class layout:
         all_exchanged_mets = sorted(list(set(list(all_exchanged_mets))))
         self.all_exchanged_mets = all_exchanged_mets
 
-    def update_media(self):
-        # TODO: update media with all exchangeable metabolites from all models
-        pass
 
     def add_model(self, model):
+        """
+        add a cometspy model to this layout
+        
+        This is the preferred way to add models to existing layout.
+
+        Parameters
+        ----------
+        
+        model : cometspy.model
+            a cometspy.model with an initial_pop
+            
+        Examples
+        --------
+        
+        >>> import cobra.test
+        >>> import cometspy as c
+        >>> layout = c.layout()
+        >>> ecoli = cobra.test.create_test_model("ecoli")
+        >>> salmonella = cobra.test.create_test_model("salmonella")
+        >>> ecoli = c.model(ecoli)
+        >>> salmonella = c.model(salmonella)
+        >>> ecoli.open_exchanges()
+        >>> salmonella.open_exchanges()
+        >>> ecoli.initial_pop = [0, 0, 1.e-7]
+        >>> salmonella.initial_pop = [0, 0, 1.e-7]
+        >>> layout.add_model(ecoli)
+        >>> layout.add_model(salmonella)
+        
+
+        """
         self.models.append(model)
         self.update_models()
 
+    def __check_if_initial_pops_in_range(self):
+        """
+        checks if initial pops for each model are in the grid or raises error
+        
+        A common error is users setting model.initial_pop but not setting
+        layout.grid.  Since they occur in different places, this method is 
+        useful for a check before running.
+
+        """
+        for m in self.models:
+            for founder in m.initial_pop:
+                if (founder[0] < 0) or (founder[1] > (self.grid[1]-1)):
+                    message = "the initial pop of a model is outside of layout.grid."
+                    message += f" Either increase layout.grid or adjust {m.id}'s initial_pop"
+                    raise ValueError(message)
+                    
     def __get_met_number(self, met):
         """ returns the met number (of the external mets) given a name """
         met_number = [x for x in range(len(self.all_exchanged_mets)) if
                       self.all_exchanged_mets[x] == met][0]
         return(met_number)
 
+def __read_file(filename):
+    f = open(filename, 'r')
+    f_lines = f.read()
+    f.close()
+    return f_lines
