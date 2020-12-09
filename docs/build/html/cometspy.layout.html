@@ -1,0 +1,787 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cometspy.layout module &#8212; cometspy 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-cometspy.layout">
+<span id="cometspy-layout-module"></span><h1>cometspy.layout module<a class="headerlink" href="#module-cometspy.layout" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="cometspy.layout.layout">
+<em class="property">class </em><code class="descclassname">cometspy.layout.</code><code class="descname">layout</code><span class="sig-paren">(</span><em><span class="n">input_obj</span><span class="p">:</span> <span class="n">list</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>object containing model and environmental definitions for a COMETS sim.</p>
+<p>The layout object is an essential object needed to start a comets
+simulation, along with a params object. For a simulation to run, the layout
+must contain model(s). Typically, the layout will be created after
+creating models, and these models will be given in a list during layout
+creation. Subsequently, methods like 
+set_specific_metabolite() will be used to create environmental media 
+definitions.  Additionally, spatial information can be assigned, such as
+the spatial dimensions in lattice units (layout.grid), spatial barriers,
+etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>input_obj</strong><span class="classifier">list(cometspy.model) or str, optional</span></dt><dd><p>either a list of cometspy models, or a path to a previously-written
+COMETS layout to load.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e_cobra</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s1">&#39;textbook&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">e_cobra</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">e</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use the media from the textbook in the COMETS media</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">e_cobra</span><span class="o">.</span><span class="n">medium</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">:],</span> <span class="mf">10.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">display_current_media</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>models</strong><span class="classifier">list(cometspy.model)</span></dt><dd><p>a list of cometspy models. do not modify directly. use add_model()</p>
+</dd>
+<dt><strong>grid</strong><span class="classifier">list of size two</span></dt><dd><p>the number of boxes in the x and y direction. default = [1, 1]</p>
+</dd>
+<dt><strong>media</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>info on met initial values and diffusion. see set_specific_metabolite</p>
+</dd>
+<dt><strong>refresh</strong><span class="classifier">list</span></dt><dd><p>info on met added per time. see set_specific_refresh</p>
+</dd>
+<dt><strong>local_media</strong><span class="classifier">dict</span></dt><dd><p>info on spatial-explicit media. see set_specific_metabolite_at_location</p>
+</dd>
+<dt><strong>local_refresh</strong><span class="classifier">dict</span></dt><dd><p>info on met added per time to loc. see set_specific_refresh_at_location</p>
+</dd>
+<dt><strong>local_static</strong><span class="classifier">dict</span></dt><dd><p>info on constant met value at loc. see set_specific_static_at_location</p>
+</dd>
+<dt><strong>default_diff_c</strong><span class="classifier">float</span></dt><dd><p>the baseline diffusion constant for all metabolites</p>
+</dd>
+<dt><strong>barriers</strong><span class="classifier">list(tuple)</span></dt><dd><p>list of impenetrable locations. see add_barriers</p>
+</dd>
+<dt><strong>region_map</strong><span class="classifier">numpy.array or None</span></dt><dd><p>integer array specifying regions. see set_region_map</p>
+</dd>
+<dt><strong>region_parameters</strong><span class="classifier">dict</span></dt><dd><p>region-specific default diffusion params. see set_region_parameters</p>
+</dd>
+<dt><strong>reactions</strong><span class="classifier">list</span></dt><dd><p>list of extracellular reactions. see add_external_reaction</p>
+</dd>
+<dt><strong>periodic_media</strong><span class="classifier">list</span></dt><dd><p>list of media undergoing periodic cycles. see set_global_periodic_media</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.add_barriers" title="cometspy.layout.layout.add_barriers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_barriers</span></code></a>(barriers)</td>
+<td>adds impenetrable barriers to the layout at specified locations</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.add_external_reaction" title="cometspy.layout.layout.add_external_reaction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_external_reaction</span></code></a>(rxnName,&nbsp;metabolites,&nbsp;…)</td>
+<td>adds an extracellular reaction to the layout</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.add_model" title="cometspy.layout.layout.add_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_model</span></code></a>(model)</td>
+<td>add a cometspy model to this layout</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.add_typical_trace_metabolites" title="cometspy.layout.layout.add_typical_trace_metabolites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_typical_trace_metabolites</span></code></a>([amount,&nbsp;static])</td>
+<td>adds common BIGG-style metabolites to the environment.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.delete_model_files" title="cometspy.layout.layout.delete_model_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_model_files</span></code></a>(working_dir)</td>
+<td>deletes model files in specified directory</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.display_current_media" title="cometspy.layout.layout.display_current_media"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_current_media</span></code></a>()</td>
+<td>a utility function to show current non-zero media amounts</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.get_model_ids" title="cometspy.layout.layout.get_model_ids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_ids</span></code></a>()</td>
+<td>returns a list of the ids of the models in this layout.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.read_comets_layout" title="cometspy.layout.layout.read_comets_layout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_comets_layout</span></code></a>(input_obj)</td>
+<td>load a comets layout from a file</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.set_global_periodic_media" title="cometspy.layout.layout.set_global_periodic_media"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_global_periodic_media</span></code></a>(metabolite,&nbsp;…)</td>
+<td>set cyclical changes in extracellular nutrient environment</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.set_metabolite_diffusion" title="cometspy.layout.layout.set_metabolite_diffusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_metabolite_diffusion</span></code></a>(diffusion_constant)</td>
+<td>sets the default diffusion constant for all metabolites</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.set_region_map" title="cometspy.layout.layout.set_region_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_region_map</span></code></a>(region_map)</td>
+<td>set a region_map dictating different regions in a spatial simulation</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.set_region_parameters" title="cometspy.layout.layout.set_region_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_region_parameters</span></code></a>(region,&nbsp;diffusion,&nbsp;…)</td>
+<td>set regions-specific diffusion and friction values</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.set_specific_metabolite" title="cometspy.layout.layout.set_specific_metabolite"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_metabolite</span></code></a>(met,&nbsp;amount[,&nbsp;static])</td>
+<td>sets the initial (or constant) value for a metabolite across space</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.set_specific_metabolite_at_location" title="cometspy.layout.layout.set_specific_metabolite_at_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_metabolite_at_location</span></code></a>(met,&nbsp;…)</td>
+<td>set an initial value of a metabolite at a specific spatial location</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.set_specific_metabolite_diffusion" title="cometspy.layout.layout.set_specific_metabolite_diffusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_metabolite_diffusion</span></code></a>(met,&nbsp;…)</td>
+<td>sets the diffusion constant of a specific metabolite</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.set_specific_refresh" title="cometspy.layout.layout.set_specific_refresh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_refresh</span></code></a>(met,&nbsp;amount)</td>
+<td>set the amount to increment a metabolite continuously through time</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.set_specific_refresh_at_location" title="cometspy.layout.layout.set_specific_refresh_at_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_refresh_at_location</span></code></a>(met,&nbsp;…)</td>
+<td>sets the amount to adjust a metabolite at a specific location in time</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.set_specific_static" title="cometspy.layout.layout.set_specific_static"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_static</span></code></a>(met,&nbsp;amount)</td>
+<td>sets a metabolite to a fixed value in every location</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.set_specific_static_at_location" title="cometspy.layout.layout.set_specific_static_at_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_specific_static_at_location</span></code></a>(met,&nbsp;…)</td>
+<td>sets a metabolite to a fixed value at a specific location</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.update_models" title="cometspy.layout.layout.update_models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_models</span></code></a>()</td>
+<td>updates layout properties when models are added / removed</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.write_layout" title="cometspy.layout.layout.write_layout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_layout</span></code></a>(working_dir)</td>
+<td>writes just the COMETS layout file to the supplied path</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.layout.layout.write_model_files" title="cometspy.layout.layout.write_model_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_model_files</span></code></a>([working_dir])</td>
+<td>writes each model file</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.layout.layout.write_necessary_files" title="cometspy.layout.layout.write_necessary_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_necessary_files</span></code></a>(working_dir)</td>
+<td>writes the layout and the model files to file</td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="cometspy.layout.layout.add_barriers">
+<code class="descname">add_barriers</code><span class="sig-paren">(</span><em><span class="n">barriers</span><span class="p">:</span> <span class="n">list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_barriers" title="Permalink to this definition">¶</a></dt>
+<dd><p>adds impenetrable barriers to the layout at specified locations</p>
+<p>Barriers can be used in COMETS to create impenetrable spatial
+locations, for example to simulate rocks or to make a rounded
+simulation. Neither biomass nor metabolites can diffuse through
+barriers.</p>
+<p>In COMETS, locations are zero-ordered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>barriers</strong><span class="classifier">list(tuple)</span></dt><dd><p>A list containing tuples of integers of x,y locations.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a diagonal line of barriers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model1</span><span class="p">,</span> <span class="n">model2</span><span class="p">])</span> <span class="c1"># assumes model1,2 are made</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">add_barriers</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.add_external_reaction">
+<code class="descname">add_external_reaction</code><span class="sig-paren">(</span><em><span class="n">rxnName</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">metabolites</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="n">stoichiometry</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_external_reaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>adds an extracellular reaction to the layout</p>
+<p>External reactions are reactions not tied to a growing (living) model.
+They have rates defined in certain kwargs. There is no enyme
+concentration; it is assumed fixed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>rxnName</strong><span class="classifier">str</span></dt><dd><p>name of the external reaction</p>
+</dd>
+<dt><strong>metabolites</strong><span class="classifier">list(str)</span></dt><dd><p>list of metabolite names (strs)</p>
+</dd>
+<dt><strong>stoichiometry</strong><span class="classifier">list(float)</span></dt><dd><p>stoichiometry of the metabolites. must be same order as metabolites</p>
+</dd>
+<dt><strong>**kwargs</strong><span class="classifier">[‘Kcat’ or ‘Km’ or ‘K’]</span></dt><dd><p>rate parameters. Either Kcat and Km, or K must be set.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># set an external reaction that converts lactose into glucose + gal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assumes import cometspy as c and a model called m has been made</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rxn_name</span> <span class="o">=</span> <span class="s1">&#39;lactase&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metabolites</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lcts_e&#39;</span><span class="p">,</span> <span class="s1">&#39;glc__D_e&#39;</span><span class="p">,</span> <span class="s1">&#39;gal_e&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stoichiometry</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="c1"># mmol / hr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">m</span><span class="p">])</span> <span class="c1"># m is a cometspy.model that has exchanges for the mets above</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">add_external_reaction</span><span class="p">(</span><span class="n">rxn_name</span><span class="p">,</span> <span class="n">metabolites</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="p">,</span>
+<span class="go">                            K = K)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.add_model">
+<code class="descname">add_model</code><span class="sig-paren">(</span><em><span class="n">model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a cometspy model to this layout</p>
+<p>This is the preferred way to add models to existing layout.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>model</strong><span class="classifier">cometspy.model</span></dt><dd><p>a cometspy.model with an initial_pop</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;ecoli&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">salmonella</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;salmonella&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">ecoli</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">salmonella</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">salmonella</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">salmonella</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-7</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">salmonella</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-7</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">ecoli</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">salmonella</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.add_typical_trace_metabolites">
+<code class="descname">add_typical_trace_metabolites</code><span class="sig-paren">(</span><em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1000.0</span></em>, <em><span class="n">static</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_typical_trace_metabolites" title="Permalink to this definition">¶</a></dt>
+<dd><p>adds common BIGG-style metabolites to the environment. This only 
+works if your models use metabolites which are formatted like ‘ca2_e’
+and then should still only be used as a starting point.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>amount</strong><span class="classifier">float, optional</span></dt><dd><p>the amount, in mmol, of these metabolites. Default is 1000.0.</p>
+</dd>
+<dt><strong>static</strong><span class="classifier">bool, optional</span></dt><dd><p>The default is True. If false, these metabolites are depletable.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.delete_model_files">
+<code class="descname">delete_model_files</code><span class="sig-paren">(</span><em><span class="n">working_dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.delete_model_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes model files in specified directory</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.display_current_media">
+<code class="descname">display_current_media</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.display_current_media" title="Permalink to this definition">¶</a></dt>
+<dd><p>a utility function to show current non-zero media amounts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.get_model_ids">
+<code class="descname">get_model_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.layout.layout.get_model_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of the ids of the models in this layout.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.read_comets_layout">
+<code class="descname">read_comets_layout</code><span class="sig-paren">(</span><em><span class="n">input_obj</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.read_comets_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>load a comets layout from a file</p>
+<p>If a COMETS layout file has been previously made, this function can
+load that file into the current cometspy layout object.</p>
+<p>This is an unusual way of working with cometspy with rare uses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>input_obj</strong><span class="classifier">str</span></dt><dd><p>the path to the existing COMETS layout file to be loaded</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_global_periodic_media">
+<code class="descname">set_global_periodic_media</code><span class="sig-paren">(</span><em><span class="n">metabolite</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">function</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amplitude</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">period</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">phase</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">offset</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_global_periodic_media" title="Permalink to this definition">¶</a></dt>
+<dd><p>set cyclical changes in extracellular nutrient environment</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>metabolite</strong><span class="classifier">str</span></dt><dd><p>name of the metabolite under a cycle</p>
+</dd>
+<dt><strong>function</strong><span class="classifier">str, one of [‘step’, ‘sin’, ‘cos’, ‘half_sin’, ‘half_cos’]</span></dt><dd><p>name of function that defines changing metabolite concentration</p>
+</dd>
+<dt><strong>amplitude</strong><span class="classifier">float</span></dt><dd><p>amplitude of the function in mmol</p>
+</dd>
+<dt><strong>period</strong><span class="classifier">float</span></dt><dd><p>duration of the function period in hr</p>
+</dd>
+<dt><strong>phase</strong><span class="classifier">float</span></dt><dd><p>horizontal phase of the period (hr)</p>
+</dd>
+<dt><strong>offset</strong><span class="classifier">float</span></dt><dd><p>vertical offset of the function (mmol)</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_metabolite_diffusion">
+<code class="descname">set_metabolite_diffusion</code><span class="sig-paren">(</span><em><span class="n">diffusion_constant</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_metabolite_diffusion" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the default diffusion constant for all metabolites</p>
+<p>Specific diffusion constants can be set subsequent to setting this.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>diffusion_constant</strong><span class="classifier">float</span></dt><dd><p>the diffusion constant, in cm2 / s, that all metabolites use</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_region_map">
+<code class="descname">set_region_map</code><span class="sig-paren">(</span><em><span class="n">region_map</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_region_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>set a region_map dictating different regions in a spatial simulation</p>
+<p>COMETS can have different regions with different substrate diffusivities
+and frictions.  Here, you set the map defining the regions. Specifically,
+you provide either:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>a numpy array whose shape == layout.grid, or</li>
+<li>a list of lists whose first length is grid[0] and second len is grid[1]</li>
+</ol>
+</div></blockquote>
+<p>Populating these objects should be integer values, beginning at 1 and
+incrementing only, that define the different grid areas.  These are
+intimately connected to region_parameters, which are set with
+layout.set_region_parameters()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>region_map</strong><span class="classifier">numpy.array(int) or list(list)</span></dt><dd><p>a 2d array of size layout.grid containing integers, or a list of
+lists which can be coerced to an integer array using np.array()</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>see set_region_parameters for an example</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_region_parameters">
+<code class="descname">set_region_parameters</code><span class="sig-paren">(</span><em><span class="n">region</span><span class="p">:</span> <span class="n">int</span></em>, <em><span class="n">diffusion</span><span class="p">:</span> <span class="n">list</span></em>, <em><span class="n">friction</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_region_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>set regions-specific diffusion and friction values</p>
+<p>COMETS can have different regions with different substrate 
+diffusivities and frictions.  Here, you set those parameters.</p>
+<p>This does not affect a simulation unless a region map is also set, 
+using the layout.set_region_map() function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>region</strong><span class="classifier">int</span></dt><dd><p>the region (set by set_region_map) that uses the other parameters</p>
+</dd>
+<dt><strong>diffusion</strong><span class="classifier">list(float)</span></dt><dd><p>a list containing diffusion constants (cm2/s) for each metabolite</p>
+</dd>
+<dt><strong>friction</strong><span class="classifier">float</span></dt><dd><p>a single value for the friction observed in this region</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># this example assumes you have already created a cometspy model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># called &quot;e&quot; and have imported cometspy as c and numpy as np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Here we are making a 2x2 world with two regions in which region</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># 1 metabolites have diffusion constant 1.e-6 cm2/s and in region</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># 2 metabolites have diffusion constant 1.e-7 cm2/s, and in both</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># cases mets have default friction constant 1.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">e</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_region_map</span><span class="p">(</span><span class="n">region_map</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n_mets</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">media</span><span class="p">)</span> <span class="c1"># how many metabolites there are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_region_parameters</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.e-6</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_mets</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_region_parameters</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.e-7</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_mets</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_specific_metabolite">
+<code class="descname">set_specific_metabolite</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">static</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_metabolite" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the initial (or constant) value for a metabolite across space</p>
+<p>This is the most common way to set a metabolite concentration. It 
+sets the initial value of the named metabolite to ‘amount’ in every
+location. Optionally, if static = True, this concentration is fixed
+during the simulation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>met</strong><span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt><strong>amount</strong><span class="classifier">float</span></dt><dd><p>initial value for the metabolite in each box, in mmol</p>
+</dd>
+<dt><strong>static</strong><span class="classifier">bool, optional</span></dt><dd><p>DEFAULT = False. If True, the ‘amount’ is fixed over time.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;glc__D_e&quot;</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;o2_e&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="n">static</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># a common thing to do is populate this from the cobra model, as </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># shown here:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cobra_model</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">cobra_model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cobra_model</span><span class="o">.</span><span class="n">medium</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">:],</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_specific_metabolite_at_location">
+<code class="descname">set_specific_metabolite_at_location</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">location</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_metabolite_at_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>set an initial value of a metabolite at a specific spatial location</p>
+<p>In contrast to set_specific_metabolite, which sets initial values 
+universally over space, this method sets a specific metabolite 
+initial value at one location only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>met</strong><span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt><strong>location</strong><span class="classifier">tuple</span></dt><dd><p>a tuple of integers specifying a specific location, e.g. (3,2)</p>
+</dd>
+<dt><strong>amount</strong><span class="classifier">float</span></dt><dd><p>the initial value for the metabolite at the location, in mmol</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Remember that COMETS locations are zero-ordered.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite_at_location</span><span class="p">(</span><span class="s2">&quot;glc__D_e&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="mf">0.005</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_specific_metabolite_diffusion">
+<code class="descname">set_specific_metabolite_diffusion</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">diffusion_constant</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_metabolite_diffusion" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the diffusion constant of a specific metabolite</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>met</strong><span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt><strong>diffusion_constant</strong><span class="classifier">float</span></dt><dd><p>the diffusion constant, in cm2/s, of the named metabolite</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">m</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite_diffusion</span><span class="p">(</span><span class="s2">&quot;ac_e&quot;</span><span class="p">,</span> <span class="mf">5.2e-6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite_diffusion</span><span class="p">(</span><span class="s2">&quot;gal_e&quot;</span><span class="p">,</span> <span class="mf">4.e-6</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_specific_refresh">
+<code class="descname">set_specific_refresh</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the amount to increment a metabolite continuously through time</p>
+<p>metabolites can be “refreshed” or “dripped in” during a COMETS 
+simulation. This sets the amount added each hour, which is divided
+up by the number of time steps. It applies that refresh to all boxes
+in space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>met</strong><span class="classifier">str</span></dt><dd><p>name of the metabolite refreshed</p>
+</dd>
+<dt><strong>amount</strong><span class="classifier">float</span></dt><dd><p>the amount added to (or subtracted from) each box, in mmol / hr.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_specific_refresh_at_location">
+<code class="descname">set_specific_refresh_at_location</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">location</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_refresh_at_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the amount to adjust a metabolite at a specific location in time</p>
+<p>Like set_specific_refresh, but for a specific lacation. This 
+Method is used to specify how much a metabolite is increased (or 
+decreased) each hour in a specific location.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>met</strong><span class="classifier">str</span></dt><dd><p>the name of the metabolite</p>
+</dd>
+<dt><strong>location</strong><span class="classifier">tuple</span></dt><dd><p>the (x, y) location to adjust, with x and y of type int</p>
+</dd>
+<dt><strong>amount</strong><span class="classifier">float</span></dt><dd><p>the amount added to (or subtracted from) the box, in mmol / hr</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_specific_static">
+<code class="descname">set_specific_static</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_static" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets a metabolite to a fixed value in every location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>met</strong><span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt><strong>amount</strong><span class="classifier">float</span></dt><dd><p>the amount, in mmol, that is in each box at each time step</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.set_specific_static_at_location">
+<code class="descname">set_specific_static_at_location</code><span class="sig-paren">(</span><em><span class="n">met</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">location</span><span class="p">:</span> <span class="n">tuple</span></em>, <em><span class="n">amount</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_static_at_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets a metabolite to a fixed value at a specific location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>met</strong><span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt><strong>location</strong><span class="classifier">tuple</span></dt><dd><p>the (x, y) location of the fixed metabolite amount. x, y are int</p>
+</dd>
+<dt><strong>amount</strong><span class="classifier">float</span></dt><dd><p>the amount, in mmol, that is in each box at each time step</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.update_models">
+<code class="descname">update_models</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.update_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>updates layout properties when models are added / removed</p>
+<p>This is usually just called internally. However, if you manually 
+change layout.models, then this method should be called to make other
+necessary changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.write_layout">
+<code class="descname">write_layout</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.write_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>writes just the COMETS layout file to the supplied path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>working_dir</strong><span class="classifier">str</span></dt><dd><p>the path to the directory where .current_layout will be written</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.write_model_files">
+<code class="descname">write_model_files</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.write_model_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>writes each model file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.layout.layout.write_necessary_files">
+<code class="descname">write_necessary_files</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.write_necessary_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>writes the layout and the model files to file</p>
+<p>This method is called by comets.run(). Alternatively it may be called
+directly if one wishes to inspect comets layout and model files.</p>
+<p>A path must be specified if called directly.</p>
+<p>Note: the layout file will be called “.current_layout” and therefore
+be hidden from file browsers by default.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>working_dir</strong><span class="classifier">str,</span></dt><dd><p>The directory where the files will be written.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">cometspy</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, D Bajic, J Chacon, J Vila.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/cometspy.layout.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

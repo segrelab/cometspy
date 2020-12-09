@@ -1,0 +1,605 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cometspy.model module &#8212; cometspy 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-cometspy.model">
+<span id="cometspy-model-module"></span><h1>cometspy.model module<a class="headerlink" href="#module-cometspy.model" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="cometspy.model.model">
+<em class="property">class </em><code class="descclassname">cometspy.model.</code><code class="descname">model</code><span class="sig-paren">(</span><em><span class="n">model</span><span class="p">:</span> <span class="n">cobra.core.model.Model</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>a COMETS metabolic model to use in a layout</p>
+<p>A model contains information including the stoichiometric matrix,
+reaction boundaries and Michaelis-Menten parameters, founder populations,
+and various attributes related to motion in space.</p>
+<p>A model is usually initiated by supplying a cobrapy model, and to be used
+in a COMETS simulation must minimally be given an initial population:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>model</strong><span class="classifier">cobra.Model or str, optional</span></dt><dd><p>Either a cobrapy Model, a path to a .cmd COMETS model, a path to a
+cobra sbml model which could be loaded with cobra.io.read_sbml_model()
+or None.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;ecoli&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">ecoli</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-12</span><span class="p">]</span> <span class="c1"># puts 1.e-12 gDW of biomass at 0,0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="go">iJO1366</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>initial_pop</strong><span class="classifier">list</span></dt><dd><p>list of lists of spatial founder pops. e.g.[[x, y, grams], [x,y,grams]]</p>
+</dd>
+<dt><strong>id</strong><span class="classifier">str</span></dt><dd><p>the name of the model. should be unique.</p>
+</dd>
+<dt><strong>reactions</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing reaction information including boundaries.</p>
+</dd>
+<dt><strong>smat</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing the stoichiometric matrix</p>
+</dd>
+<dt><strong>metabolites</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>single-column DataFrame containing the names of the metabolites</p>
+</dd>
+<dt><strong>signals</strong><span class="classifier">pandas.Dataframe</span></dt><dd><p>DataFrame on reactions whose bounds depend on metabolite concentrations</p>
+</dd>
+<dt><strong>default_vmax</strong><span class="classifier">float</span></dt><dd><p>default uptake vmax in mmol / gDW /hr for Michaelis-Menten kinetics</p>
+</dd>
+<dt><strong>default_km</strong><span class="classifier">float</span></dt><dd><p>default half-max metabolite concentration (M) for M-M kinetics</p>
+</dd>
+<dt><strong>default_hill</strong><span class="classifier">float</span></dt><dd><p>default hill coefficient for hill-like uptake kinetics</p>
+</dd>
+<dt><strong>default_bounds</strong><span class="classifier">list</span></dt><dd><p>list of two floats that are the default lower and upper reaction bounds</p>
+</dd>
+<dt><strong>obj_style</strong><span class="classifier">str</span></dt><dd><p>one of MAXIMIZE_OBJECTIVE_FLUX (fba) or MAX_OBJECTIVE_MIN_TOTAL (pfba)</p>
+</dd>
+<dt><strong>optimizer</strong><span class="classifier">str</span></dt><dd><p>one of “GUROBI” or “GLPK”. not all functionality works with GLPK</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.add_convection_parameters" title="cometspy.model.model.add_convection_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_convection_parameters</span></code></a>([packedDensity,&nbsp;…])</td>
+<td>sets the parameters for biomass spread to use convection</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.add_light" title="cometspy.model.model.add_light"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_light</span></code></a>(reaction,&nbsp;abs_coefficient,&nbsp;abs_base)</td>
+<td>Causes a reaction to function in response to light</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.add_neutral_drift_parameter" title="cometspy.model.model.add_neutral_drift_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_neutral_drift_parameter</span></code></a>(neutralDriftSigma)</td>
+<td>sets the neutralDriftSigma parameter</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.add_noise_variance_parameter" title="cometspy.model.model.add_noise_variance_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_noise_variance_parameter</span></code></a>(noiseVariance)</td>
+<td>sets the noise variance parameter</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.add_nonlinear_diffusion_parameters" title="cometspy.model.model.add_nonlinear_diffusion_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nonlinear_diffusion_parameters</span></code></a>([zero,&nbsp;…])</td>
+<td>sets the model to use non-linear diffusion biomass spread.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.add_signal" title="cometspy.model.model.add_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_signal</span></code></a>(rxn_num,&nbsp;exch_ind,&nbsp;bound,&nbsp;…)</td>
+<td>adds a signal to the reaction rxn_num that changes bounds</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.change_bounds" title="cometspy.model.model.change_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_bounds</span></code></a>(reaction,&nbsp;lower_bound,&nbsp;upper_bound)</td>
+<td>changes the bounds of the specified reaction</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.change_hill" title="cometspy.model.model.change_hill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_hill</span></code></a>(reaction,&nbsp;hill)</td>
+<td>changes the hill coefficient of the specified reaction.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.change_km" title="cometspy.model.model.change_km"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_km</span></code></a>(reaction,&nbsp;km)</td>
+<td>changes the km of the specified reaction.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.change_vmax" title="cometspy.model.model.change_vmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_vmax</span></code></a>(reaction,&nbsp;vmax)</td>
+<td>changes the vmax of the specified reaction.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.delete_comets_model" title="cometspy.model.model.delete_comets_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_comets_model</span></code></a>([working_dir])</td>
+<td>deletes a file version of this model if it exists.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.ensure_sinks_are_not_exchanges" title="cometspy.model.model.ensure_sinks_are_not_exchanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_sinks_are_not_exchanges</span></code></a>([suffix])</td>
+<td>set exchange reactions ending in suffix (default = ‘_c’) to sink</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.get_bounds" title="cometspy.model.model.get_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bounds</span></code></a>(reaction)</td>
+<td>returns a tuple (lb, ub) for the specified reaction</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.get_exchange_metabolites" title="cometspy.model.model.get_exchange_metabolites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_exchange_metabolites</span></code></a>()</td>
+<td>returns a list of the names of the exchange metabolites</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.get_reaction_names" title="cometspy.model.model.get_reaction_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_reaction_names</span></code></a>()</td>
+<td>returns a list of reaction names</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.load_cobra_model" title="cometspy.model.model.load_cobra_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_cobra_model</span></code></a>(curr_m)</td>
+<td>creates the COMETS model from the supplied cobra model</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.open_exchanges" title="cometspy.model.model.open_exchanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open_exchanges</span></code></a>([lower_bound,&nbsp;upper_bound])</td>
+<td>sets all exchange boundaries to the specifed values</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.read_cobra_model" title="cometspy.model.model.read_cobra_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_cobra_model</span></code></a>(path)</td>
+<td>reads a cobra model from a file and loads it into this model</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#cometspy.model.model.read_comets_model" title="cometspy.model.model.read_comets_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_comets_model</span></code></a>(path)</td>
+<td>an alternative way to create a COMETS model by reading from a file</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#cometspy.model.model.write_comets_model" title="cometspy.model.model.write_comets_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_comets_model</span></code></a>([working_dir])</td>
+<td>writes the COMETS model object to a file</td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="cometspy.model.model.add_convection_parameters">
+<code class="descname">add_convection_parameters</code><span class="sig-paren">(</span><em><span class="n">packedDensity</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">elasticModulus</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">frictionConstant</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">convDiffConstant</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_convection_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the parameters for biomass spread to use convection</p>
+<p>This also requires one set the biomassMotionStyle to 
+‘Convection 2D’ in the comets.params object (see Example)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>packedDensity</strong><span class="classifier">float, optional</span></dt><dd></dd>
+<dt><strong>elasticModulus</strong><span class="classifier">float, optional</span></dt><dd></dd>
+<dt><strong>frictionConstant</strong><span class="classifier">float, optional</span></dt><dd></dd>
+<dt><strong>convDiffConstant</strong><span class="classifier">float, optional</span></dt><dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.add_light">
+<code class="descname">add_light</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">abs_coefficient</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">abs_base</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_light" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes a reaction to function in response to light</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>reaction</strong><span class="classifier">str</span></dt><dd><p>the name of the reaction affected</p>
+</dd>
+<dt><strong>abs_coefficient</strong><span class="classifier">float</span></dt><dd><p>the absorption coefficient</p>
+</dd>
+<dt><strong>abs_base</strong><span class="classifier">float</span></dt><dd><p>absorption baseline</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.add_neutral_drift_parameter">
+<code class="descname">add_neutral_drift_parameter</code><span class="sig-paren">(</span><em><span class="n">neutralDriftSigma</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_neutral_drift_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the neutralDriftSigma parameter</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.add_noise_variance_parameter">
+<code class="descname">add_noise_variance_parameter</code><span class="sig-paren">(</span><em><span class="n">noiseVariance</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_noise_variance_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the noise variance parameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>noiseVariance</strong><span class="classifier">float</span></dt><dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.add_nonlinear_diffusion_parameters">
+<code class="descname">add_nonlinear_diffusion_parameters</code><span class="sig-paren">(</span><em><span class="n">zero</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">n</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">exponent</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em><span class="n">hilln</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">10.0</span></em>, <em><span class="n">hillk</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.9</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_nonlinear_diffusion_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the model to use non-linear diffusion biomass spread.</p>
+<p>This also requires one set the biomassMotionStyle to 
+‘ConvNonlin Diffusion 2D’ in the comets.params object (see Example)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>zero</strong><span class="classifier">float, optional</span></dt><dd></dd>
+<dt><strong>n</strong><span class="classifier">float, optional</span></dt><dd></dd>
+<dt><strong>exponent</strong><span class="classifier">float, optional</span></dt><dd></dd>
+<dt><strong>hilln</strong><span class="classifier">float, optional</span></dt><dd></dd>
+<dt><strong>hillk</strong><span class="classifier">float, optional</span></dt><dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.add_signal">
+<code class="descname">add_signal</code><span class="sig-paren">(</span><em><span class="n">rxn_num</span></em>, <em><span class="n">exch_ind</span></em>, <em><span class="n">bound</span></em>, <em><span class="n">function</span></em>, <em><span class="n">parms</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>adds a signal to the reaction rxn_num that changes bounds</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>rxn_num</strong><span class="classifier">int or ‘death’</span></dt><dd><p>reaction affected (int) or whether the signal causes death ‘death’</p>
+</dd>
+<dt><strong>exch_id</strong><span class="classifier">int</span></dt><dd><p>the number of the exchange reaction. see model.metabolites</p>
+</dd>
+<dt><strong>bound</strong><span class="classifier">str  ‘ub’ or ‘lb’</span></dt><dd><p>specifies whether the upper or lower bound is affected</p>
+</dd>
+<dt><strong>function</strong><span class="classifier">str ‘linear’ or ‘bounded_linear’ or ‘generalized_logistic’</span></dt><dd><p>specifies the function relating the metabolite conc. to the bound</p>
+</dd>
+<dt><strong>parms</strong><span class="classifier">list (float)</span></dt><dd><p>a list of floats for the function</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.change_bounds">
+<code class="descname">change_bounds</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">lower_bound</span><span class="p">:</span> <span class="n">float</span></em>, <em><span class="n">upper_bound</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>changes the bounds of the specified reaction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>reaction</strong><span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+<dt><strong>lower_bound</strong><span class="classifier">float</span></dt><dd><p>the new value of the reaction’s lower bound in mmol / gDW / hr</p>
+</dd>
+<dt><strong>upper_bound</strong><span class="classifier">float</span></dt><dd><p>the new value of the reaction’s upper bound in mmol / gDW / hr</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.change_hill">
+<code class="descname">change_hill</code><span class="sig-paren">(</span><em><span class="n">reaction</span></em>, <em><span class="n">hill</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_hill" title="Permalink to this definition">¶</a></dt>
+<dd><p>changes the hill coefficient of the specified reaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>reaction</strong><span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+<dt><strong>hill</strong><span class="classifier">float</span></dt><dd><p>the new hill coef. for the reaction, for Hill-like kinetics</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.change_km">
+<code class="descname">change_km</code><span class="sig-paren">(</span><em><span class="n">reaction</span></em>, <em><span class="n">km</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_km" title="Permalink to this definition">¶</a></dt>
+<dd><p>changes the km of the specified reaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>reaction</strong><span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+<dt><strong>km</strong><span class="classifier">float</span></dt><dd><p>the new km value for the reaction, for Monod (Michaelis-Menten)
+kinetics</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.change_vmax">
+<code class="descname">change_vmax</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em>, <em><span class="n">vmax</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_vmax" title="Permalink to this definition">¶</a></dt>
+<dd><p>changes the vmax of the specified reaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>reaction</strong><span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+<dt><strong>vmax</strong><span class="classifier">float</span></dt><dd><p>the new vmax value for the reaction, for Monod (Michaelis-Menten)
+kinetics</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.delete_comets_model">
+<code class="descname">delete_comets_model</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.delete_comets_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes a file version of this model if it exists.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>working_dir</strong><span class="classifier">str, optional</span></dt><dd><p>the directory where the comets model file exists</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.ensure_sinks_are_not_exchanges">
+<code class="descname">ensure_sinks_are_not_exchanges</code><span class="sig-paren">(</span><em><span class="n">suffix</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'_c'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.ensure_sinks_are_not_exchanges" title="Permalink to this definition">¶</a></dt>
+<dd><p>set exchange reactions ending in suffix (default = ‘_c’) to sink</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>suffix</strong><span class="classifier">str, optional</span></dt><dd><p>the suffix to look for in exchange reactions. default = ‘_c’</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.get_bounds">
+<code class="descname">get_bounds</code><span class="sig-paren">(</span><em><span class="n">reaction</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#cometspy.model.model.get_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a tuple (lb, ub) for the specified reaction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>reaction</strong><span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.get_exchange_metabolites">
+<code class="descname">get_exchange_metabolites</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.model.model.get_exchange_metabolites" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of the names of the exchange metabolites</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.get_reaction_names">
+<code class="descname">get_reaction_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#cometspy.model.model.get_reaction_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of reaction names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.load_cobra_model">
+<code class="descname">load_cobra_model</code><span class="sig-paren">(</span><em><span class="n">curr_m</span><span class="p">:</span> <span class="n">cobra.core.model.Model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.load_cobra_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates the COMETS model from the supplied cobra model</p>
+<p>This is usually used internally when creating a COMETS model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>curr_m</strong><span class="classifier">cobra.Model</span></dt><dd><p>the cobra model object to be converted to the COMETS model object</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.open_exchanges">
+<code class="descname">open_exchanges</code><span class="sig-paren">(</span><em><span class="n">lower_bound</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">- 1000.0</span></em>, <em><span class="n">upper_bound</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1000.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.open_exchanges" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets all exchange boundaries to the specifed values</p>
+<p>This method is useful when first making a COMETS model so that medium
+definitions are not carried over from cobra into COMETS.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>lower_bound</strong><span class="classifier">float, optional</span></dt><dd><p>default = -1000.   in units of mmol / gDW / hr</p>
+</dd>
+<dt><strong>upper_bound</strong><span class="classifier">float, optional</span></dt><dd><p>default = 1000.    in units of mmol / gDW / hr</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.read_cobra_model">
+<code class="descname">read_cobra_model</code><span class="sig-paren">(</span><em><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.read_cobra_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>reads a cobra model from a file and loads it into this model</p>
+<p>This is an alternative way to initialize a COMETS model, by supplying
+it with the path to a cobra model that can be read using
+cobra.io.read_sbml_model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>path</strong><span class="classifier">str</span></dt><dd><p>path to a cobra model in sbml format</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.read_comets_model">
+<code class="descname">read_comets_model</code><span class="sig-paren">(</span><em><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.read_comets_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>an alternative way to create a COMETS model by reading from a file</p>
+<p>This allows a user to load previously-saved COMETS models. The 
+contents populate this object’s attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>path</strong><span class="classifier">str</span></dt><dd><p>the path to the COMETS model file</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cometspy.model.model.write_comets_model">
+<code class="descname">write_comets_model</code><span class="sig-paren">(</span><em><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.write_comets_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>writes the COMETS model object to a file</p>
+<p>This writes the current model object in COMETS format to file, either
+in the current working directory or in the directory specified by
+the optional parameter working_dir.  It is mostly used by the comets
+object to run simulations, though a user may with to write these to 
+examine directly or to save.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>working_dir</strong><span class="classifier">str, optional</span></dt><dd><p>a directory path to put COMETS files.  for example “./data_files/”</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">cometspy</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, D Bajic, J Chacon, J Vila.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/cometspy.model.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
