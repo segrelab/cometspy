@@ -8,13 +8,12 @@ cometspy automatically generated API
 
 .. toctree::
 :maxdepth: 2
-:caption: Contents:
-
-cometspy.model
-cometspy.params
-cometspy.layout
-cometspy.comets
-cometspy.utils
+	   
+	   cometspy.model
+	   cometspy.params
+	   cometspy.layout
+	   cometspy.comets
+	   cometspy.utils
 
 Indices and tables
 ==================
