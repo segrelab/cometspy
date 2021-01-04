@@ -3,17 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-cometspy automatically generated API
-====================================
-
+Contents
+========
 .. toctree::
-:maxdepth: 2
-	   
-	   cometspy.model
-	   cometspy.params
-	   cometspy.layout
-	   cometspy.comets
-	   cometspy.utils
+   :maxdepth: 2
+   cometspy.model
+   cometspy.params
+   cometspy.layout
+   cometspy.comets
+   cometspy.utils
 
 Indices and tables
 ==================
