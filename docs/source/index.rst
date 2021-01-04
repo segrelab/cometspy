@@ -6,12 +6,13 @@
 Contents
 ========
 .. toctree::
-   :maxdepth: 2
-   cometspy.model
-   cometspy.params
-   cometspy.layout
-   cometspy.comets
-   cometspy.utils
+   :maxdepth: 1
+
+   Model <cometspy.model>
+   Params <cometspy.params>
+   Layout <cometspy.layout>
+   Comets <cometspy.comets>
+   Utils <cometspy.utils>
 
 Indices and tables
 ==================
