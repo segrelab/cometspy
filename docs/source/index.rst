@@ -10,7 +10,11 @@ cometspy automatically generated API
 :maxdepth: 2
 :caption: Contents:
 
-cometspy
+cometspy.model
+cometspy.params
+cometspy.layout
+cometspy.comets
+cometspy.utils
 
 Indices and tables
 ==================
