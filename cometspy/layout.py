@@ -613,6 +613,22 @@ class layout:
         ids = [x.id for x in self.models]
         return(ids)
 
+    def get_model(self, model_id):
+        """
+        Get a comets model object from the model ID. Return None if the model is not found.s
+
+        Parameters
+        ----------
+        model_id: str,
+            model id
+
+        """
+        for model in self.models:
+            if model.id == model_id:
+                return model
+
+        return None
+
     def write_necessary_files(self, working_dir : str):
         """
         writes the layout and the model files to file

@@ -328,6 +328,12 @@ class model:
         exchmets = self.metabolites.iloc[exchmets-1]
         return(exchmets.METABOLITE_NAMES)
 
+    def get_exchange_reactions(self) -> list:
+        """
+        Returns a list of all exchange reactions
+        """
+        return self.reactions.loc[self.reactions['EXCH'], "REACTION_NAMES"]
+
     def change_bounds(self, reaction : str, lower_bound : float, upper_bound : float):
         """ changes the bounds of the specified reaction
         
