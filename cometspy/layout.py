@@ -615,7 +615,7 @@ class layout:
 
     def get_model(self, model_id):
         """
-        Get a comets model object from the model ID. Return None if the model is not found.s
+        Get a comets model object from the model ID. Return None if the model is not found.
 
         Parameters
         ----------
