@@ -613,14 +613,14 @@ class layout:
         ids = [x.id for x in self.models]
         return(ids)
 
-    def get_model(self, model_id):
+    def get_model(self, model_id: str):
         """
         Get a comets model object from the model ID. Return None if the model is not found.
 
         Parameters
         ----------
         model_id: str,
-            model id
+            The ID of the requested model
 
         """
         for model in self.models:
