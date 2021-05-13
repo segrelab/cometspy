@@ -358,7 +358,7 @@ class params:
             self.all_params['writeTotalBiomassLog'] = False
             self.all_params['writeBiomassLog'] = True
                     
-    def write_params(self, out_glb : str, out_pkg : str):
+    def write_params(self, out_glb : str, out_pkg : str, to_append : str=""):
         """
         writes params data to the specified files
         
@@ -374,6 +374,8 @@ class params:
 
 
         """
+        out_glb = out_glb + to_append
+        out_pkg = out_pkg + to_append
 
         if os.path.isfile(out_glb):
             os.remove(out_glb)

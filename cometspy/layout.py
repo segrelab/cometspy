@@ -613,7 +613,7 @@ class layout:
         ids = [x.id for x in self.models]
         return(ids)
 
-    def write_necessary_files(self, working_dir : str):
+    def write_necessary_files(self, working_dir : str, to_append = ""):
         """
         writes the layout and the model files to file
         
@@ -629,23 +629,25 @@ class layout:
         ----------
         working_dir : str, 
             The directory where the files will be written.
+        to_append : str, 
+            String to append to written filenames
 
         """
         self.__check_if_initial_pops_in_range()
-        self.write_layout(working_dir)
-        self.write_model_files(working_dir)
+        self.write_layout(working_dir, to_append)
+        self.write_model_files(working_dir, to_append)
 
-    def write_model_files(self, working_dir=""):
+    def write_model_files(self, working_dir="", to_append = ""):
         '''writes each model file'''
         for m in self.models:
-            m.write_comets_model(working_dir)
+            m.write_comets_model(working_dir, to_append)
             
-    def delete_model_files(self, working_dir):
+    def delete_model_files(self, working_dir, to_append = ""):
         """
         deletes model files in specified directory
         """
         for m in self.models:
-            m.delete_comets_model(working_dir)
+            m.delete_comets_model(working_dir, to_append)
 
     def display_current_media(self):
         """
@@ -1026,7 +1028,7 @@ class layout:
                                        axis=0, sort=False)
         self.media = self.media.reset_index(drop=True)
 
-    def write_layout(self, working_dir : str):
+    def write_layout(self, working_dir : str, to_append = ""):
         """
         writes just the COMETS layout file to the supplied path
 
@@ -1041,7 +1043,7 @@ class layout:
         # we should check for manual changes to everything. Alternatively,
         # we should print all blocks no matter what. 
         self.__check_if_diffusion_flag_should_be_set()
-        outfile = working_dir + ".current_layout"
+        outfile = working_dir + ".current_layout" + to_append
         if os.path.isfile(outfile):
             os.remove(outfile)
 

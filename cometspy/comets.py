@@ -154,15 +154,11 @@ class comets:
         self.parameters = parameters
 
         # dealing with output files
-        self.parameters.all_params['useLogNameTimeStamp'] = False
-        self.parameters.all_params['TotalBiomassLogName'] = (
-            'total_biomass_log_' + hex(id(self)))
-        self.parameters.all_params['BiomassLogName'] = (
-            'biomass_log_' + hex(id(self)))
-        self.parameters.all_params['FluxLogName'] = (
-            'flux_log_' + hex(id(self)))
-        self.parameters.all_params['MediaLogName'] = (
-            'media_log_' + hex(id(self)))
+        params.set_param("useLogNameTimeStamp", False)
+        params.set_param("TotalBiomassLogName", self.parameters.all_params['TotalBiomassLogName'] + hex(id(self)))
+        params.set_param("BiomassLogName", self.parameters.all_params['BiomassLogName'] + hex(id(self)))
+        params.set_param("FluxLogName", self.parameters.all_params['MediaBiomassLogName'] + hex(id(self)))
+        params.set_param("MediaBiomassLogName", self.parameters.all_params['MediaBiomassLogName'] + hex(id(self)))
 
     def __build_default_classpath_pieces(self):
         """
@@ -353,22 +349,24 @@ class comets:
             self.parameters.all_params['writeTotalBiomassLog'] = False
             self.parameters.all_params['writeBiomassLog'] = True
 
+        to_append = '_' + hex(id(self))
         # write the files for comets in working_dir
-        c_global = self.working_dir + '.current_global'
-        c_package = self.working_dir + '.current_package'
-        c_script = self.working_dir + '.current_script'
+        c_global = self.working_dir + '.current_global' + to_append)
+        c_package = self.working_dir + '.current_package' + to_append)
+        c_script = self.working_dir + '.current_script' + to_append)
+ 
 
-        self.layout.write_necessary_files(self.working_dir)
+        self.layout.write_necessary_files(self.working_dir, to_append)
+
         # self.layout.write_layout(self.working_dir + '.current_layout')
         self.parameters.write_params(c_global, c_package)
 
         if os.path.isfile(c_script):
             os.remove(c_script)
         with open(c_script, 'a') as f:
-            f.write('load_comets_parameters ' + '.current_global' + '\n')
-            f.writelines('load_package_parameters ' + '.current_package' + '\n')
-            f.writelines('load_layout ' + '.current_layout')
-
+            f.write('load_comets_parameters ' + '.current_global_' + hex(id(self))) + '\n')
+            f.writelines('load_package_parameters ' + '.current_package_' + hex(id(self))) + '\n')
+            f.writelines('load_layout ' + '.current_layout_' + hex(id(self))))
 
         if platform.system() == 'Windows':
             self.cmd = ('\"' + self.COMETS_HOME +

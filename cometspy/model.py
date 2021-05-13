@@ -812,7 +812,7 @@ class model:
         self.reactions = reactions
         self.metabolites = metabolites
 
-    def delete_comets_model(self, working_dir = None):
+    def delete_comets_model(self, working_dir = None, to_append : str=""):
         """ deletes a file version of this model if it exists.
         
             Parameters
@@ -825,10 +825,10 @@ class model:
         path_to_delete = ""
         if working_dir is not None:
             path_to_delete = working_dir
-        path_to_delete = path_to_delete + self.id + '.cmd'
+        path_to_delete = path_to_delete + self.id + to_append + '.cmd'
         os.remove(path_to_delete)
         
-    def write_comets_model(self, working_dir : str =None):
+    def write_comets_model(self, working_dir : str =None, to_append : str=""):
         """ writes the COMETS model object to a file 
             
             This writes the current model object in COMETS format to file, either
@@ -846,7 +846,7 @@ class model:
         path_to_write = ""
         if working_dir is not None:
             path_to_write = working_dir
-        path_to_write = path_to_write + self.id + '.cmd'
+        path_to_write = path_to_write + self.id + to_append + '.cmd'
 
         # format variables for writing comets model
         bnd = self.reactions.loc[(self.reactions['LB']
