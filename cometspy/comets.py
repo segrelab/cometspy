@@ -355,7 +355,6 @@ class comets:
         c_package = self.working_dir + '.current_package' + to_append
         c_script = self.working_dir + '.current_script' + to_append
  
-
         self.layout.write_necessary_files(self.working_dir, to_append)
 
         # self.layout.write_layout(self.working_dir + '.current_layout')
@@ -364,22 +363,22 @@ class comets:
         if os.path.isfile(c_script):
             os.remove(c_script)
         with open(c_script, 'a') as f:
-            f.write('load_comets_parameters ' + '.current_global_' + hex(id(self))) + '\n')
-            f.writelines('load_package_parameters ' + '.current_package_' + hex(id(self))) + '\n')
-            f.writelines('load_layout ' + '.current_layout_' + hex(id(self))))
+            f.write('load_comets_parameters ' + '.current_global_' + hex(id(self)) + '\n')
+            f.writelines('load_package_parameters ' + '.current_package_' + hex(id(self)) + '\n')
+            f.writelines('load_layout ' + '.current_layout_' + hex(id(self)))
 
         if platform.system() == 'Windows':
             self.cmd = ('\"' + self.COMETS_HOME +
-                     '\\comets_scr' + '\" \"' +
-                    c_script +
-                    '\"')
+                        '\\comets_scr' + '\" \"' +
+                        c_script +
+                        '\"')
         else:
-        # simulate
+            # simulate
             self.cmd = ('java -classpath ' + self.JAVA_CLASSPATH +
-                    # ' -Djava.library.path=' + self.D_JAVA_LIB_PATH +
-                    ' edu.bu.segrelab.comets.Comets -loader' +
-                    ' edu.bu.segrelab.comets.fba.FBACometsLoader' +
-                    ' -script "' + '.current_script' + '"')
+                        # ' -Djava.library.path=' + self.D_JAVA_LIB_PATH +
+                        ' edu.bu.segrelab.comets.Comets -loader' +
+                        ' edu.bu.segrelab.comets.fba.FBACometsLoader' +
+                        ' -script "' + '.current_script' + '"')
         p = sp.Popen(self.cmd, 
                      cwd = self.working_dir,
                      shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
