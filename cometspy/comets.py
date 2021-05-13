@@ -351,9 +351,9 @@ class comets:
 
         to_append = '_' + hex(id(self))
         # write the files for comets in working_dir
-        c_global = self.working_dir + '.current_global' + to_append)
-        c_package = self.working_dir + '.current_package' + to_append)
-        c_script = self.working_dir + '.current_script' + to_append)
+        c_global = self.working_dir + '.current_global' + to_append
+        c_package = self.working_dir + '.current_package' + to_append
+        c_script = self.working_dir + '.current_script' + to_append
  
 
         self.layout.write_necessary_files(self.working_dir, to_append)
