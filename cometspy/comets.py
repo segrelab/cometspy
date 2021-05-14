@@ -436,21 +436,20 @@ class comets:
 
         # Read spatial biomass log
         if self.parameters.all_params['writeBiomassLog']:
-            biomass_out_file = self.working_dir + 'biomass' + to_append
-            self.biomass = pd.read_csv(biomass_out_file,
-                                       header=None, delimiter=r'\s+',
-                                       names=['cycle', 'x', 'y',
-                                              'species', 'biomass'])
+            self.biomass = pd.read_csv(self.working_dir + self.parameters.all_params[
+                'BiomassLogName'], header=None, delimiter=r'\s+', names=['cycle', 'x', 'y',
+                                                                         'species', 'biomass'])
             # cut off extension added by toolbox
             self.biomass['species'] = [sp[:-4] if '.cmd' in sp else sp for sp in self.biomass.species]
 
             if delete_files:
-                os.remove(biomass_out_file)
+                os.remove(self.working_dir + self.parameters.all_params['BiomassLogName'])
 
         # Read evolution-related logs
         if 'evolution' in list(self.parameters.all_params.keys()):
             if self.parameters.all_params['evolution']:
-                genotypes_out_file = self.working_dir + 'GENOTYPES_biomass' + to_append
+                genotypes_out_file = self.working_dir + 'GENOTYPES_' + self.parameters.all_params[
+                    'BiomassLogName']
                 self.genotypes = pd.read_csv(genotypes_out_file,
                                              header=None, delimiter=r'\s+',
                                              names=['Ancestor',
