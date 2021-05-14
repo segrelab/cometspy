@@ -436,7 +436,7 @@ class comets:
 
         # Read spatial biomass log
         if self.parameters.all_params['writeBiomassLog']:
-            biomass_out_file = self.working_dir + 'biomass_log_' + hex(id(self))
+            biomass_out_file = self.working_dir + 'biomass' + to_append
             self.biomass = pd.read_csv(biomass_out_file,
                                        header=None, delimiter=r'\s+',
                                        names=['cycle', 'x', 'y',
@@ -450,7 +450,7 @@ class comets:
         # Read evolution-related logs
         if 'evolution' in list(self.parameters.all_params.keys()):
             if self.parameters.all_params['evolution']:
-                genotypes_out_file = self.working_dir + 'GENOTYPES_biomass_log_' + hex(id(self))
+                genotypes_out_file = self.working_dir + 'GENOTYPES_biomass' + to_append
                 self.genotypes = pd.read_csv(genotypes_out_file,
                                              header=None, delimiter=r'\s+',
                                              names=['Ancestor',
