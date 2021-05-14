@@ -828,7 +828,7 @@ class model:
         path_to_delete = path_to_delete + self.id + to_append + '.cmd'
         os.remove(path_to_delete)
         
-    def write_comets_model(self, working_dir : str =None, to_append : str=""):
+    def write_comets_model(self, working_dir : str = None):
         """ writes the COMETS model object to a file 
             
             This writes the current model object in COMETS format to file, either
@@ -846,7 +846,7 @@ class model:
         path_to_write = ""
         if working_dir is not None:
             path_to_write = working_dir
-        path_to_write = path_to_write + self.id + to_append + '.cmd'
+        path_to_write = path_to_write + self.id + '.cmd'
 
         # format variables for writing comets model
         bnd = self.reactions.loc[(self.reactions['LB']

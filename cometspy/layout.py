@@ -7,9 +7,6 @@ import math
 from cometspy.model import model
 
 
-
-
-
 class layout:
     '''
     object containing model and environmental definitions for a COMETS sim.
@@ -635,19 +632,19 @@ class layout:
         """
         self.__check_if_initial_pops_in_range()
         self.write_layout(working_dir, to_append)
-        self.write_model_files(working_dir, to_append)
+        self.write_model_files(working_dir)
 
-    def write_model_files(self, working_dir="", to_append = ""):
+    def write_model_files(self, working_dir=""):
         '''writes each model file'''
         for m in self.models:
-            m.write_comets_model(working_dir, to_append)
+            m.write_comets_model(working_dir)
             
-    def delete_model_files(self, working_dir, to_append = ""):
+    def delete_model_files(self, working_dir):
         """
         deletes model files in specified directory
         """
         for m in self.models:
-            m.delete_comets_model(working_dir, to_append)
+            m.delete_comets_model(working_dir)
 
     def display_current_media(self):
         """

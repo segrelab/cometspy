@@ -21,7 +21,7 @@ __author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon"
 __copyright__ = "Copyright 2019, The COMETS Consortium"
 __credits__ = ["Djordje Bajic", "Jean Vila", "Jeremy Chacon"]
 __license__ = "MIT"
-__version__ = "0.3.8"
+__version__ = "0.4.5"
 __comets_compatibility__ = "2.10.2" # version of comets this was tested with
 
 __maintainer__ = "Djordje Bajic"
@@ -119,7 +119,6 @@ class comets:
     def __init__(self, layout,
                  parameters, relative_dir : str =''):
 
-
         # define instance variables
         self.working_dir = os.getcwd() + '/' + relative_dir
         try:
@@ -154,11 +153,15 @@ class comets:
         self.parameters = parameters
 
         # dealing with output files
-        params.set_param("useLogNameTimeStamp", False)
-        params.set_param("TotalBiomassLogName", self.parameters.all_params['TotalBiomassLogName'] + hex(id(self)))
-        params.set_param("BiomassLogName", self.parameters.all_params['BiomassLogName'] + hex(id(self)))
-        params.set_param("FluxLogName", self.parameters.all_params['MediaBiomassLogName'] + hex(id(self)))
-        params.set_param("MediaBiomassLogName", self.parameters.all_params['MediaBiomassLogName'] + hex(id(self)))
+        self.parameters.set_param("useLogNameTimeStamp", False)
+        self.parameters.set_param("TotalBiomassLogName",
+                                  self.parameters.all_params['TotalBiomassLogName'] + '_' + hex(id(self)))
+        self.parameters.set_param("BiomassLogName",
+                                  self.parameters.all_params['BiomassLogName'] + '_' + hex(id(self)))
+        self.parameters.set_param("FluxLogName",
+                                  self.parameters.all_params['FluxLogName'] + '_' + hex(id(self)))
+        self.parameters.set_param("MediaLogName",
+                                  self.parameters.all_params['MediaLogName'] + '_' + hex(id(self)))
 
     def __build_default_classpath_pieces(self):
         """
@@ -363,9 +366,9 @@ class comets:
         if os.path.isfile(c_script):
             os.remove(c_script)
         with open(c_script, 'a') as f:
-            f.write('load_comets_parameters ' + '.current_global_' + hex(id(self)) + '\n')
-            f.writelines('load_package_parameters ' + '.current_package_' + hex(id(self)) + '\n')
-            f.writelines('load_layout ' + '.current_layout_' + hex(id(self)))
+            f.write('load_comets_parameters ' + '.current_global' + to_append + '\n')
+            f.writelines('load_package_parameters ' + '.current_package' + to_append + '\n')
+            f.writelines('load_layout ' + '.current_layout' + to_append)
 
         if platform.system() == 'Windows':
             self.cmd = ('\"' + self.COMETS_HOME +
@@ -378,7 +381,8 @@ class comets:
                         # ' -Djava.library.path=' + self.D_JAVA_LIB_PATH +
                         ' edu.bu.segrelab.comets.Comets -loader' +
                         ' edu.bu.segrelab.comets.fba.FBACometsLoader' +
-                        ' -script "' + '.current_script' + '"')
+                        ' -script "' + c_script + '"')
+
         p = sp.Popen(self.cmd, 
                      cwd = self.working_dir,
                      shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
@@ -468,7 +472,7 @@ class comets:
             os.remove(c_global)
             os.remove(c_package)
             os.remove(c_script)
-            os.remove(self.working_dir + '.current_layout')
+            os.remove(self.working_dir + '.current_layout' + to_append)
             os.remove(self.working_dir + 'COMETS_manifest.txt')  # todo: stop writing this in java
         print('Done!')
 

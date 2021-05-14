@@ -127,8 +127,8 @@ class params:
         self.all_params = {'writeSpecificMediaLog': False,
                            'specificMediaLogRate': 1,
                            'specificMedia': 'ac_e',
-                           'SpecificMediaLogName': 'specific_media.txt',
-                           'BiomassLogName': 'biomass.txt',
+                           'SpecificMediaLogName': 'specific_media',
+                           'BiomassLogName': 'biomass',
                            'BiomassLogRate': 1,
                            'biomassLogFormat': 'COMETS',
                            'FluxLogName': 'flux_out',
@@ -137,7 +137,7 @@ class params:
                            'MediaLogName': 'media_out',
                            'MediaLogRate': 5,
                            'mediaLogFormat': 'COMETS',
-                           'TotalBiomassLogName': 'total_biomass_out.txt',
+                           'TotalBiomassLogName': 'total_biomass_out',
                            'maxCycles': 100,
                            'saveslideshow': False,
                            'totalBiomassLogRate': 1,
@@ -358,7 +358,7 @@ class params:
             self.all_params['writeTotalBiomassLog'] = False
             self.all_params['writeBiomassLog'] = True
                     
-    def write_params(self, out_glb : str, out_pkg : str, to_append : str=""):
+    def write_params(self, out_glb : str, out_pkg : str):
         """
         writes params data to the specified files
         
@@ -374,9 +374,6 @@ class params:
 
 
         """
-        out_glb = out_glb + to_append
-        out_pkg = out_pkg + to_append
-
         if os.path.isfile(out_glb):
             os.remove(out_glb)
 
