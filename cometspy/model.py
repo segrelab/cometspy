@@ -592,9 +592,9 @@ class model:
             
         """
         self.id = os.path.splitext(os.path.basename(path))[0]
-
+        
         # in this way, its robust to empty lines:
-        m_f_lines = [s for s in __read_file(path).splitlines() if s]
+        m_f_lines = [s for s in _read_file(path).splitlines() if s]
         m_filedata_string = os.linesep.join(m_f_lines)
         ends = []
         for k in range(0, len(m_f_lines)):
@@ -1000,7 +1000,7 @@ class model:
             f.write(r'//' + '\n')
 
 
-def __read_file(filename: str) -> str:
+def _read_file(filename: str) -> str:
     """ helper function to read non-rectangular files.
     """
     f = open(filename, 'r')
