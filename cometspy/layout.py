@@ -327,7 +327,7 @@ class layout:
 
         """
         # .. load layout file
-        f_lines = [s for s in __read_file(input_obj).splitlines() if s]
+        f_lines = [s for s in _read_file(input_obj).splitlines() if s]
         filedata_string = os.linesep.join(f_lines)
         end_blocks = []
         for i in range(0, len(f_lines)):
@@ -1426,7 +1426,7 @@ class layout:
                       self.all_exchanged_mets[x] == met][0]
         return(met_number)
 
-def __read_file(filename):
+def _read_file(filename):
     f = open(filename, 'r')
     f_lines = f.read()
     f.close()

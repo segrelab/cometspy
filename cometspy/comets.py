@@ -403,11 +403,13 @@ class comets:
         if self.parameters.all_params['writeTotalBiomassLog']:
             tbmf = _readlines_file(
                 self.working_dir + self.parameters.all_params['TotalBiomassLogName'])
+            tbmf = [x.replace(",",".") for x in tbmf] # for systems that use commas as decimal place
             self.total_biomass = pd.DataFrame([re.split(r'\t+', x.strip())
                                                for x in tbmf],
                                               columns=['cycle'] +
                                               self.layout.get_model_ids())
             self.total_biomass = self.total_biomass.astype('float')
+            self.total_biomass.cycle = self.total_biomass.cycle.astype('int')
             if delete_files:
                 os.remove(self.working_dir + self.parameters.all_params['TotalBiomassLogName'])
 
