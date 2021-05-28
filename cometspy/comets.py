@@ -421,6 +421,11 @@ class comets:
             self.fluxes = pd.read_csv(self.working_dir + self.parameters.all_params['FluxLogName'],
                                       delim_whitespace=True,
                                       header=None, names=range(max_rows))
+            # deal with commas-as-decimals
+            if any([isinstance(self.fluxes.iloc[0,i], str) for i in range(self.fluxes.shape[1])]):
+                self.fluxes = pd.read_csv(self.working_dir + self.parameters.all_params['FluxLogName'],
+                                      decimal = ",", delim_whitespace=True,
+                                      header=None, names=range(max_rows))
             if delete_files:
                 os.remove(self.working_dir + self.parameters.all_params['FluxLogName'])
             self.__build_readable_flux_object()
@@ -432,7 +437,14 @@ class comets:
                                                                'cycle', 'x',
                                                                'y',
                                                                'conc_mmol'))
-
+            # deal with commas-as-decimals
+            if isinstance(self.media.loc[0, "conc_mmol"], str):
+                self.media = pd.read_csv(self.working_dir + self.parameters.all_params[
+                'MediaLogName'], 
+                    decimal = ",", delim_whitespace=True, names=('metabolite',
+                                                               'cycle', 'x',
+                                                               'y',
+                                                               'conc_mmol'))                
             if delete_files:
                 os.remove(self.working_dir + self.parameters.all_params['MediaLogName'])
 
@@ -441,6 +453,13 @@ class comets:
             self.biomass = pd.read_csv(self.working_dir + self.parameters.all_params[
                 'BiomassLogName'], header=None, delimiter=r'\s+', names=['cycle', 'x', 'y',
                                                                          'species', 'biomass'])
+            # deal with commas-as-decimals
+            if isinstance(self.biomass.loc[0,"biomass"], str):
+                self.biomass = pd.read_csv(self.working_dir + self.parameters.all_params[
+                'BiomassLogName'], header=None, 
+                    decimal = ",",
+                    delimiter=r'\s+', names=['cycle', 'x', 'y','species', 'biomass'])
+                
             # cut off extension added by toolbox
             self.biomass['species'] = [sp[:-4] if '.cmd' in sp else sp for sp in self.biomass.species]
 
@@ -464,6 +483,10 @@ class comets:
         if self.parameters.all_params['writeSpecificMediaLog']:
             spec_med_file = self.working_dir + self.parameters.all_params['SpecificMediaLogName']
             self.specific_media = pd.read_csv(spec_med_file, delimiter=r'\s+')
+            # deal with commas-as-decimals
+            if any([isinstance(self.specific_media.iloc[0,i], str) for i in range(3, self.specific_media.shape[1])]):
+                self.specific_media = pd.read_csv(spec_med_file, decimal = ",",delimiter=r'\s+')
+
             if delete_files:
                 os.remove(self.working_dir + self.parameters.all_params['SpecificMediaLogName'])
 
