@@ -6,7 +6,6 @@ import cobra
 import io
 
 
-
 class model:
     """ a COMETS metabolic model to use in a layout
     
@@ -66,9 +65,9 @@ class model:
             iJO1366
 
     """
-    def __init__(self, model : cobra.Model =None):
+    def __init__(self, model : cobra.Model = None):
         self.initial_pop = [[0, 0, 0.0]]
-        self.id = None
+        self.id = '_' + hex(id(self))
         self.reactions = pd.DataFrame(columns=['REACTION_NAMES', 'ID',
                                                'LB', 'UB', 'EXCH',
                                                'EXCH_IND', 'V_MAX',
@@ -115,7 +114,6 @@ class model:
     def get_reaction_names(self) -> list:
         """ returns a list of reaction names"""
         return(list(self.reactions['REACTION_NAMES']))
-
 
     def add_signal(self, rxn_num, exch_ind, bound,
                    function, parms):
@@ -474,7 +472,7 @@ class model:
             >>> model.load_cobra_model(ecoli)
             
         """
-        self.id = curr_m.id
+        self.id = curr_m.id + self.id
         # reactions and their features
         reaction_list = curr_m.reactions
         self.reactions['REACTION_NAMES'] = [str(x).split(':')[0] for
@@ -591,7 +589,7 @@ class model:
             >>> model.read_comets_model(path_to_model)
             
         """
-        self.id = os.path.splitext(os.path.basename(path))[0]
+        self.id = os.path.splitext(os.path.basename(path))[0] + self.id
         
         # in this way, its robust to empty lines:
         m_f_lines = [s for s in _read_file(path).splitlines() if s]
@@ -812,7 +810,7 @@ class model:
         self.reactions = reactions
         self.metabolites = metabolites
 
-    def delete_comets_model(self, working_dir = None, to_append : str=""):
+    def delete_comets_model(self, working_dir = None):
         """ deletes a file version of this model if it exists.
         
             Parameters
@@ -825,7 +823,7 @@ class model:
         path_to_delete = ""
         if working_dir is not None:
             path_to_delete = working_dir
-        path_to_delete = path_to_delete + self.id + to_append + '.cmd'
+        path_to_delete = path_to_delete + self.id + '.cmd'
         os.remove(path_to_delete)
         
     def write_comets_model(self, working_dir : str = None):

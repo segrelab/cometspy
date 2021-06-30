@@ -469,7 +469,7 @@ class comets:
         # Read evolution-related logs
         if 'evolution' in list(self.parameters.all_params.keys()):
             if self.parameters.all_params['evolution']:
-                genotypes_out_file = self.working_dir + 'GENOTYPES_' + self.parameters.all_params[
+                genotypes_out_file = 'GENOTYPES_' + self.parameters.all_params[
                     'BiomassLogName']
                 self.genotypes = pd.read_csv(genotypes_out_file,
                                              header=None, delimiter=r'\s+',

@@ -4,13 +4,13 @@ from os import path
 setup(
     name='cometspy',
     packages=['cometspy'],
-    version='0.4.10',
+    version='0.4.11',
     license='GPL',
     description='The Python interface to COMETS',
     author='The COMETSPy Core Team',
     author_email='djordje.bajic@yale.edu',
     url='https://github.com/segrelab/cometspy',
-    download_url='https://github.com/segrelab/cometspy/archive/v0.4.10.tar.gz',  # New releases here!! 
+    download_url='https://github.com/segrelab/cometspy/archive/v0.4.11.tar.gz',  # New releases here!! 
     keywords=['metabolism', 'dynamic', 'flux', 'balance', 'analysis', 'spatial', 'evolution'],
     install_requires=[
         # I get to this in a second
