@@ -769,7 +769,7 @@ class layout:
         self.__diffusion_flag = True
         
     def set_specific_metabolite(self, met : str, amount : float, 
-                                static : bool =False):
+                                static : bool = False):
         """
         sets the initial (or constant) value for a metabolite across space
         

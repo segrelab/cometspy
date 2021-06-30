@@ -65,9 +65,14 @@ class model:
             iJO1366
 
     """
-    def __init__(self, model : cobra.Model = None):
+    def __init__(self, model : cobra.Model = None, randomtag : bool = False):
         self.initial_pop = [[0, 0, 0.0]]
-        self.id = '_' + hex(id(self))
+
+        if randomtag:
+            self.id = '_' + hex(id(self))
+        else:
+            self.id = ""
+
         self.reactions = pd.DataFrame(columns=['REACTION_NAMES', 'ID',
                                                'LB', 'UB', 'EXCH',
                                                'EXCH_IND', 'V_MAX',
@@ -104,12 +109,12 @@ class model:
 
         if model is not None:
             if isinstance(model, cobra.Model):
-                self.load_cobra_model(model)
+                self.load_cobra_model(model, randomtag)
             else:  # assume it is a path
                 if model[-3:] == "cmd":
-                    self.read_comets_model(model)
+                    self.read_comets_model(model, randomtag)
                 else:
-                    self.read_cobra_model(model)
+                    self.read_cobra_model(model, randomtag)
 
     def get_reaction_names(self) -> list:
         """ returns a list of reaction names"""
@@ -451,7 +456,7 @@ class model:
         curr_m = cobra.io.read_sbml_model(path)
         self.load_cobra_model(curr_m)
 
-    def load_cobra_model(self, curr_m : cobra.Model):
+    def load_cobra_model(self, curr_m : cobra.Model, randomtag : bool = False):
         """ creates the COMETS model from the supplied cobra model
         
             This is usually used internally when creating a COMETS model. 
@@ -471,8 +476,11 @@ class model:
             >>> model = c.model()
             >>> model.load_cobra_model(ecoli)
             
-        """
-        self.id = curr_m.id + self.id
+        """ 
+        self.id = curr_m.id
+        if randomtag:
+            self.id = self.id + '_' + hex(id(self))
+
         # reactions and their features
         reaction_list = curr_m.reactions
         self.reactions['REACTION_NAMES'] = [str(x).split(':')[0] for
@@ -588,9 +596,11 @@ class model:
             >>> model = c.model()
             >>> model.read_comets_model(path_to_model)
             
-        """
+        """        
         self.id = os.path.splitext(os.path.basename(path))[0] + self.id
-        
+        if randomtag:
+            self.id = self.id + '_' + hex(id(self))
+
         # in this way, its robust to empty lines:
         m_f_lines = [s for s in _read_file(path).splitlines() if s]
         m_filedata_string = os.linesep.join(m_f_lines)
