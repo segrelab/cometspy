@@ -431,7 +431,7 @@ class model:
         self.reactions.loc[self.reactions[
             'REACTION_NAMES'] == reaction, 'HILL'] = hill
 
-    def read_cobra_model(self, path : str):
+    def read_cobra_model(self, path : str, randomtag : bool = False):
         """ reads a cobra model from a file and loads it into this model 
             
             This is an alternative way to initialize a COMETS model, by supplying
@@ -454,7 +454,7 @@ class model:
         
         """
         curr_m = cobra.io.read_sbml_model(path)
-        self.load_cobra_model(curr_m)
+        self.load_cobra_model(curr_m, randomtag)
 
     def load_cobra_model(self, curr_m : cobra.Model, randomtag : bool = False):
         """ creates the COMETS model from the supplied cobra model
@@ -576,7 +576,7 @@ class model:
         if hasattr(curr_m, 'comets_obj_style'):
             self.obj_style = curr_m.comets_obj_style
 
-    def read_comets_model(self, path : str):
+    def read_comets_model(self, path : str, randomtag : bool = False):
         """ an alternative way to create a COMETS model by reading from a file
         
             This allows a user to load previously-saved COMETS models. The 

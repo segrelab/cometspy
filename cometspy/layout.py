@@ -128,7 +128,7 @@ class layout:
                 raise IOError(' when running comets.layout(), input_obj' +
                               ' is a string, and therefore should be a path' +
                               ' to a layout; however, no file could be found' +
-                              ' at that path destionation')
+                              ' at that path destination')
             self.read_comets_layout(input_obj)
         else:
             if not isinstance(input_obj, list):
