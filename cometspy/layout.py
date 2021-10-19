@@ -613,6 +613,22 @@ class layout:
         ids = [x.id for x in self.models]
         return(ids)
 
+    def get_model(self, model_id: str):
+        """
+        Get a comets model object from the model ID. Return None if the model is not found.
+
+        Parameters
+        ----------
+        model_id: str,
+            The ID of the requested model
+
+        """
+        for model in self.models:
+            if model.id == model_id:
+                return model
+
+        return None
+
     def write_necessary_files(self, working_dir : str):
         """
         writes the layout and the model files to file
@@ -1040,6 +1056,10 @@ class layout:
         # right now we only check if a user manually set a diff_c.  Ideally,
         # we should check for manual changes to everything. Alternatively,
         # we should print all blocks no matter what. 
+        
+        # Reset index of media - avoids downstream errors
+        self.media = self.media.reset_index(drop=True)
+
         self.__check_if_diffusion_flag_should_be_set()
         outfile = working_dir + ".current_layout"
         if os.path.isfile(outfile):

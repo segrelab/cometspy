@@ -1,0 +1,8 @@
+# Folders
+cometspy/__pycache__/*
+
+# Package files
+*.egg-info/*
+
+# pyc files
+*.pyc
