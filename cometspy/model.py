@@ -332,7 +332,7 @@ class model:
         """
         Returns a list of all exchange reactions
         """
-        return self.reactions.loc[self.reactions['EXCH'], "REACTION_NAMES"]
+        return list(self.reactions.loc[self.reactions['EXCH'], "REACTION_NAMES"])
 
     def change_bounds(self, reaction : str, lower_bound : float, upper_bound : float):
         """ changes the bounds of the specified reaction
