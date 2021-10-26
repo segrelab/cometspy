@@ -971,8 +971,7 @@ class model:
                     curr_col_names = col_names + [str(i) for i in range(n_parms)]
                     temp_df = pd.DataFrame(columns=curr_col_names)
                     if row.loc['REACTION_NUMBER'] != 'death':
-                        # this is to deal with the off-by-one difference between the pandas table and java
-                        row.loc['REACTION_NUMBER'] = str(int(row.loc['REACTION_NUMBER']) - 1)
+                        row.loc['REACTION_NUMBER'] = str(int(row.loc['REACTION_NUMBER']))
                     temp_df.loc[0, 'REACTION_NUMBER'] = row.loc['REACTION_NUMBER']
                     temp_df.loc[0, 'EXCH_IND'] = row.loc['EXCH_IND']
                     temp_df.loc[0, 'BOUND'] = row.loc['BOUND']
