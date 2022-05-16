@@ -156,13 +156,13 @@ class comets:
         # dealing with output files
         self.parameters.set_param("useLogNameTimeStamp", False)
         self.parameters.set_param("TotalBiomassLogName",
-                                  self.parameters.all_params['TotalBiomassLogName'] + '_' + hex(id(self)))
+                                  "totalbiomasslog" + '_' + hex(id(self)))
         self.parameters.set_param("BiomassLogName",
-                                  self.parameters.all_params['BiomassLogName'] + '_' + hex(id(self)))
+                                  "biomasslog" + '_' + hex(id(self)))
         self.parameters.set_param("FluxLogName",
-                                  self.parameters.all_params['FluxLogName'] + '_' + hex(id(self)))
+                                  "fluxlog" + '_' + hex(id(self)))
         self.parameters.set_param("MediaLogName",
-                                  self.parameters.all_params['MediaLogName'] + '_' + hex(id(self)))
+                                  "medialog" + '_' + hex(id(self)))
 
     def __build_default_classpath_pieces(self):
         """
