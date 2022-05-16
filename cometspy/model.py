@@ -88,6 +88,16 @@ class model:
                                              'PARAMETERS',
                                              'REACTION_NAMES', 'EXCH'],
                                     dtype=object)
+        # multitoxins is a special case of signaling
+        self.multitoxins = pd.DataFrame(columns = ['REACTION_NUMBER',
+                                                   'EXCH_INDS',
+                                                   'BOUND',
+                                                   'KMS',
+                                                   'HILLS',
+                                                   'VMAX',
+                                                   'REACTION_NAME',
+                                                   'EXCH_NAMES'],
+                                        dtype = object)
         self.light = []
 
         self.vmax_flag = False
@@ -119,8 +129,62 @@ class model:
     def get_reaction_names(self) -> list:
         """ returns a list of reaction names"""
         return(list(self.reactions['REACTION_NAMES']))
+    
+    def add_multitoxin(self, rxn_num, exch_ids, bound,
+                       vmax, kms, hills):
+        """
+        Adds a signaling relationship where >= 1 signal close a bound 
+        
+        This incorporates a hill-function reduction of (usually) an upper bound
+        It is useful for incorporating multiple, additively-functioning signals.
+        
+        bound = vmax * MULT((km_i^h_i) / (km_i^h_i + M_i^h_i)) 
+        where MULT is a multiplicative function, M_i is the molarity of the 
+        metabolite in the given exch_id, and km_i and h_i are the km and h for
+        for that signal. 
 
-    def add_signal(self, rxn_num, exch_ind, bound,
+        Parameters
+        ----------
+        rxn_num : int
+            number of the affected reaction
+        exch_ids : list[int]
+            exchange numbers of the signals
+        bound : str
+            "ub" or "lb"
+        vmax : float
+            maximum bound in absence of signals
+        kms : list[float]
+            kms for the signals
+        hills : list[float]
+            hill coefficients for the signals
+
+        Returns
+        -------
+        None.
+
+        """
+        rxn_name = self.reactions.loc[self.reactions.ID == rxn_num,
+                              'REACTION_NAMES'].item()
+        rxn_num = str(rxn_num)
+        exch_names = [list(self.get_exchange_metabolites())[exch_id-1] for
+                      exch_id in exch_ids]
+        new_row = pd.DataFrame({'REACTION_NUMBER': rxn_num,
+                                'EXCH_INDS': 1,
+                                'BOUND': bound,
+                                'KMS': 1,
+                                'HILLS': 1,
+                                'VMAX' :vmax,
+                                'REACTION_NAME': rxn_name,
+                                'EXCH_NAMES': ""},
+                               index=[0],
+                               dtype=object)
+        new_row.loc[0, 'KMS'] = kms
+        new_row.loc[0, 'HILLS'] = hills
+        new_row.loc[0, "EXCH_INDS"] = exch_ids
+        new_row.loc[0, 'EXCH_NAMES'] = exch_names
+        self.multitoxins = self.multitoxins.append(new_row, ignore_index=True)
+
+    def add_signal(self, rxn_num, exch_id, bound,
                    function, parms):
         """adds a signal to the reaction rxn_num that changes bounds
         
@@ -150,9 +214,9 @@ class model:
 	#       however, COMETS actually wants that rxn_num - 1, which
 	#       is why it does that during the saving process, and why
 	#	you will see it that way in saved model files.
-        exch_name = list(self.get_exchange_metabolites())[exch_ind-1]
+        exch_name = list(self.get_exchange_metabolites())[exch_id-1]
         new_row = pd.DataFrame({'REACTION_NUMBER': rxn_num,
-                                'EXCH_IND': exch_ind,
+                                'EXCH_IND': exch_id,
                                 'BOUND': bound,
                                 'FUNCTION': function,
                                 'PARAMETERS': 1,
@@ -958,27 +1022,38 @@ class model:
                                                     lrxn[1], lrxn[2]))
                 f.write(r'//' + '\n')
 
-            if self.signals.size > 0:
+            if self.signals.size > 0 or self.multitoxins.size > 0:
                 f.write('MET_REACTION_SIGNAL\n')
-                sub_signals = self.signals.drop(['REACTION_NAMES', 'EXCH'],
-                                                axis='columns')
-                col_names = list(self.signals.drop(['REACTION_NAMES',
-                                                    'EXCH', 'PARAMETERS'],
-                                                   axis='columns').columns)
-                for idx in sub_signals.index:
-                    row = sub_signals.drop(['PARAMETERS'], axis='columns').iloc[idx, :]
-                    n_parms = len(sub_signals.PARAMETERS[idx])
-                    curr_col_names = col_names + [str(i) for i in range(n_parms)]
-                    temp_df = pd.DataFrame(columns=curr_col_names)
-                    if row.loc['REACTION_NUMBER'] != 'death':
-                        row.loc['REACTION_NUMBER'] = str(int(row.loc['REACTION_NUMBER']))
-                    temp_df.loc[0, 'REACTION_NUMBER'] = row.loc['REACTION_NUMBER']
-                    temp_df.loc[0, 'EXCH_IND'] = row.loc['EXCH_IND']
-                    temp_df.loc[0, 'BOUND'] = row.loc['BOUND']
-                    temp_df.loc[0, 'FUNCTION'] = row.loc['FUNCTION']
-                    for i in range(n_parms):
-                        temp_df.loc[0, str(i)] = sub_signals.PARAMETERS[idx][i]
-                    temp_df.to_csv(f, mode='a', line_terminator = '\n', sep=' ', header=False, index=False)
+                if self.signals.size > 0:
+                    sub_signals = self.signals.drop(['REACTION_NAMES', 'EXCH'],
+                                                    axis='columns')
+                    col_names = list(self.signals.drop(['REACTION_NAMES',
+                                                        'EXCH', 'PARAMETERS'],
+                                                       axis='columns').columns)
+                    for idx in sub_signals.index:
+                        row = sub_signals.drop(['PARAMETERS'], axis='columns').iloc[idx, :]
+                        n_parms = len(sub_signals.PARAMETERS[idx])
+                        curr_col_names = col_names + [str(i) for i in range(n_parms)]
+                        temp_df = pd.DataFrame(columns=curr_col_names)
+                        if row.loc['REACTION_NUMBER'] != 'death':
+                            row.loc['REACTION_NUMBER'] = str(int(row.loc['REACTION_NUMBER']))
+                        temp_df.loc[0, 'REACTION_NUMBER'] = row.loc['REACTION_NUMBER']
+                        temp_df.loc[0, 'EXCH_IND'] = row.loc['EXCH_IND']
+                        temp_df.loc[0, 'BOUND'] = row.loc['BOUND']
+                        temp_df.loc[0, 'FUNCTION'] = row.loc['FUNCTION']
+                        for i in range(n_parms):
+                            temp_df.loc[0, str(i)] = sub_signals.PARAMETERS[idx][i]
+                        temp_df.to_csv(f, mode='a', line_terminator = '\n', sep=' ', header=False, index=False)
+                if self.multitoxins.size > 0:
+                    for idx in self.multitoxins.index:
+                        rxn_num = self.multitoxins.loc[idx,"REACTION_NUMBER"]
+                        bound = self.multitoxins.loc[idx,"BOUND"]
+                        exch_inds = ','.join([str(ind) for ind in self.multitoxins.loc[idx,"EXCH_INDS"]])
+                        vmax = self.multitoxins.loc[idx, 'VMAX']
+                        kms = ','.join([str(ind) for ind in self.multitoxins.loc[idx,"KMS"]])
+                        hills = ','.join([str(ind) for ind in self.multitoxins.loc[idx,"HILLS"]])
+                        curr_line = f"multitoxin {rxn_num} {exch_inds} {bound} {vmax} {kms} {hills}"
+                        f.write(curr_line + '\n')
                 f.write(r'//' + '\n')
 
             if self.convection_flag:
