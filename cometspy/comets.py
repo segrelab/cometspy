@@ -23,7 +23,7 @@ __credits__ = ["Djordje Bajic", "Jean Vila", "Jeremy Chacon"]
 __license__ = "MIT"
 __version__ = "0.4.16"
 __comets_compatibility__ = "2.10.2" # version of comets this was tested with (except signaling)
-__comets_compatibility_signaling__ = "2.10.7" # version signaling was tested with
+__comets_compatibility_signaling__ = "2.10.8" # version signaling was tested with
 
 __maintainer__ = "Djordje Bajic"
 __email__ = "djordje.bajic@yale.edu"
