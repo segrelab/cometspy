@@ -12,7 +12,7 @@ COMETSPy is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 CometsPy is developed with non-commercial use in mind and is presented as-is. To inquire about collaborations or commercial usage and development, please contact us at <comets@bu.edu>.
 
 # Documentation
-Documentation on how to use COMETS with COMETSPy is found at [comets-manual.readthedocs.io](https://comets-manual.readthedocs.io/en/latest/).
+Documentation on how to use COMETS with COMETSPy is found at [https://cometspy.readthedocs.io](https://cometspy.readthedocs.io/en/latest/).
 
 # Installation
 Use pip to install COMETSPy from PyPI:
