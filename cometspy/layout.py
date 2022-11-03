@@ -1317,7 +1317,7 @@ class layout:
         n_models = len(self.models)
         initial_pop = []
         for i, m in enumerate(self.models):
-            if not isinstance(m.initial_pop[0], list):
+            if not isinstance(m.initial_pop, list):
                 m.initial_pop = [m.initial_pop]
             for pop in m.initial_pop:
                 curr_line = [0] * (n_models + 2)
