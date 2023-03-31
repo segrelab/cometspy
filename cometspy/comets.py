@@ -196,7 +196,7 @@ class comets:
             recursive=True)[0]
 
         self.classpath_pieces['jmatio'] = glob.glob(self.COMETS_HOME +
-                                                      '/lib' + '/**/jamtio.jar',
+                                                      '/lib' + '/**/jmatio.jar',
                                                       recursive=True)[0]
         self.classpath_pieces['jmat'] = glob.glob(self.COMETS_HOME +
                                                       '/lib' + '/**/jmatio.jar',
