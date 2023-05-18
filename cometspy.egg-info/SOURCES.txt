@@ -1,0 +1,15 @@
+LICENSE
+README.md
+setup.cfg
+setup.py
+cometspy/__init__.py
+cometspy/comets.py
+cometspy/layout.py
+cometspy/model.py
+cometspy/params.py
+cometspy/utils.py
+cometspy.egg-info/PKG-INFO
+cometspy.egg-info/SOURCES.txt
+cometspy.egg-info/dependency_links.txt
+cometspy.egg-info/requires.txt
+cometspy.egg-info/top_level.txt
