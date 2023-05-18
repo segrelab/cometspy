@@ -442,8 +442,9 @@ class layout:
             for i in range(lin_diff+1, lin_diff_end):
                 diff_spec = [float(x) for x in f_lines[i].split()]
                 if diff_spec[0] > len(self.media.metabolite)-1:
-                    print('\n Warning: Corrupt line ' + str(i) + ' in diffusion' +
-                          'values. \nLine not written. Check your layout file.')
+                    print('\n Warning: Corrupt line ' + str(i) + ' in ' +
+                          'diffusion values. \nLine not written. Check your ' +
+                          'layout file.')
                 else:
                     self.media.loc[int(diff_spec[0]),
                                    'diff_c'] = diff_spec[1]
@@ -824,8 +825,8 @@ class layout:
             newrow = pd.DataFrame([newrow], columns=newrow.keys())
             self.media = pd.concat([self.media,
                                     newrow],
-                                   axis=0, sort=False)
-            print('Warning: The added metabolite (' + met + ') is not' +
+                                   axis=0, sort=False, ignore_index=True)
+            print('Warning: The added metabolite (' + met + ') is not ' +
                   'able to be taken up by any of the current models')
 
     def set_specific_metabolite_at_location(self, met : str, 
