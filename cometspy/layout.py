@@ -442,8 +442,9 @@ class layout:
             for i in range(lin_diff+1, lin_diff_end):
                 diff_spec = [float(x) for x in f_lines[i].split()]
                 if diff_spec[0] > len(self.media.metabolite)-1:
-                    print('\n Warning: Corrupt line ' + str(i) + ' in diffusion' +
-                          'values. \nLine not written. Check your layout file.')
+                    print('\n Warning: Corrupt line ' + str(i) + ' in ' +
+                          'diffusion values. \nLine not written. Check your ' +
+                          'layout file.')
                 else:
                     self.media.loc[int(diff_spec[0]),
                                    'diff_c'] = diff_spec[1]
