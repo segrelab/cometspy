@@ -825,7 +825,7 @@ class layout:
             self.media = pd.concat([self.media,
                                     newrow],
                                    axis=0, sort=False)
-            print('Warning: The added metabolite (' + met + ') is not' +
+            print('Warning: The added metabolite (' + met + ') is not ' +
                   'able to be taken up by any of the current models')
 
     def set_specific_metabolite_at_location(self, met : str, 
