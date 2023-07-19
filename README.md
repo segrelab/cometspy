@@ -24,4 +24,4 @@ pip3 install cometspy
 # Cite us
 
 # Contributing
-Contributions are welcome and appreciated. Questions and discussions can be raised on [Gitter](https://gitter.im/segrelab/comets). Issues should be discussed in this forum before they are raised on GitHub. For other questions contact us on email comets@bu.edu.
+Contributions are welcome and appreciated. Questions and discussions can be raised on [Gitter](https://gitter.im/segrelab/comets). Issues should be discussed in this forum before they are raised on GitHub. For other questions contact us via email at comets@bu.edu.
