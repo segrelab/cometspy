@@ -1,5 +1,6 @@
 import unittest
 import os
+import pandas as pd
 from cometspy import params
 
 
