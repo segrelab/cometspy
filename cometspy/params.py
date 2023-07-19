@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import warnings
 
 
 def __isfloat(value):
@@ -100,7 +101,7 @@ class params:
         if name in self.all_params:
             self.all_params[name] = value
         else:
-            print('Parameter ' + name + ' does not exist')
+            warnings.warn('Parameter ' + name + ' does not exist')
 
     def get_param(self, name : str) -> object:
         """
