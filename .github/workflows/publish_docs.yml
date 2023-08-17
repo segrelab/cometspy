@@ -50,4 +50,5 @@ jobs:
           git init
           git add .
           git commit -m "Deploy documentation to GitHub Pages"
-          git push --force "https://${{ github.token }}@github.com/${{ github.repository }}.git" master:gh-pages
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          git push --force origin master:gh-pages
