@@ -43,12 +43,7 @@ jobs:
           sphinx-build -b html docs/source docs/build
 
       - name: Deploy to GitHub Pages
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          cd docs/build
-          git init
-          git add .
-          git commit -m "Deploy documentation to GitHub Pages"
-          git remote add origin "https://github.com/${{ github.repository }}.git"
-          git push --force origin master:gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build
