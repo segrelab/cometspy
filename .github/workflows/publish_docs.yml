@@ -4,7 +4,7 @@ name: Build and Publish Documentation
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["master", "docs"]
+    branches: ["master"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -42,8 +42,12 @@ jobs:
         run: |
           sphinx-build -b html docs/source docs/build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
