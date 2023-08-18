@@ -190,8 +190,8 @@ class layout:
         COMETS can have different regions with different substrate diffusivities
         and frictions.  Here, you set the map defining the regions. Specifically,
         you provide either:
-            1) a numpy array whose shape == layout.grid, or
-            2) a list of lists whose first length is grid[0] and second len is grid[1]
+        1) a numpy array whose shape == layout.grid, or
+        2) a list of lists whose first length is grid[0] and second len is grid[1]
 
         Populating these objects should be integer values, beginning at 1 and
         incrementing only, that define the different grid areas.  These are
@@ -237,7 +237,7 @@ class layout:
             list of metabolite names (strs)
         stoichiometry : list(float)
             stoichiometry of the metabolites. must be same order as metabolites
-        **kwargs : ['Kcat' or 'Km' or 'K']
+        kwargs : ['Kcat' or 'Km' or 'K']
             rate parameters. Either Kcat and Km, or K must be set. 
             
         Examples
