@@ -1,7 +1,6 @@
 
 [![Current PyPI version](https://img.shields.io/pypi/v/cometspy.svg)](https://pypi.org/project/cometspy/)
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/cometspy.svg)](https://pypi.org/project/cometspy/)
-[![Join the chat at https://gitter.im/segrelab/comets](https://badges.gitter.im/segrelab/comets.png)](https://gitter.im/segrelab/comets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub release](https://img.shields.io/github/release/segrelab/cometspy/all.svg)](https://GitHub.com/segrelab/cometspy/releases/)
 
 # COMETSPy - The Python Interface for COMETS
@@ -12,7 +11,7 @@ COMETSPy is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 CometsPy is developed with non-commercial use in mind and is presented as-is. To inquire about collaborations or commercial usage and development, please contact us at <comets@bu.edu>.
 
 # Documentation
-Documentation on how to use COMETS with COMETSPy is found at [https://cometspy.readthedocs.io](https://cometspy.readthedocs.io/en/latest/).
+Documentation on how to use COMETS with COMETSPy can be found at [https://cometspy.readthedocs.io/en/latest/](https://segrelab.github.io/cometspy/).
 
 # Installation
 Use pip to install COMETSPy from PyPI:
