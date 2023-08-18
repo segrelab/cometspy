@@ -36,7 +36,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install sphinx sphinx-autodoc-typehints
+          pip install sphinx sphinx-autodoc-typehints pandas
 
       - name: Generate Documentation
         run: |
