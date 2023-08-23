@@ -20,7 +20,10 @@ analyze the results. COMETSpy is designed to be used in conjunction with
 COMETS. It is not a standalone package, and requires COMETS to be
 installed on the user's computer.
 
-.. TODO: Insert a graphic here showing the relationship between COMETS and COMETSpy
+.. Graphic showing the relationship between COMETS and COMETSpy
+.. image:: images/cometspy_workflow.png
+  :width: 800
+  :alt: Results from COMETS simulations
 
 This documentation is meant to aide users in installing COMETSpy and
 using COMETSpy to run simulations and analyze the results. If you need
