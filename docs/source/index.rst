@@ -3,6 +3,8 @@
    You can adapt this file completely to your liking, but it should at
    least contain the root `toctree` directive.
 
+What is COMETSpy?
+----------------------------
 COMETS is a software platform for performing **computer simulations of
 metabolism in spatially structured microbial communities**. It is based on
 stoichiometric modeling of the genome-scale metabolic network of
@@ -25,12 +27,18 @@ installed on the user's computer.
   :width: 800
   :alt: The COMETSpy/COMETS workflow
 
+How to use this Documentation:
+------------------------------
+
 This documentation is meant to aide users in installing COMETSpy and
 using COMETSpy to run simulations and analyze the results. If you need
 help and do not easily find an answer in this documentation, ask your question
 in a `new issue on GitHub <https://github.com/segrelab/cometspy/issues/new>`_.
 **Any question that you have likely indicates a shortcoming in the documentation,
 which we will want to fix!**
+
+Cite Us:
+--------
 
 The newest version of COMETS, which was developed as a partnership between
 researchers at `Boston University <https://www.bu.edu/segrelab/>`_,
