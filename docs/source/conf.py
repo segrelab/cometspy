@@ -36,4 +36,5 @@ html_theme = 'alabaster'
 html_static_path = ['_static']
 html_theme_options = {
     'logo': '../_images/cometspy_logo.png', # Path relative to the docs/build/_static directory
-}
+    'show_related': False,
+    }

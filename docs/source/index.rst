@@ -3,6 +3,18 @@
    You can adapt this file completely to your liking, but it should at
    least contain the root `toctree` directive.
 
+.. The toctree directive controls what links are in the "Navigation" bar
+   at the top of each page. The "maxdepth" argument determines how many
+   levels deep the links are shown. The "caption" argument determines the
+   title of the "Navigation" bar.
+.. toctree::
+    :maxdepth: 3
+    :caption: Custom Links
+
+    install
+    cometspy
+
+
 What is COMETSpy?
 ----------------------------
 COMETS is a software platform for performing **computer simulations of
@@ -37,6 +49,8 @@ in a `new issue on GitHub <https://github.com/segrelab/cometspy/issues/new>`_.
 **Any question that you have likely indicates a shortcoming in the documentation,
 which we will want to fix!**
 
+.. TODO: Explain the structure of the documentation here
+
 Cite Us:
 --------
 
@@ -50,7 +64,6 @@ in the following paper:
 the computation of microbial ecosystems in time and space (COMETS), Nature
 Protocols (2021) https://doi.org/10.1038/s41596-021-00593-3.
 <https://www.nature.com/articles/s41596-021-00593-3>`_
-
 
 
 Indices and tables
