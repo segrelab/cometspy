@@ -36,9 +36,9 @@ exclude_patterns = []
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_theme_options = {
-    'logo': '../_images/cometspy_logo.png', # Path relative to the docs/build/_static directory
+    # 'logo': '../_images/cometspy_logo.png', # Path relative to the docs/build/_static directory
     'display_version': True,
-    'show_related': False,
+    # 'show_related': False,
     'collapse_navigation': True,
     'sticky_navigation': True,
     'navigation_depth': 4,
