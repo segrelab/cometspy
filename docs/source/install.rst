@@ -7,9 +7,6 @@
    at the top of each page. The "maxdepth" argument determines how many
    levels deep the links are shown. The "caption" argument determines the
    title of the "Navigation" bar.
-.. toctree::
-    :maxdepth: 1
-    :caption: Custom Links
 
 
 
