@@ -8,7 +8,7 @@
    levels deep the links are shown. The "caption" argument determines the
    title of the "Navigation" bar.
 
-
+.. include:: common_toc.rst
 
 How to Install:
 ----------------------------
