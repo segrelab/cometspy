@@ -39,8 +39,7 @@ html_logo = 'images/cometspy_logo.png'
 html_theme_options = {
     'logo_only': True,
     'display_version': True,
-    # 'show_related': False,
-    'collapse_navigation': True,
+    'collapse_navigation': False,
     'sticky_navigation': True,
     'navigation_depth': 4,
     'includehidden': True,

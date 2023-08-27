@@ -8,6 +8,22 @@
    levels deep the links are shown. The "caption" argument determines the
    title of the "Navigation" bar.
 
+.. toctree::
+   :caption: Package Documentation
+   :maxdepth: 2
+   :hidden:
+
+   install
+   cometspy
+
+
+.. toctree::
+    :maxdepth: 2
+    :numbered:
+    :caption: Tutorials
+    :hidden:
+
+
 Introduction
 ============
 
