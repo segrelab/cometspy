@@ -7,6 +7,13 @@
    at the top of each page. The "maxdepth" argument determines how many
    levels deep the links are shown. The "caption" argument determines the
    title of the "Navigation" bar.
+.. toctree::
+   :caption
+   :hidden:
+
+   index
+   install
+   cometspy
 
 What is COMETSpy?
 ----------------------------
