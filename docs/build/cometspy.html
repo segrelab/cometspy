@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cometspy package &mdash; COMETSpy  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/cometspy_logo_white_bkgd.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Package Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#how-to-install">How to Install:</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">cometspy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cometspy.comets">cometspy.comets module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cometspy.comets.comets"><code class="docutils literal notranslate"><span class="pre">comets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.comets.comets.get_biomass_image"><code class="docutils literal notranslate"><span class="pre">comets.get_biomass_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.comets.comets.get_flux_image"><code class="docutils literal notranslate"><span class="pre">comets.get_flux_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.comets.comets.get_metabolite_image"><code class="docutils literal notranslate"><span class="pre">comets.get_metabolite_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.comets.comets.get_metabolite_time_series"><code class="docutils literal notranslate"><span class="pre">comets.get_metabolite_time_series()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.comets.comets.get_species_exchange_fluxes"><code class="docutils literal notranslate"><span class="pre">comets.get_species_exchange_fluxes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.comets.comets.run"><code class="docutils literal notranslate"><span class="pre">comets.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.comets.comets.set_classpath"><code class="docutils literal notranslate"><span class="pre">comets.set_classpath()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cometspy.layout">cometspy.layout module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cometspy.layout.layout"><code class="docutils literal notranslate"><span class="pre">layout</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.add_barriers"><code class="docutils literal notranslate"><span class="pre">layout.add_barriers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.add_external_reaction"><code class="docutils literal notranslate"><span class="pre">layout.add_external_reaction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.add_model"><code class="docutils literal notranslate"><span class="pre">layout.add_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.add_typical_trace_metabolites"><code class="docutils literal notranslate"><span class="pre">layout.add_typical_trace_metabolites()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.delete_model_files"><code class="docutils literal notranslate"><span class="pre">layout.delete_model_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.display_current_media"><code class="docutils literal notranslate"><span class="pre">layout.display_current_media()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.get_model_ids"><code class="docutils literal notranslate"><span class="pre">layout.get_model_ids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.read_comets_layout"><code class="docutils literal notranslate"><span class="pre">layout.read_comets_layout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_global_periodic_media"><code class="docutils literal notranslate"><span class="pre">layout.set_global_periodic_media()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_metabolite_diffusion"><code class="docutils literal notranslate"><span class="pre">layout.set_metabolite_diffusion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_region_map"><code class="docutils literal notranslate"><span class="pre">layout.set_region_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_region_parameters"><code class="docutils literal notranslate"><span class="pre">layout.set_region_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_specific_metabolite"><code class="docutils literal notranslate"><span class="pre">layout.set_specific_metabolite()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_specific_metabolite_at_location"><code class="docutils literal notranslate"><span class="pre">layout.set_specific_metabolite_at_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_specific_metabolite_diffusion"><code class="docutils literal notranslate"><span class="pre">layout.set_specific_metabolite_diffusion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_specific_refresh"><code class="docutils literal notranslate"><span class="pre">layout.set_specific_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_specific_refresh_at_location"><code class="docutils literal notranslate"><span class="pre">layout.set_specific_refresh_at_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_specific_static"><code class="docutils literal notranslate"><span class="pre">layout.set_specific_static()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.set_specific_static_at_location"><code class="docutils literal notranslate"><span class="pre">layout.set_specific_static_at_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.update_models"><code class="docutils literal notranslate"><span class="pre">layout.update_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.write_layout"><code class="docutils literal notranslate"><span class="pre">layout.write_layout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.write_model_files"><code class="docutils literal notranslate"><span class="pre">layout.write_model_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.layout.layout.write_necessary_files"><code class="docutils literal notranslate"><span class="pre">layout.write_necessary_files()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cometspy.model">cometspy.model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cometspy.model.model"><code class="docutils literal notranslate"><span class="pre">model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.add_convection_parameters"><code class="docutils literal notranslate"><span class="pre">model.add_convection_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.add_light"><code class="docutils literal notranslate"><span class="pre">model.add_light()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.add_multitoxin"><code class="docutils literal notranslate"><span class="pre">model.add_multitoxin()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.add_neutral_drift_parameter"><code class="docutils literal notranslate"><span class="pre">model.add_neutral_drift_parameter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.add_noise_variance_parameter"><code class="docutils literal notranslate"><span class="pre">model.add_noise_variance_parameter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.add_nonlinear_diffusion_parameters"><code class="docutils literal notranslate"><span class="pre">model.add_nonlinear_diffusion_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.add_signal"><code class="docutils literal notranslate"><span class="pre">model.add_signal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.change_bounds"><code class="docutils literal notranslate"><span class="pre">model.change_bounds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.change_hill"><code class="docutils literal notranslate"><span class="pre">model.change_hill()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.change_km"><code class="docutils literal notranslate"><span class="pre">model.change_km()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.change_vmax"><code class="docutils literal notranslate"><span class="pre">model.change_vmax()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.delete_comets_model"><code class="docutils literal notranslate"><span class="pre">model.delete_comets_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.ensure_sinks_are_not_exchanges"><code class="docutils literal notranslate"><span class="pre">model.ensure_sinks_are_not_exchanges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.get_bounds"><code class="docutils literal notranslate"><span class="pre">model.get_bounds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.get_exchange_metabolites"><code class="docutils literal notranslate"><span class="pre">model.get_exchange_metabolites()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.get_reaction_names"><code class="docutils literal notranslate"><span class="pre">model.get_reaction_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.load_cobra_model"><code class="docutils literal notranslate"><span class="pre">model.load_cobra_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.open_exchanges"><code class="docutils literal notranslate"><span class="pre">model.open_exchanges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.read_cobra_model"><code class="docutils literal notranslate"><span class="pre">model.read_cobra_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.read_comets_model"><code class="docutils literal notranslate"><span class="pre">model.read_comets_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.model.model.write_comets_model"><code class="docutils literal notranslate"><span class="pre">model.write_comets_model()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cometspy.params">cometspy.params module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cometspy.params.params"><code class="docutils literal notranslate"><span class="pre">params</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.params.params.get_param"><code class="docutils literal notranslate"><span class="pre">params.get_param()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.params.params.set_param"><code class="docutils literal notranslate"><span class="pre">params.set_param()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.params.params.show_params"><code class="docutils literal notranslate"><span class="pre">params.show_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cometspy.params.params.write_params"><code class="docutils literal notranslate"><span class="pre">params.write_params()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cometspy.utils">cometspy.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cometspy.utils.chemostat"><code class="docutils literal notranslate"><span class="pre">chemostat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cometspy.utils.grow_rocks"><code class="docutils literal notranslate"><span class="pre">grow_rocks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cometspy.utils.pick_random_locations"><code class="docutils literal notranslate"><span class="pre">pick_random_locations()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cometspy">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">COMETSpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">cometspy package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cometspy.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cometspy-package">
+<h1>cometspy package<a class="headerlink" href="#cometspy-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-cometspy.comets">
+<span id="cometspy-comets-module"></span><h2>cometspy.comets module<a class="headerlink" href="#module-cometspy.comets" title="Permalink to this heading"></a></h2>
+<p>The comets module runs COMETS simulations and stores output.</p>
+<p>Generally, a comets object is created just before calling run(). Afterwards,
+any saved data (e.g. total_biomass) can be accessed from the object.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cometspy.comets.comets">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cometspy.comets.</span></span><span class="sig-name descname"><span class="pre">comets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.comets.comets" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>the main simulation object to run COMETS</p>
+<p>The comets class stores a previously-made layout and params, and
+interacts with COMETS to run the simulation. It also stores any
+generated output, which could include total_biomass, biomass,
+media, or fluxes, as set in the params object. std_out from the COMETS
+simulation is saved in the attribute run_output and can be useful to
+examine to debug errors.</p>
+<p>When creating a comets object, the optional relative_dir path is useful
+when one is to run multiple simulations simultaneously, otherwise
+temporary files may overwrite each other.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>layout<span class="classifier">layout</span></dt><dd><p>a cometspy.layout containing models and media information</p>
+</dd>
+<dt>parameters<span class="classifier">params</span></dt><dd><p>a cometspy.params containing specified simulation parameters</p>
+</dd>
+<dt>relative_dir<span class="classifier">str, optional</span></dt><dd><p>a directory to place temporary simulation files.</p>
+</dd>
+</dl>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>layout<span class="classifier">cometspy.layout</span></dt><dd><p>the layout containing cometspy.model[s] and media information</p>
+</dd>
+<dt>params<span class="classifier">cometspy.params</span></dt><dd><p>the params containing simulation and default biological parameters</p>
+</dd>
+<dt>working_dir<span class="classifier">str</span></dt><dd><p>the directory at which to save temporary sim files</p>
+</dd>
+<dt>GUROBI_HOME<span class="classifier">str</span></dt><dd><p>the directory where GUROBI exists on the system</p>
+</dd>
+<dt>COMETS_HOME<span class="classifier">str</span></dt><dd><p>the directory where COMETS exists on the system</p>
+</dd>
+<dt>VERSION<span class="classifier">str</span></dt><dd><p>the version of comets, read from the files at COMETS_HOME</p>
+</dd>
+<dt>classpath_pieces<span class="classifier">dict</span></dt><dd><p>classpath separated into library name (key) and location (value)</p>
+</dd>
+<dt>JAVA_CLASSPATH<span class="classifier">str</span></dt><dd><p>a generated (overwritable) string containing the java classpath</p>
+</dd>
+<dt>run_output<span class="classifier">str</span></dt><dd><p>generated object containing text from COMETS sim’s std_out</p>
+</dd>
+<dt>run_errors<span class="classifier">str</span></dt><dd><p>generated object containing text from COMETS sim’s std_err</p>
+</dd>
+<dt>total_biomass<span class="classifier">pandas.DataFrame</span></dt><dd><p>generated object containing total biomass from simulation</p>
+</dd>
+<dt>biomass<span class="classifier">pandas.DataFrame</span></dt><dd><p>generated object containing spatially-explicit biomass from sim</p>
+</dd>
+<dt>specific_media<span class="classifier">pandas.DataFrame</span></dt><dd><p>generated object containing information on selected media from sim</p>
+</dd>
+<dt>media<span class="classifier">pandas.Dataframe</span></dt><dd><p>generated object containing spatially-explicit media from sim</p>
+</dd>
+<dt>fluxes_by_species<span class="classifier">dict{model_id</span><span class="classifier">pandas.DataFrame}</span></dt><dd><p>generated object containing each species’ spatial-explicit fluxes</p>
+</dd>
+<dt>genotypes<span class="classifier">pandas.DataFrame</span></dt><dd><p>generated object containing genotypes if an evolution sim was run</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># assume layout and params have already been created</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># and cometspy was imported as c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span> <span class="c1"># this could take from seconds to hours</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">run_output</span><span class="p">)</span> <span class="c1"># to see the std_out</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;cycle&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assume params.all_params[&quot;writeBiomassLog&quot;] == True, and that</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># params.all_params[&quot;BiomassLogRate&quot;] = 1000, and that</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># params.all_params[&quot;maxCycles&quot;] = 5000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">im</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_biomass_image</span><span class="p">(</span><span class="n">layout</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">4000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.comets.comets.get_biomass_image">
+<span class="sig-name descname"><span class="pre">get_biomass_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="headerlink" href="#cometspy.comets.comets.get_biomass_image" title="Permalink to this definition"></a></dt>
+<dd><p>returns an image of biomass concentrations at a given cycle</p>
+<p>This will only work if biomass was saved at the current cycle. This
+requires the following parameters to have been set:
+&gt;&gt;&gt; params.set_param(“writeBiomassLog”,True)
+&gt;&gt;&gt; params.set_param(“BiomassLogRate”, n) # n is in cycles</p>
+<section id="id1">
+<h4>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>model_id<span class="classifier">str</span></dt><dd><p>the id of the model to get biomass data on</p>
+</dd>
+<dt>cycle<span class="classifier">int</span></dt><dd><p>the cycle to get the biomass data</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>A 2d numpy array which can be visualized like an image.</p>
+</div></blockquote>
+</section>
+<section id="id2">
+<h4>Examples<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assume sim.params.all_params[&quot;BiomassLogRate&quot;] = 100 and that</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># sim.params.all_params[&quot;maxCycles&quot;] = 1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">im</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_biomass_image</span><span class="p">(</span><span class="s2">&quot;iJO1366&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span> <span class="c1"># e.g. the ecoli model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span> <span class="c1"># may need to be installed</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.comets.comets.get_flux_image">
+<span class="sig-name descname"><span class="pre">get_flux_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="headerlink" href="#cometspy.comets.comets.get_flux_image" title="Permalink to this definition"></a></dt>
+<dd><p>returns a 2d numpy array showing fluxes at a given cycle</p>
+<p>This will only work if flux was saved at the current cycle. This
+requires the following parameters to have been set:</p>
+<blockquote>
+<div><p>params.set_param(“writeFluxLog”,True)
+params.set_param(“FluxLogRate”, n) # n is in cycles</p>
+</div></blockquote>
+<section id="id3">
+<h4>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>model_id<span class="classifier">str</span></dt><dd><p>the id of the model about which to get fluxes</p>
+</dd>
+<dt>reaction_id<span class="classifier">str</span></dt><dd><p>the id of the reaction about which to get fluxes</p>
+</dd>
+<dt>cycle<span class="classifier">int</span></dt><dd><p>the cycle at which to get fluxes</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h4>Returns<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
+<p>a 2d numpy array which can be visualized like an image</p>
+</section>
+<section id="id5">
+<h4>Examples<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assume sim.params.all_params[&quot;FluxLogRate&quot;] = 100 and that</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># sim.params.all_params[&quot;maxCycles&quot;] = 1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assume a model used was iJO1366</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">im</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_flux_image</span><span class="p">(</span><span class="s2">&quot;iJO1366&quot;</span><span class="p">,</span> <span class="s2">&quot;EX_ac_e&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span> <span class="c1"># may need to be installed</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.comets.comets.get_metabolite_image">
+<span class="sig-name descname"><span class="pre">get_metabolite_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">met</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">array</span></span></span><a class="headerlink" href="#cometspy.comets.comets.get_metabolite_image" title="Permalink to this definition"></a></dt>
+<dd><p>returns an image of metabolite concentrations at a given cycle</p>
+<p>This will only work if media was saved at the current cycle. This
+requires the following parameters to have been set:</p>
+<blockquote>
+<div><p>params.set_param(“writeMediaLog”,True)
+params.set_param(“MediaLogRate”, n) # n is in cycles</p>
+</div></blockquote>
+<section id="notes">
+<h4>Notes<a class="headerlink" href="#notes" title="Permalink to this heading"></a></h4>
+<p>There may be a bug where cycles are + 1 what they should be. We will
+fix this soon but for now be aware you may need to +1 your desired
+cycle. The bug does not affect anything within the simulation.</p>
+</section>
+<section id="id6">
+<h4>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>met<span class="classifier">str</span></dt><dd><p>the name of the metabolite</p>
+</dd>
+<dt>cycle<span class="classifier">int</span></dt><dd><p>the cycle to get the metabolite data</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h4>Returns<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><p>A 2d numpy array which can be visualized like an image.</p>
+</div></blockquote>
+</section>
+<section id="id8">
+<h4>Examples<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assume sim.params.all_params[&quot;MediaLogRate&quot;] = 100 and that</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># sim.params.all_params[&quot;maxCycles&quot;] = 1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">im</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_metabolite_image</span><span class="p">(</span><span class="s2">&quot;ac_e&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span> <span class="c1"># may need to be installed</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.comets.comets.get_metabolite_time_series">
+<span class="sig-name descname"><span class="pre">get_metabolite_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upper_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#cometspy.comets.comets.get_metabolite_time_series" title="Permalink to this definition"></a></dt>
+<dd><p>returns a pandas DataFrame containing extracellular metabolite time series</p>
+<section id="id9">
+<h4>Parameters<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>upper_threshold<span class="classifier">float (optional)</span></dt><dd><p>metabolites ever above this are not returned</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.comets.comets.get_species_exchange_fluxes">
+<span class="sig-name descname"><span class="pre">get_species_exchange_fluxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#cometspy.comets.comets.get_species_exchange_fluxes" title="Permalink to this definition"></a></dt>
+<dd><p>returns a pandas DataFrame containing one model’s exchange flux time series</p>
+<section id="id10">
+<h4>Parameters<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>model_id<span class="classifier">str</span></dt><dd><p>id of the model</p>
+</dd>
+<dt>threshold<span class="classifier">float (optional)</span></dt><dd><p>abs(flux) must exceed this to be returned</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.comets.comets.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delete_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.comets.comets.run" title="Permalink to this definition"></a></dt>
+<dd><p>run a COMETS simulation</p>
+<p>This runs the COMETS simulation specified by the layout and params
+objects supplied to this comets object. It creates the files needed
+for COMETS into the current directory or the optional one specified
+when this object was created.</p>
+<p>Once complete (or if an error has occurred), this tries to read
+simulation logs including data, as well as the std_out in the
+run_output attribute.</p>
+<p>If the optional delete_files is set to False, then temporary files and
+data log files are not deleted. They are deleted by default.</p>
+<section id="id11">
+<h4>Parameters<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>delete_files<span class="classifier">bool, optional</span></dt><dd><p>Whether to delete simulation and log files. The default is True.</p>
+</dd>
+</dl>
+</section>
+<section id="id12">
+<h4>Examples<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">delete_files</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">run_output</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.comets.comets.set_classpath">
+<span class="sig-name descname"><span class="pre">set_classpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">libraryname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.comets.comets.set_classpath" title="Permalink to this definition"></a></dt>
+<dd><p>sets the full path to a required specified java library</p>
+<p>This can be used to set non-default classpaths. Note that currently,
+it does not work for windows, because windows runs COMETS slightly
+differently than Unix.</p>
+<section id="id13">
+<h4>Parameters<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>libraryname<span class="classifier">str</span></dt><dd><p>the library for which the new path is being supplied.</p>
+</dd>
+<dt>path<span class="classifier">str</span></dt><dd><p>the full path, including file name, to the library</p>
+</dd>
+</dl>
+</section>
+<section id="id14">
+<h4>Examples<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">set_classpath</span><span class="p">(</span><span class="s2">&quot;jmatio&quot;</span><span class="p">,</span> <span class="s2">&quot;/opt/jmatio/jmatio.jar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-cometspy.layout">
+<span id="cometspy-layout-module"></span><h2>cometspy.layout module<a class="headerlink" href="#module-cometspy.layout" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cometspy.layout.layout">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cometspy.layout.</span></span><span class="sig-name descname"><span class="pre">layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>object containing model and environmental definitions for a COMETS sim.</p>
+<p>The layout object is an essential object needed to start a comets
+simulation, along with a params object. For a simulation to run, the layout
+must contain model(s). Typically, the layout will be created after
+creating models, and these models will be given in a list during layout
+creation. Subsequently, methods like 
+set_specific_metabolite() will be used to create environmental media 
+definitions.  Additionally, spatial information can be assigned, such as
+the spatial dimensions in lattice units (layout.grid), spatial barriers,
+etc.</p>
+<section id="id15">
+<h3>Parameters<a class="headerlink" href="#id15" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>input_obj<span class="classifier">list(cometspy.model) or str, optional</span></dt><dd><p>either a list of cometspy models, or a path to a previously-written
+COMETS layout to load.</p>
+</dd>
+</dl>
+</section>
+<section id="id16">
+<h3>Examples<a class="headerlink" href="#id16" title="Permalink to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e_cobra</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s1">&#39;textbook&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">e_cobra</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">e</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use the media from the textbook in the COMETS media</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">e_cobra</span><span class="o">.</span><span class="n">medium</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">:],</span> <span class="mf">10.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">display_current_media</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id17">
+<h3>Attributes<a class="headerlink" href="#id17" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>models<span class="classifier">list(cometspy.model)</span></dt><dd><p>a list of cometspy models. do not modify directly. use add_model()</p>
+</dd>
+<dt>grid<span class="classifier">list of size two</span></dt><dd><p>the number of boxes in the x and y direction. default = [1, 1]</p>
+</dd>
+<dt>media<span class="classifier">pandas.DataFrame</span></dt><dd><p>info on met initial values and diffusion. see set_specific_metabolite</p>
+</dd>
+<dt>refresh<span class="classifier">list</span></dt><dd><p>info on met added per time. see set_specific_refresh</p>
+</dd>
+<dt>local_media<span class="classifier">dict</span></dt><dd><p>info on spatial-explicit media. see set_specific_metabolite_at_location</p>
+</dd>
+<dt>local_refresh<span class="classifier">dict</span></dt><dd><p>info on met added per time to loc. see set_specific_refresh_at_location</p>
+</dd>
+<dt>local_static<span class="classifier">dict</span></dt><dd><p>info on constant met value at loc. see set_specific_static_at_location</p>
+</dd>
+<dt>default_diff_c<span class="classifier">float</span></dt><dd><p>the baseline diffusion constant for all metabolites</p>
+</dd>
+<dt>barriers<span class="classifier">list(tuple)</span></dt><dd><p>list of impenetrable locations. see add_barriers</p>
+</dd>
+<dt>region_map<span class="classifier">numpy.array or None</span></dt><dd><p>integer array specifying regions. see set_region_map</p>
+</dd>
+<dt>region_parameters<span class="classifier">dict</span></dt><dd><p>region-specific default diffusion params. see set_region_parameters</p>
+</dd>
+<dt>reactions<span class="classifier">list</span></dt><dd><p>list of extracellular reactions. see add_external_reaction</p>
+</dd>
+<dt>periodic_media<span class="classifier">list</span></dt><dd><p>list of media undergoing periodic cycles. see set_global_periodic_media</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.add_barriers">
+<span class="sig-name descname"><span class="pre">add_barriers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">barriers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_barriers" title="Permalink to this definition"></a></dt>
+<dd><p>adds impenetrable barriers to the layout at specified locations</p>
+<p>Barriers can be used in COMETS to create impenetrable spatial
+locations, for example to simulate rocks or to make a rounded
+simulation. Neither biomass nor metabolites can diffuse through
+barriers.</p>
+<p>In COMETS, locations are zero-ordered.</p>
+<section id="id18">
+<h4>Parameters<a class="headerlink" href="#id18" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>barriers<span class="classifier">list(tuple)</span></dt><dd><p>A list containing tuples of integers of x,y locations.</p>
+</dd>
+</dl>
+</section>
+<section id="id19">
+<h4>Examples<a class="headerlink" href="#id19" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a diagonal line of barriers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model1</span><span class="p">,</span> <span class="n">model2</span><span class="p">])</span> <span class="c1"># assumes model1,2 are made</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">add_barriers</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.add_external_reaction">
+<span class="sig-name descname"><span class="pre">add_external_reaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rxnName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metabolites</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stoichiometry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_external_reaction" title="Permalink to this definition"></a></dt>
+<dd><p>adds an extracellular reaction to the layout</p>
+<p>External reactions are reactions not tied to a growing (living) model.
+They have rates defined in certain kwargs. There is no enyme
+concentration; it is assumed fixed.</p>
+<section id="id20">
+<h4>Parameters<a class="headerlink" href="#id20" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>rxnName<span class="classifier">str</span></dt><dd><p>name of the external reaction</p>
+</dd>
+<dt>metabolites<span class="classifier">list(str)</span></dt><dd><p>list of metabolite names (strs)</p>
+</dd>
+<dt>stoichiometry<span class="classifier">list(float)</span></dt><dd><p>stoichiometry of the metabolites. must be same order as metabolites</p>
+</dd>
+<dt>kwargs<span class="classifier">[‘Kcat’ or ‘Km’ or ‘K’]</span></dt><dd><p>rate parameters. Either Kcat and Km, or K must be set.</p>
+</dd>
+</dl>
+</section>
+<section id="id21">
+<h4>Examples<a class="headerlink" href="#id21" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># set an external reaction that converts lactose into glucose + gal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assumes import cometspy as c and a model called m has been made</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rxn_name</span> <span class="o">=</span> <span class="s1">&#39;lactase&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metabolites</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lcts_e&#39;</span><span class="p">,</span> <span class="s1">&#39;glc__D_e&#39;</span><span class="p">,</span> <span class="s1">&#39;gal_e&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stoichiometry</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="c1"># mmol / hr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">m</span><span class="p">])</span> <span class="c1"># m is a cometspy.model that has exchanges for the mets above</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">add_external_reaction</span><span class="p">(</span><span class="n">rxn_name</span><span class="p">,</span> <span class="n">metabolites</span><span class="p">,</span> <span class="n">stoichiometry</span><span class="p">,</span>
+<span class="go">                            K = K)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.add_model">
+<span class="sig-name descname"><span class="pre">add_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_model" title="Permalink to this definition"></a></dt>
+<dd><p>add a cometspy model to this layout</p>
+<p>This is the preferred way to add models to existing layout.</p>
+<section id="id22">
+<h4>Parameters<a class="headerlink" href="#id22" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>model<span class="classifier">cometspy.model</span></dt><dd><p>a cometspy.model with an initial_pop</p>
+</dd>
+</dl>
+</section>
+<section id="id23">
+<h4>Examples<a class="headerlink" href="#id23" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;ecoli&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">salmonella</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;salmonella&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">ecoli</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">salmonella</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">salmonella</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">salmonella</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-7</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">salmonella</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-7</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">ecoli</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">salmonella</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.add_typical_trace_metabolites">
+<span class="sig-name descname"><span class="pre">add_typical_trace_metabolites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.add_typical_trace_metabolites" title="Permalink to this definition"></a></dt>
+<dd><p>adds common BIGG-style metabolites to the environment. This only 
+works if your models use metabolites which are formatted like ‘ca2_e’
+and then should still only be used as a starting point.</p>
+<section id="id24">
+<h4>Parameters<a class="headerlink" href="#id24" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>amount<span class="classifier">float, optional</span></dt><dd><p>the amount, in mmol, of these metabolites. Default is 1000.0.</p>
+</dd>
+<dt>static<span class="classifier">bool, optional</span></dt><dd><p>The default is True. If false, these metabolites are depletable.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.delete_model_files">
+<span class="sig-name descname"><span class="pre">delete_model_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">working_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.delete_model_files" title="Permalink to this definition"></a></dt>
+<dd><p>deletes model files in specified directory</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.display_current_media">
+<span class="sig-name descname"><span class="pre">display_current_media</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.display_current_media" title="Permalink to this definition"></a></dt>
+<dd><p>a utility function to show current non-zero media amounts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.get_model_ids">
+<span class="sig-name descname"><span class="pre">get_model_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#cometspy.layout.layout.get_model_ids" title="Permalink to this definition"></a></dt>
+<dd><p>returns a list of the ids of the models in this layout.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.read_comets_layout">
+<span class="sig-name descname"><span class="pre">read_comets_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.read_comets_layout" title="Permalink to this definition"></a></dt>
+<dd><p>load a comets layout from a file</p>
+<p>If a COMETS layout file has been previously made, this function can
+load that file into the current cometspy layout object.</p>
+<p>This is an unusual way of working with cometspy with rare uses.</p>
+<section id="id25">
+<h4>Parameters<a class="headerlink" href="#id25" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>input_obj<span class="classifier">str</span></dt><dd><p>the path to the existing COMETS layout file to be loaded</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_global_periodic_media">
+<span class="sig-name descname"><span class="pre">set_global_periodic_media</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metabolite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amplitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_global_periodic_media" title="Permalink to this definition"></a></dt>
+<dd><p>set cyclical changes in extracellular nutrient environment</p>
+<section id="id26">
+<h4>Parameters<a class="headerlink" href="#id26" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>metabolite<span class="classifier">str</span></dt><dd><p>name of the metabolite under a cycle</p>
+</dd>
+<dt>function<span class="classifier">str, one of [‘step’, ‘sin’, ‘cos’, ‘half_sin’, ‘half_cos’]</span></dt><dd><p>name of function that defines changing metabolite concentration</p>
+</dd>
+<dt>amplitude<span class="classifier">float</span></dt><dd><p>amplitude of the function in mmol</p>
+</dd>
+<dt>period<span class="classifier">float</span></dt><dd><p>duration of the function period in hr</p>
+</dd>
+<dt>phase<span class="classifier">float</span></dt><dd><p>horizontal phase of the period (hr)</p>
+</dd>
+<dt>offset<span class="classifier">float</span></dt><dd><p>vertical offset of the function (mmol)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_metabolite_diffusion">
+<span class="sig-name descname"><span class="pre">set_metabolite_diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diffusion_constant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_metabolite_diffusion" title="Permalink to this definition"></a></dt>
+<dd><p>sets the default diffusion constant for all metabolites</p>
+<p>Specific diffusion constants can be set subsequent to setting this.</p>
+<section id="id27">
+<h4>Parameters<a class="headerlink" href="#id27" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>diffusion_constant<span class="classifier">float</span></dt><dd><p>the diffusion constant, in cm2 / s, that all metabolites use</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_region_map">
+<span class="sig-name descname"><span class="pre">set_region_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_region_map" title="Permalink to this definition"></a></dt>
+<dd><p>set a region_map dictating different regions in a spatial simulation</p>
+<p>COMETS can have different regions with different substrate diffusivities
+and frictions.  Here, you set the map defining the regions. Specifically,
+you provide either:
+1) a numpy array whose shape == layout.grid, or
+2) a list of lists whose first length is grid[0] and second len is grid[1]</p>
+<p>Populating these objects should be integer values, beginning at 1 and
+incrementing only, that define the different grid areas.  These are
+intimately connected to region_parameters, which are set with
+layout.set_region_parameters()</p>
+<section id="id28">
+<h4>Parameters<a class="headerlink" href="#id28" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>region_map<span class="classifier">numpy.array(int) or list(list)</span></dt><dd><p>a 2d array of size layout.grid containing integers, or a list of
+lists which can be coerced to an integer array using np.array()</p>
+</dd>
+</dl>
+</section>
+<section id="id29">
+<h4>Examples<a class="headerlink" href="#id29" title="Permalink to this heading"></a></h4>
+<p>see set_region_parameters for an example</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_region_parameters">
+<span class="sig-name descname"><span class="pre">set_region_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">friction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_region_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>set regions-specific diffusion and friction values</p>
+<p>COMETS can have different regions with different substrate 
+diffusivities and frictions.  Here, you set those parameters.</p>
+<p>This does not affect a simulation unless a region map is also set, 
+using the layout.set_region_map() function.</p>
+<section id="id30">
+<h4>Parameters<a class="headerlink" href="#id30" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>region<span class="classifier">int</span></dt><dd><p>the region (set by set_region_map) that uses the other parameters</p>
+</dd>
+<dt>diffusion<span class="classifier">list(float)</span></dt><dd><p>a list containing diffusion constants (cm2/s) for each metabolite</p>
+</dd>
+<dt>friction<span class="classifier">float</span></dt><dd><p>a single value for the friction observed in this region</p>
+</dd>
+</dl>
+</section>
+<section id="id31">
+<h4>Examples<a class="headerlink" href="#id31" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># this example assumes you have already created a cometspy model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># called &quot;e&quot; and have imported cometspy as c and numpy as np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Here we are making a 2x2 world with two regions in which region</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># 1 metabolites have diffusion constant 1.e-6 cm2/s and in region</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># 2 metabolites have diffusion constant 1.e-7 cm2/s, and in both</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># cases mets have default friction constant 1.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">e</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_region_map</span><span class="p">(</span><span class="n">region_map</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n_mets</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">media</span><span class="p">)</span> <span class="c1"># how many metabolites there are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_region_parameters</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.e-6</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_mets</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_region_parameters</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.e-7</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_mets</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_specific_metabolite">
+<span class="sig-name descname"><span class="pre">set_specific_metabolite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">met</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_metabolite" title="Permalink to this definition"></a></dt>
+<dd><p>sets the initial (or constant) value for a metabolite across space</p>
+<p>This is the most common way to set a metabolite concentration. It 
+sets the initial value of the named metabolite to ‘amount’ in every
+location. Optionally, if static = True, this concentration is fixed
+during the simulation.</p>
+<section id="id32">
+<h4>Parameters<a class="headerlink" href="#id32" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>met<span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt>amount<span class="classifier">float</span></dt><dd><p>initial value for the metabolite in each box, in mmol</p>
+</dd>
+<dt>static<span class="classifier">bool, optional</span></dt><dd><p>DEFAULT = False. If True, the ‘amount’ is fixed over time.</p>
+</dd>
+</dl>
+</section>
+<section id="id33">
+<h4>Examples<a class="headerlink" href="#id33" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;glc__D_e&quot;</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;o2_e&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="n">static</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># a common thing to do is populate this from the cobra model, as </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># shown here:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cobra_model</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">cobra_model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cobra_model</span><span class="o">.</span><span class="n">medium</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">:],</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_specific_metabolite_at_location">
+<span class="sig-name descname"><span class="pre">set_specific_metabolite_at_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">met</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_metabolite_at_location" title="Permalink to this definition"></a></dt>
+<dd><p>set an initial value of a metabolite at a specific spatial location</p>
+<p>In contrast to set_specific_metabolite, which sets initial values 
+universally over space, this method sets a specific metabolite 
+initial value at one location only.</p>
+<section id="id34">
+<h4>Parameters<a class="headerlink" href="#id34" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>met<span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt>location<span class="classifier">tuple</span></dt><dd><p>a tuple of integers specifying a specific location, e.g. (3,2)</p>
+</dd>
+<dt>amount<span class="classifier">float</span></dt><dd><p>the initial value for the metabolite at the location, in mmol</p>
+</dd>
+</dl>
+</section>
+<section id="id35">
+<h4>Examples<a class="headerlink" href="#id35" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite_at_location</span><span class="p">(</span><span class="s2">&quot;glc__D_e&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="mf">0.005</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id36">
+<h4>Notes<a class="headerlink" href="#id36" title="Permalink to this heading"></a></h4>
+<p>Remember that COMETS locations are zero-ordered.</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_specific_metabolite_diffusion">
+<span class="sig-name descname"><span class="pre">set_specific_metabolite_diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">met</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusion_constant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_metabolite_diffusion" title="Permalink to this definition"></a></dt>
+<dd><p>sets the diffusion constant of a specific metabolite</p>
+<section id="id37">
+<h4>Parameters<a class="headerlink" href="#id37" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>met<span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt>diffusion_constant<span class="classifier">float</span></dt><dd><p>the diffusion constant, in cm2/s, of the named metabolite</p>
+</dd>
+</dl>
+</section>
+<section id="id38">
+<h4>Examples<a class="headerlink" href="#id38" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">m</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite_diffusion</span><span class="p">(</span><span class="s2">&quot;ac_e&quot;</span><span class="p">,</span> <span class="mf">5.2e-6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite_diffusion</span><span class="p">(</span><span class="s2">&quot;gal_e&quot;</span><span class="p">,</span> <span class="mf">4.e-6</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_specific_refresh">
+<span class="sig-name descname"><span class="pre">set_specific_refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">met</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_refresh" title="Permalink to this definition"></a></dt>
+<dd><p>set the amount to increment a metabolite continuously through time</p>
+<p>metabolites can be “refreshed” or “dripped in” during a COMETS 
+simulation. This sets the amount added each hour, which is divided
+up by the number of time steps. It applies that refresh to all boxes
+in space.</p>
+<section id="id39">
+<h4>Parameters<a class="headerlink" href="#id39" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>met<span class="classifier">str</span></dt><dd><p>name of the metabolite refreshed</p>
+</dd>
+<dt>amount<span class="classifier">float</span></dt><dd><p>the amount added to (or subtracted from) each box, in mmol / hr.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_specific_refresh_at_location">
+<span class="sig-name descname"><span class="pre">set_specific_refresh_at_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">met</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_refresh_at_location" title="Permalink to this definition"></a></dt>
+<dd><p>sets the amount to adjust a metabolite at a specific location in time</p>
+<p>Like set_specific_refresh, but for a specific lacation. This 
+Method is used to specify how much a metabolite is increased (or 
+decreased) each hour in a specific location.</p>
+<section id="id40">
+<h4>Parameters<a class="headerlink" href="#id40" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>met<span class="classifier">str</span></dt><dd><p>the name of the metabolite</p>
+</dd>
+<dt>location<span class="classifier">tuple</span></dt><dd><p>the (x, y) location to adjust, with x and y of type int</p>
+</dd>
+<dt>amount<span class="classifier">float</span></dt><dd><p>the amount added to (or subtracted from) the box, in mmol / hr</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_specific_static">
+<span class="sig-name descname"><span class="pre">set_specific_static</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">met</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_static" title="Permalink to this definition"></a></dt>
+<dd><p>sets a metabolite to a fixed value in every location</p>
+<section id="id41">
+<h4>Parameters<a class="headerlink" href="#id41" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>met<span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt>amount<span class="classifier">float</span></dt><dd><p>the amount, in mmol, that is in each box at each time step</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.set_specific_static_at_location">
+<span class="sig-name descname"><span class="pre">set_specific_static_at_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">met</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.set_specific_static_at_location" title="Permalink to this definition"></a></dt>
+<dd><p>sets a metabolite to a fixed value at a specific location</p>
+<section id="id42">
+<h4>Parameters<a class="headerlink" href="#id42" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>met<span class="classifier">str</span></dt><dd><p>name of the metabolite</p>
+</dd>
+<dt>location<span class="classifier">tuple</span></dt><dd><p>the (x, y) location of the fixed metabolite amount. x, y are int</p>
+</dd>
+<dt>amount<span class="classifier">float</span></dt><dd><p>the amount, in mmol, that is in each box at each time step</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.update_models">
+<span class="sig-name descname"><span class="pre">update_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.update_models" title="Permalink to this definition"></a></dt>
+<dd><p>updates layout properties when models are added / removed</p>
+<p>This is usually just called internally. However, if you manually 
+change layout.models, then this method should be called to make other
+necessary changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.write_layout">
+<span class="sig-name descname"><span class="pre">write_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">working_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.write_layout" title="Permalink to this definition"></a></dt>
+<dd><p>writes just the COMETS layout file to the supplied path</p>
+<section id="id43">
+<h4>Parameters<a class="headerlink" href="#id43" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>working_dir<span class="classifier">str</span></dt><dd><p>the path to the directory where .current_layout will be written</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.write_model_files">
+<span class="sig-name descname"><span class="pre">write_model_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">working_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.write_model_files" title="Permalink to this definition"></a></dt>
+<dd><p>writes each model file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.layout.layout.write_necessary_files">
+<span class="sig-name descname"><span class="pre">write_necessary_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">working_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.layout.layout.write_necessary_files" title="Permalink to this definition"></a></dt>
+<dd><p>writes the layout and the model files to file</p>
+<p>This method is called by comets.run(). Alternatively it may be called
+directly if one wishes to inspect comets layout and model files.</p>
+<p>A path must be specified if called directly.</p>
+<p>Note: the layout file will be called “.current_layout” and therefore
+be hidden from file browsers by default.</p>
+<section id="id44">
+<h4>Parameters<a class="headerlink" href="#id44" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>working_dir<span class="classifier">str, </span></dt><dd><p>The directory where the files will be written.</p>
+</dd>
+<dt>to_append<span class="classifier">str, </span></dt><dd><p>String to append to written filenames</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-cometspy.model">
+<span id="cometspy-model-module"></span><h2>cometspy.model module<a class="headerlink" href="#module-cometspy.model" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cometspy.model.model">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cometspy.model.</span></span><span class="sig-name descname"><span class="pre">model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomtag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>a COMETS metabolic model to use in a layout</p>
+<p>A model contains information including the stoichiometric matrix,
+reaction boundaries and Michaelis-Menten parameters, founder populations,
+and various attributes related to motion in space.</p>
+<p>A model is usually initiated by supplying a cobrapy model, and to be used
+in a COMETS simulation must minimally be given an initial population:</p>
+<section id="id45">
+<h3>Parameters<a class="headerlink" href="#id45" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>model<span class="classifier">cobra.Model or str, optional</span></dt><dd><p>Either a cobrapy Model, a path to a .cmd COMETS model, a path to a
+cobra sbml model which could be loaded with cobra.io.read_sbml_model()
+or None.</p>
+</dd>
+</dl>
+</section>
+<section id="id46">
+<h3>Attributes<a class="headerlink" href="#id46" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>initial_pop<span class="classifier">list</span></dt><dd><p>list of lists of spatial founder pops. e.g.[[x, y, grams], [x,y,grams]]</p>
+</dd>
+<dt>id<span class="classifier">str</span></dt><dd><p>the name of the model. should be unique.</p>
+</dd>
+<dt>reactions<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing reaction information including boundaries.</p>
+</dd>
+<dt>smat<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing the stoichiometric matrix</p>
+</dd>
+<dt>metabolites<span class="classifier">pandas.DataFrame</span></dt><dd><p>single-column DataFrame containing the names of the metabolites</p>
+</dd>
+<dt>signals<span class="classifier">pandas.Dataframe</span></dt><dd><p>DataFrame on reactions whose bounds depend on metabolite concentrations</p>
+</dd>
+<dt>default_vmax<span class="classifier">float</span></dt><dd><p>default uptake vmax in mmol / gDW /hr for Michaelis-Menten kinetics</p>
+</dd>
+<dt>default_km<span class="classifier">float</span></dt><dd><p>default half-max metabolite concentration (M) for M-M kinetics</p>
+</dd>
+<dt>default_hill<span class="classifier">float</span></dt><dd><p>default hill coefficient for hill-like uptake kinetics</p>
+</dd>
+<dt>default_bounds<span class="classifier">list</span></dt><dd><p>list of two floats that are the default lower and upper reaction bounds</p>
+</dd>
+<dt>obj_style<span class="classifier">str</span></dt><dd><p>one of MAXIMIZE_OBJECTIVE_FLUX (fba) or MAX_OBJECTIVE_MIN_TOTAL (pfba)</p>
+</dd>
+<dt>optimizer<span class="classifier">str</span></dt><dd><p>one of “GUROBI” or “GLPK”. not all functionality works with GLPK</p>
+</dd>
+</dl>
+</section>
+<section id="id47">
+<h3>Examples<a class="headerlink" href="#id47" title="Permalink to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;ecoli&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">ecoli</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-12</span><span class="p">]</span> <span class="c1"># puts 1.e-12 gDW of biomass at 0,0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="go">iJO1366</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.add_convection_parameters">
+<span class="sig-name descname"><span class="pre">add_convection_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">packedDensity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elasticModulus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frictionConstant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convDiffConstant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_convection_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>sets the parameters for biomass spread to use convection</p>
+<p>This also requires one set the biomassMotionStyle to 
+‘Convection 2D’ in the comets.params object (see Example)</p>
+<section id="id48">
+<h4>Parameters<a class="headerlink" href="#id48" title="Permalink to this heading"></a></h4>
+<p>packedDensity : float, optional
+elasticModulus : float, optional
+frictionConstant : float, optional
+convDiffConstant : float, optional</p>
+</section>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
+<p>import cobra.test
+import cometspy as c
+model = c.model(cobra.test.create_test_model(“ecoli”))
+model.add_convection_parameters(1., 0.5, 2., 10.e-5)
+params = c.params()
+params.set_param(“biomassMotionStyle”, “Convection 2D”)</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.add_light">
+<span class="sig-name descname"><span class="pre">add_light</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abs_coefficient</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abs_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_light" title="Permalink to this definition"></a></dt>
+<dd><p>Causes a reaction to function in response to light</p>
+<section id="id49">
+<h4>Parameters<a class="headerlink" href="#id49" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>reaction<span class="classifier">str</span></dt><dd><p>the name of the reaction affected</p>
+</dd>
+<dt>abs_coefficient<span class="classifier">float</span></dt><dd><p>the absorption coefficient</p>
+</dd>
+<dt>abs_base<span class="classifier">float</span></dt><dd><p>absorption baseline</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.add_multitoxin">
+<span class="sig-name descname"><span class="pre">add_multitoxin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rxn_num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exch_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hills</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_multitoxin" title="Permalink to this definition"></a></dt>
+<dd><p>Adds a signaling relationship where &gt;= 1 signal close a bound</p>
+<p>This incorporates a hill-function reduction of (usually) an upper bound
+It is useful for incorporating multiple, additively-functioning signals.</p>
+<p>bound = vmax * MULT((km_i^h_i) / (km_i^h_i + M_i^h_i)) 
+where MULT is a multiplicative function, M_i is the molarity of the 
+metabolite in the given exch_id, and km_i and h_i are the km and h for
+for that signal.</p>
+<section id="id50">
+<h4>Parameters<a class="headerlink" href="#id50" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>rxn_num<span class="classifier">int</span></dt><dd><p>number of the affected reaction</p>
+</dd>
+<dt>exch_ids<span class="classifier">list[int]</span></dt><dd><p>exchange numbers of the signals</p>
+</dd>
+<dt>bound<span class="classifier">str</span></dt><dd><p>“ub” or “lb”</p>
+</dd>
+<dt>vmax<span class="classifier">float</span></dt><dd><p>maximum bound in absence of signals</p>
+</dd>
+<dt>kms<span class="classifier">list[float]</span></dt><dd><p>kms for the signals</p>
+</dd>
+<dt>hills<span class="classifier">list[float]</span></dt><dd><p>hill coefficients for the signals</p>
+</dd>
+</dl>
+</section>
+<section id="id51">
+<h4>Returns<a class="headerlink" href="#id51" title="Permalink to this heading"></a></h4>
+<p>None.</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.add_neutral_drift_parameter">
+<span class="sig-name descname"><span class="pre">add_neutral_drift_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neutralDriftSigma</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_neutral_drift_parameter" title="Permalink to this definition"></a></dt>
+<dd><p>sets the neutralDriftSigma parameter</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.add_noise_variance_parameter">
+<span class="sig-name descname"><span class="pre">add_noise_variance_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">noiseVariance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_noise_variance_parameter" title="Permalink to this definition"></a></dt>
+<dd><p>sets the noise variance parameter</p>
+<section id="id52">
+<h4>Parameters<a class="headerlink" href="#id52" title="Permalink to this heading"></a></h4>
+<p>noiseVariance : float</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.add_nonlinear_diffusion_parameters">
+<span class="sig-name descname"><span class="pre">add_nonlinear_diffusion_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zero</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hilln</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hillk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_nonlinear_diffusion_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>sets the model to use non-linear diffusion biomass spread.</p>
+<p>This also requires one set the biomassMotionStyle to 
+‘ConvNonlin Diffusion 2D’ in the comets.params object (see Example)</p>
+<section id="id53">
+<h4>Parameters<a class="headerlink" href="#id53" title="Permalink to this heading"></a></h4>
+<p>zero : float, optional
+n : float, optional
+exponent : float, optional
+hilln : float, optional
+hillk : float, optional</p>
+</section>
+<section id="id54">
+<h4>Example<a class="headerlink" href="#id54" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;ecoli&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">add_nonlinear_diffusion_parameters</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;biomassMotionStyle&quot;</span><span class="p">,</span> <span class="s2">&quot;ConvNonlin Diffusion 2D&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.add_signal">
+<span class="sig-name descname"><span class="pre">add_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rxn_num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exch_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.add_signal" title="Permalink to this definition"></a></dt>
+<dd><p>adds a signal to the reaction rxn_num that changes bounds</p>
+<section id="id55">
+<h4>Parameters<a class="headerlink" href="#id55" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>rxn_num<span class="classifier">int or ‘death’</span></dt><dd><p>reaction affected (int) or whether the signal causes death ‘death’</p>
+</dd>
+<dt>exch_id<span class="classifier">int</span></dt><dd><p>the number of the exchange reaction. see model.metabolites</p>
+</dd>
+<dt>bound<span class="classifier">str  ‘ub’ or ‘lb’</span></dt><dd><p>specifies whether the upper or lower bound is affected</p>
+</dd>
+<dt>function<span class="classifier">str ‘linear’ or ‘bounded_linear’ or ‘generalized_logistic’</span></dt><dd><p>specifies the function relating the metabolite conc. to the bound</p>
+</dd>
+<dt>parms<span class="classifier">list (float)</span></dt><dd><p>a list of floats for the function</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.change_bounds">
+<span class="sig-name descname"><span class="pre">change_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_bounds" title="Permalink to this definition"></a></dt>
+<dd><p>changes the bounds of the specified reaction</p>
+<section id="id56">
+<h4>Parameters<a class="headerlink" href="#id56" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>reaction<span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+<dt>lower_bound<span class="classifier">float</span></dt><dd><p>the new value of the reaction’s lower bound in mmol / gDW / hr</p>
+</dd>
+<dt>upper_bound<span class="classifier">float</span></dt><dd><p>the new value of the reaction’s upper bound in mmol / gDW / hr</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.change_hill">
+<span class="sig-name descname"><span class="pre">change_hill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hill</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_hill" title="Permalink to this definition"></a></dt>
+<dd><p>changes the hill coefficient of the specified reaction.</p>
+<section id="id57">
+<h4>Parameters<a class="headerlink" href="#id57" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>reaction<span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+<dt>hill<span class="classifier">float</span></dt><dd><p>the new hill coef. for the reaction, for Hill-like kinetics</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.change_km">
+<span class="sig-name descname"><span class="pre">change_km</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">km</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_km" title="Permalink to this definition"></a></dt>
+<dd><p>changes the km of the specified reaction.</p>
+<section id="id58">
+<h4>Parameters<a class="headerlink" href="#id58" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>reaction<span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+<dt>km<span class="classifier">float</span></dt><dd><p>the new km value for the reaction, for Monod (Michaelis-Menten)
+kinetics</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.change_vmax">
+<span class="sig-name descname"><span class="pre">change_vmax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.change_vmax" title="Permalink to this definition"></a></dt>
+<dd><p>changes the vmax of the specified reaction.</p>
+<section id="id59">
+<h4>Parameters<a class="headerlink" href="#id59" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>reaction<span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+<dt>vmax<span class="classifier">float</span></dt><dd><p>the new vmax value for the reaction, for Monod (Michaelis-Menten)
+kinetics</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.delete_comets_model">
+<span class="sig-name descname"><span class="pre">delete_comets_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">working_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.delete_comets_model" title="Permalink to this definition"></a></dt>
+<dd><p>deletes a file version of this model if it exists.</p>
+<section id="id60">
+<h4>Parameters<a class="headerlink" href="#id60" title="Permalink to this heading"></a></h4>
+<blockquote>
+<div><dl class="simple">
+<dt>working_dir<span class="classifier">str, optional</span></dt><dd><p>the directory where the comets model file exists</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.ensure_sinks_are_not_exchanges">
+<span class="sig-name descname"><span class="pre">ensure_sinks_are_not_exchanges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_c'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.ensure_sinks_are_not_exchanges" title="Permalink to this definition"></a></dt>
+<dd><p>set exchange reactions ending in suffix (default = ‘_c’) to sink</p>
+<section id="id61">
+<h4>Parameters<a class="headerlink" href="#id61" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>suffix<span class="classifier">str, optional</span></dt><dd><p>the suffix to look for in exchange reactions. default = ‘_c’</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.get_bounds">
+<span class="sig-name descname"><span class="pre">get_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#cometspy.model.model.get_bounds" title="Permalink to this definition"></a></dt>
+<dd><p>returns a tuple (lb, ub) for the specified reaction</p>
+<section id="id62">
+<h4>Parameters<a class="headerlink" href="#id62" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>reaction<span class="classifier">str</span></dt><dd><p>the name of the reaction</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.get_exchange_metabolites">
+<span class="sig-name descname"><span class="pre">get_exchange_metabolites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#cometspy.model.model.get_exchange_metabolites" title="Permalink to this definition"></a></dt>
+<dd><p>returns a list of the names of the exchange metabolites</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.get_reaction_names">
+<span class="sig-name descname"><span class="pre">get_reaction_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#cometspy.model.model.get_reaction_names" title="Permalink to this definition"></a></dt>
+<dd><p>returns a list of reaction names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.load_cobra_model">
+<span class="sig-name descname"><span class="pre">load_cobra_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curr_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomtag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.load_cobra_model" title="Permalink to this definition"></a></dt>
+<dd><p>creates the COMETS model from the supplied cobra model</p>
+<p>This is usually used internally when creating a COMETS model.</p>
+<section id="id63">
+<h4>Parameters<a class="headerlink" href="#id63" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>curr_m<span class="classifier">cobra.Model</span></dt><dd><p>the cobra model object to be converted to the COMETS model object</p>
+</dd>
+</dl>
+</section>
+<section id="id64">
+<h4>Example<a class="headerlink" href="#id64" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ecoli</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s1">&#39;ecoli&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">load_cobra_model</span><span class="p">(</span><span class="n">ecoli</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.open_exchanges">
+<span class="sig-name descname"><span class="pre">open_exchanges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.open_exchanges" title="Permalink to this definition"></a></dt>
+<dd><p>sets all exchange boundaries to the specifed values</p>
+<p>This method is useful when first making a COMETS model so that medium
+definitions are not carried over from cobra into COMETS.</p>
+<section id="id65">
+<h4>Parameters<a class="headerlink" href="#id65" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>lower_bound<span class="classifier">float, optional</span></dt><dd><p>default = -1000.   in units of mmol / gDW / hr</p>
+</dd>
+<dt>upper_bound<span class="classifier">float, optional</span></dt><dd><p>default = 1000.    in units of mmol / gDW / hr</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.read_cobra_model">
+<span class="sig-name descname"><span class="pre">read_cobra_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomtag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.read_cobra_model" title="Permalink to this definition"></a></dt>
+<dd><p>reads a cobra model from a file and loads it into this model</p>
+<p>This is an alternative way to initialize a COMETS model, by supplying
+it with the path to a cobra model that can be read using
+cobra.io.read_sbml_model.</p>
+<section id="id66">
+<h4>Parameters<a class="headerlink" href="#id66" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>path<span class="classifier">str</span></dt><dd><p>path to a cobra model in sbml format</p>
+</dd>
+</dl>
+</section>
+<section id="id67">
+<h4>Example<a class="headerlink" href="#id67" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path_to_file</span> <span class="o">=</span> <span class="s2">&quot;./my_new_model.xml&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">read_cobra_model</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.read_comets_model">
+<span class="sig-name descname"><span class="pre">read_comets_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomtag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.read_comets_model" title="Permalink to this definition"></a></dt>
+<dd><p>an alternative way to create a COMETS model by reading from a file</p>
+<p>This allows a user to load previously-saved COMETS models. The 
+contents populate this object’s attributes.</p>
+<section id="id68">
+<h4>Parameters<a class="headerlink" href="#id68" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>path<span class="classifier">str</span></dt><dd><p>the path to the COMETS model file</p>
+</dd>
+</dl>
+</section>
+<section id="id69">
+<h4>Example<a class="headerlink" href="#id69" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path_to_model</span> <span class="o">=</span> <span class="s2">&quot;./iJO1366.cmd&quot;</span> <span class="c1"># this must actually exist</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">read_comets_model</span><span class="p">(</span><span class="n">path_to_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.model.model.write_comets_model">
+<span class="sig-name descname"><span class="pre">write_comets_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">working_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.model.model.write_comets_model" title="Permalink to this definition"></a></dt>
+<dd><p>writes the COMETS model object to a file</p>
+<p>This writes the current model object in COMETS format to file, either
+in the current working directory or in the directory specified by
+the optional parameter working_dir.  It is mostly used by the comets
+object to run simulations, though a user may with to write these to 
+examine directly or to save.</p>
+<section id="id70">
+<h4>Parameters<a class="headerlink" href="#id70" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>working_dir<span class="classifier">str, optional</span></dt><dd><p>a directory path to put COMETS files.  for example “./data_files/”</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-cometspy.params">
+<span id="cometspy-params-module"></span><h2>cometspy.params module<a class="headerlink" href="#module-cometspy.params" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cometspy.params.params">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cometspy.params.</span></span><span class="sig-name descname"><span class="pre">params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">global_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.params" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>object storing simulation-related and some default biological parameters</p>
+<p>The params object is an essential object needed to start a comets
+simulation, along with a layout object containing models. The params 
+object stores simulation information such as timeStep and maxCycles, as 
+well as many default biological parameters such as defaultKm and 
+defaultDiffC (the default metabolite diffusion constant).</p>
+<p>All of the parameters are stored in a dictionary called ‘all_params’ and
+can either be adjusted directly or using set_param().</p>
+<p>When params are written to a COMETS object for COMETS to process, two
+files are generated (‘.current_global’ and ‘current_package’)</p>
+<section id="id71">
+<h3>Parameters<a class="headerlink" href="#id71" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>global_params<span class="classifier">str, optional</span></dt><dd><p>optional path to an existing ‘global_params’ file to load</p>
+</dd>
+<dt>package_params<span class="classifier">str, optional</span></dt><dd><p>optional path to an existing ‘package_params’ file to load</p>
+</dd>
+</dl>
+</section>
+<section id="id72">
+<h3>Examples<a class="headerlink" href="#id72" title="Permalink to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a params object and change two params</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;timeStep&quot;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span> <span class="c1"># hours</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;spaceWidth&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="c1"># cm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># view all the params</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">show_params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># access the params directly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">all_params</span> <span class="c1"># this is a dict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use a params object in a comets simulation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-7</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">model</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># normally we&#39;d now alter the media in the layout</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">add_typical_trace_metabolites</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s1">&#39;lcts_e&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span> <span class="c1"># mmol</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id73">
+<h3>Attributes<a class="headerlink" href="#id73" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>all_params<span class="classifier">dict</span></dt><dd><p>contains every possible param as keys, with their value as the value</p>
+</dd>
+<dt>params_units<span class="classifier">dict</span></dt><dd><p>dictionary containing the units for each possible parameter</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.params.params.get_param">
+<span class="sig-name descname"><span class="pre">get_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#cometspy.params.params.get_param" title="Permalink to this definition"></a></dt>
+<dd><p>returns the value associated with the given parameter name</p>
+<section id="id74">
+<h4>Parameters<a class="headerlink" href="#id74" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>name<span class="classifier">str</span></dt><dd><p>the name of the parameter whose value is desired</p>
+</dd>
+</dl>
+</section>
+<section id="id75">
+<h4>Returns<a class="headerlink" href="#id75" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>object</dt><dd><p>the type of object depends on the parameter requested</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.params.params.set_param">
+<span class="sig-name descname"><span class="pre">set_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.params.set_param" title="Permalink to this definition"></a></dt>
+<dd><p>alters a specific parameter value</p>
+<p>See show_params() for a list of possible parameters to adjust.</p>
+<section id="id76">
+<h4>Parameters<a class="headerlink" href="#id76" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>name<span class="classifier">str</span></dt><dd><p>the name of a specific parameter to change</p>
+</dd>
+<dt>value<span class="classifier">variable</span></dt><dd><p>the type of the value depends on the parameter.</p>
+</dd>
+</dl>
+</section>
+<section id="id77">
+<h4>Examples<a class="headerlink" href="#id77" title="Permalink to this heading"></a></h4>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">cometspy</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;writeBiomassLog&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;BiomassLogRate&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;defaultVmax&quot;</span><span class="p">,</span> <span class="mf">10.24</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.params.params.show_params">
+<span class="sig-name descname"><span class="pre">show_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.params.show_params" title="Permalink to this definition"></a></dt>
+<dd><p>utility function to show all possible parameters and their units</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cometspy.params.params.write_params">
+<span class="sig-name descname"><span class="pre">write_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_glb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_pkg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cometspy.params.params.write_params" title="Permalink to this definition"></a></dt>
+<dd><p>writes params data to the specified files</p>
+<p>Usually this is only used internally, though a user could use it to 
+pre-generate params files.</p>
+<section id="id78">
+<h4>Parameters<a class="headerlink" href="#id78" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>out_glb<span class="classifier">str</span></dt><dd><p>the path and name of the ‘global’ parameters file to be written</p>
+</dd>
+<dt>out_pkg<span class="classifier">str</span></dt><dd><p>the path and name of the ‘package’ parameters file to be written</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-cometspy.utils">
+<span id="cometspy-utils-module"></span><h2>cometspy.utils module<a class="headerlink" href="#module-cometspy.utils" title="Permalink to this heading"></a></h2>
+<p>The utils module contains helper functions generating spatial patterns.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cometspy.utils.chemostat">
+<span class="sig-prename descclassname"><span class="pre">cometspy.utils.</span></span><span class="sig-name descname"><span class="pre">chemostat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reservoir_media</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilution_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#cometspy.utils.chemostat" title="Permalink to this definition"></a></dt>
+<dd><p>helper function to let a user skip some steps when generating a chemostat</p>
+<p>This sets relevant simulation parameters (e.g. deathRate, 
+metaboliteDilutionRate) and layout values (e.g. refresh media) based upon
+a “reservoir” definition and a dilution rate.</p>
+<p>It generates a layout that has the reservoir_media as the initial values,
+as well as set it to drip in / out based upon the dilution rate.</p>
+<p>The returned layout and params can be further modified before supplying
+to a comets object if desired.</p>
+<section id="id79">
+<h3>Parameters<a class="headerlink" href="#id79" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>models<span class="classifier">list(cometspy.model)</span></dt><dd><p>list of cometspy.model(s) with initial_pop set to use in the sim</p>
+</dd>
+<dt>reservoir_media<span class="classifier">dict</span></dt><dd><p>media definition with metabolite names as keys as mmol amounts as values</p>
+</dd>
+<dt>dilution_rate<span class="classifier">float</span></dt><dd><p>the dilution rate of the chemostat, in 1/hr</p>
+</dd>
+</dl>
+</section>
+<section id="id80">
+<h3>Returns<a class="headerlink" href="#id80" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>tuple (layout, params)</dt><dd><p>a cometspy.layout object and a cometspy.params object</p>
+</dd>
+</dl>
+</section>
+<section id="id81">
+<h3>Examples<a class="headerlink" href="#id81" title="Permalink to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cometspy.utils</span> <span class="kn">import</span> <span class="n">chemostat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a model from a cobra model, open exchange reactions, and give a pop</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tb</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-4</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reservoir</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;glc__D_e&#39;</span> <span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;nh4_e&#39;</span> <span class="p">:</span> <span class="mf">1000.</span><span class="p">,</span> <span class="s1">&#39;pi_e&#39;</span> <span class="p">:</span> <span class="mf">1000.</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">chemostat</span><span class="p">([</span><span class="n">m</span><span class="p">],</span> <span class="n">reservoir</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cometspy.utils.grow_rocks">
+<span class="sig-prename descclassname"><span class="pre">cometspy.utils.</span></span><span class="sig-name descname"><span class="pre">grow_rocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#cometspy.utils.grow_rocks" title="Permalink to this definition"></a></dt>
+<dd><p>grows simple simulated rocks by adding random adjacent points from seeds</p>
+<p>n number of seed points are generated first with pick_random_locations. 
+Then, mean_size * n - n additional points are added to these seed locations. 
+For each new point, one random location out of the set of all possible 
+unoccupied locations next to occupied locations are chosen. Only 
+lattice points directly to the NSEW are considered. This process is
+repeated until all new points are assigned. This usually results in
+‘rocks’ of different shapes and sizes.</p>
+<p>This function can be very slow (&gt; 1 min) when n * mean_size &gt; 2000</p>
+<section id="id82">
+<h3>Parameters<a class="headerlink" href="#id82" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>n<span class="classifier">int</span></dt><dd><p>number of seed points to generate rocks from</p>
+</dd>
+<dt>xrange<span class="classifier">tuple</span></dt><dd><p>x range possible, e.g. (0, 5)</p>
+</dd>
+<dt>yrange<span class="classifier">tuple</span></dt><dd><p>y range possible, e.g. (0, 10)</p>
+</dd>
+<dt>mean_size<span class="classifier">int</span></dt><dd><p>average size in lattice units of a generated rock</p>
+</dd>
+</dl>
+</section>
+<section id="id83">
+<h3>Returns<a class="headerlink" href="#id83" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>list</dt><dd><p>list of all points generated including seed points</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cometspy.utils.pick_random_locations">
+<span class="sig-prename descclassname"><span class="pre">cometspy.utils.</span></span><span class="sig-name descname"><span class="pre">pick_random_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forbidden_locs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#cometspy.utils.pick_random_locations" title="Permalink to this definition"></a></dt>
+<dd><p>returns a list of n x,y tuples corresponding to locations in the range given</p>
+<section id="id84">
+<h3>Parameters<a class="headerlink" href="#id84" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>n<span class="classifier">int</span></dt><dd><p>number of locations desired</p>
+</dd>
+<dt>xrange<span class="classifier">tuple</span></dt><dd><p>the x-range (min, max) of the x range possible</p>
+</dd>
+<dt>yrange<span class="classifier">tuple</span></dt><dd><p>the y-range (min, max) of the y range possible</p>
+</dd>
+<dt>forbidden_locs<span class="classifier">set, optional</span></dt><dd><p>A list of tuples that cannot be chosen.</p>
+</dd>
+</dl>
+</section>
+<section id="id85">
+<h3>Returns<a class="headerlink" href="#id85" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>list</dt><dd><p>a list of (x,y) values.</p>
+</dd>
+</dl>
+</section>
+<section id="id86">
+<h3>Examples<a class="headerlink" href="#id86" title="Permalink to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cometspy.utils</span> <span class="kn">import</span> <span class="n">pick_random_locations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="n">pick_random_locations</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-cometspy">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cometspy" title="Permalink to this heading"></a></h2>
+<p><em>a python package for making and running COMETS simulations.</em></p>
+<p>cometspy is a straight-forward python interface to the COMETS program. 
+Use for dynamic flux-balance analysis, with multiple models, heterogenous 
+spatio-temporal environments, and evolution.</p>
+<p><strong>To use this package, you must also have the actual COMETS program installed.</strong></p>
+<ul class="simple">
+<li><p>For more information on COMETS, see <a class="reference external" href="https://runcomets.org">https://runcomets.org</a></p></li>
+<li><p>For COMETS development, see <a class="reference external" href="https://github.com/segrelab/comets">https://github.com/segrelab/comets</a></p></li>
+<li><p>For development of this package, see <a class="reference external" href="http://github.com/segrelab/cometspy">http://github.com/segrelab/cometspy</a></p></li>
+</ul>
+<p><strong>cometspy workflow:</strong></p>
+<p>models -&gt; layout, layout + params -&gt; comets, comets.run()</p>
+<p><strong>cometspy hello.world</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a model from a cobra model, open exchange reactions, and give a pop</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tb</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.e-4</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a layout with the model, and give it three nutrients</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">m</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;glc__D_e&quot;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;nh4_e&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">static</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;pi_e&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">static</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make params and change one default</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># make a simulation and run it!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># saved data objects are pandas.DataFrames, and therefore can be plotted</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># sim.total_biomass.plot(x = &quot;cycle&quot;)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, The Segre Lab at Boston University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -22,6 +22,7 @@ author = 'The Segre Lab at Boston University'
 extensions = [
     # ... other extensions ...
     'sphinx.ext.autodoc',
+    'sphinx_rtd_theme',
 ]
 
 templates_path = ['_templates']
@@ -32,5 +33,15 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+html_logo = 'images/cometspy_logo_white_bkgd.png'
+html_theme_options = {
+    'logo_only': True,
+    'display_version': True,
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+    }
