@@ -659,7 +659,7 @@ class comets:
         if not self.parameters.all_params['writeBiomassLog']:
             raise ValueError("biomass log was not recorded during simulation")
         if model_id not in list(np.unique(self.biomass['species'])):
-            raise NameError("model " + model.id + " is not one of the model ids")
+            raise NameError("model " + model_id + " is not one of the model ids")
         if cycle not in list(np.unique(self.biomass['cycle'])):
             raise ValueError('biomass was not saved at the desired cycle. try another.')
         im = np.zeros((self.layout.grid[0], self.layout.grid[1]))
