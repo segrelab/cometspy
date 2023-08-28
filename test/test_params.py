@@ -1,9 +1,7 @@
 import unittest
 import os
-
-print(os.getcwd())
-
 import pandas as pd
+
 from cometspy import params
 
 
