@@ -61,7 +61,22 @@ in a `new issue on GitHub <https://github.com/segrelab/cometspy/issues/new>`_.
 **Any question that you have likely indicates a shortcoming in the documentation,
 which we will want to fix!**
 
-.. TODO: Explain the structure of the documentation here
+Find the module/class/function that you are interested in using in the
+table of contents on the left or in the following indices, click on the link to
+go to the appropriate documentation:
+
+* :ref:`modindex`
+* :ref:`genindex`
+
+For a class, the documentation will include a brief description of the class,
+the parameters that the class takes, and a list of all attributes, and examples
+of how to use the class. The documentation will also include a list of all
+the methods that are available for that class.
+
+For a function, including the methods for a class, the documentation will 
+include a description of what the function does, a list of the parameters that
+the function takes and the objects that the function returns, and examples of
+how to use the function.
 
 Cite Us:
 --------
@@ -76,11 +91,3 @@ in the following paper:
 the computation of microbial ecosystems in time and space (COMETS), Nature
 Protocols (2021) https://doi.org/10.1038/s41596-021-00593-3.
 <https://www.nature.com/articles/s41596-021-00593-3>`_
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
