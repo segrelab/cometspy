@@ -1,4 +1,3 @@
 pandas
 cobra
 numpy
-cometspy
