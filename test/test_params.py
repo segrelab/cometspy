@@ -46,7 +46,10 @@ class TestParams(unittest.TestCase):
             with open(out_pkg_file) as f:
                 package_params_lines = f.readlines()
 
-            # Here, you could check if the lines contain the expected parameters and values.
+            # Here, you could check if the lines contain the expected
+            # parameters and values, but for now, just check that the
+            # number of lines is correct
+            self.assertEqual(len(global_params_lines), 35)
 
         finally:
             # Clean up: remove the temporary files
