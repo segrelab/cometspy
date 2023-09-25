@@ -1,4 +1,5 @@
 import unittest
+import cobra
 
 from cometspy.utils import pick_random_locations, grow_rocks, \
     _find_unoccupied_adjacent, chemostat
@@ -83,6 +84,8 @@ class TestUtils(unittest.TestCase):
                          {(0, 1), (1, 2), (2, 1), (3, 4), (4, 3), (2, 3), (1, 0), (3, 2)})
 
     def test_chemostat(self):
+        cobra_model = cobra.io.load_model("textbook")
+        model = 
         models = [layout(), layout()]  # Replace with actual models
         reservoir_media = {'glc__D_e': 0.01, 'nh4_e': 1000., 'pi_e': 1000.}
         dilution_rate = 0.1

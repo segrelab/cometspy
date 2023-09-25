@@ -13,3 +13,4 @@ cometspy.egg-info/SOURCES.txt
 cometspy.egg-info/dependency_links.txt
 cometspy.egg-info/requires.txt
 cometspy.egg-info/top_level.txt
+test/test_params.py
