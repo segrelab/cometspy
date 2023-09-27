@@ -664,10 +664,12 @@ class comets:
             raise ValueError('biomass was not saved at the desired cycle. try another.')
         im = np.zeros((self.layout.grid[0], self.layout.grid[1]))
         aux = self.biomass.loc[np.logical_and(self.biomass['cycle'] == cycle,
-                                    self.biomass['species'] == model_id), :]
+                                              self.biomass['species'] == model_id), :]
         for index, row in aux.iterrows():
-            im[int(row['x']-1), int(row['y']-1)] = row['biomass']
-        return(im)
+            # FIXME: This was a quick fix to account for the biomass being
+            # 0-indexed, but the fluxes being 1-indexed (see issue #14).
+            im[int(row['x']), int(row['y'])] = row['biomass']
+        return im
 
     def get_flux_image(self, model_id : str,
                        reaction_id : str, cycle : int) -> np.array:
