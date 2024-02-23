@@ -12,4 +12,15 @@ Installation
 
 How to Install:
 ----------------------------
-pip it
+pip it:
+
+pip install cometspy
+
+Warning! The current version will work only with Pandas version 1.5.0 or higer. 
+Pandas changed the variable line_terminator to lineterminator in the 'csv' modules.
+More at: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html
+"Changed in version 1.5.0: Previously was line_terminator, changed for consistency with read_csv and the standard library ‘csv’ module."
+
+If you get an error message about line_terminator, update your pandas package. 
+
+
