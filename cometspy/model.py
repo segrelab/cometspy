@@ -628,11 +628,13 @@ class model:
         if hasattr(curr_m, 'default_bounds'):
             self.default_bounds = curr_m.default_bounds
 
-        obj = [str(x).split(':')[0]
-               for x in reaction_list
-               if x.objective_coefficient != 0][0]
-        self.objective = int(self.reactions[self.reactions.
-                                            REACTION_NAMES == obj]['ID'])
+        obj = {str(x).split(':')[0]:x.objective_coefficient 
+               for x in reaction_list 
+               if x.objective_coefficient != 0}
+        obj = {rx: -1 if coef < 0 else 1 for rx, coef in obj.items()}
+
+        self.objective = [int(self.reactions[self.reactions.
+                                             REACTION_NAMES == rx]['ID']) * coef for rx, coef in obj.items()]
 
         if hasattr(curr_m, 'comets_optimizer'):
             self.optimizer = curr_m.comets_optimizer
@@ -980,7 +982,7 @@ class model:
             f.write(r'//' + '\n')
 
             f.write('OBJECTIVE\n' +
-                    '    ' + str(self.objective) + '\n')
+                    '    ' + '    '.join([str(rx) for rx in self.objective]) + '\n')
             f.write(r'//' + '\n')
 
             f.write('METABOLITE_NAMES\n')
