@@ -4,7 +4,7 @@ from os import path
 setup(
     name='cometspy',
     packages=['cometspy'],
-    version='0.4.19',
+    version='0.4.20',
     license='GPL',
     description='The Python interface to COMETS',
     author='The COMETSPy Core Team',
