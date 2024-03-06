@@ -18,10 +18,10 @@ import numpy as np
 import platform
 
 __author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon"
-__copyright__ = "Copyright 2019, The COMETS Consortium"
+__copyright__ = "Copyright 2024, The COMETS Consortium"
 __credits__ = ["Djordje Bajic", "Jean Vila", "Jeremy Chacon"]
 __license__ = "MIT"
-__version__ = "0.4.19"
+__version__ = "0.4.20"
 __comets_compatibility__ = "2.11.1" # version of comets this was tested with (except signaling)
 __comets_compatibility_signaling__ = "2.11.1" # version signaling was tested with
 
