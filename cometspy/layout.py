@@ -111,6 +111,9 @@ class layout:
         self.region_map = None
         self.region_parameters = {}
 
+        self.models_pairs_frictions =[]
+        self.models_substrate_frictions =[]
+
         self.__local_media_flag = False
         self.__diffusion_flag = False
         self.__refresh_flag = False
@@ -119,6 +122,8 @@ class layout:
         self.__region_flag = False
         self.__ext_rxns_flag = False
         self.__periodic_media_flag = False
+        self.__models_frictions_flag = False
+        self.__models_pairs_frictions_flag = False
 
         if input_obj is None:
             print('building empty layout model\nmodels will need to be added' +
@@ -701,7 +706,7 @@ class layout:
         if len(self.barriers) > 0:
             self.__barrier_flag = True
             self.barriers = list(set(self.barriers))
-    
+
     def set_metabolite_diffusion(self, diffusion_constant : float):
         """
         sets the default diffusion constant for all metabolites
@@ -967,6 +972,44 @@ class layout:
             self.local_static[location] = {}
         self.local_static[location][met] = amount
 
+    def set_models_substrate_frictions(self, 
+                                        friction : list):
+        """
+        sets the values of the friction paremeters between the organisms and substrate
+
+        Parameters
+        ----------
+        model : int
+            the order of the model
+        location : tuple
+            the (x, y) location of the fixed metabolite amount. x, y are int
+        amount : float
+            the amount, in mmol, that is in each box at each time step
+
+
+        """
+        self.__models_frictions_flag = True
+        self.models_substrate_frictions=friction
+           
+    def set_models_pairs_frictions(self, 
+                                        pairs_frictions : list):
+        """
+        sets the values of the friction paremeters between the organisms and substrate
+
+        Parameters
+        ----------
+        model : int
+            the order of the model
+        location : tuple
+            the (x, y) location of the fixed metabolite amount. x, y are int
+        amount : float
+            the amount, in mmol, that is in each box at each time step
+
+
+        """
+        self.__models_pairs_frictions_flag = True
+        self.models_pairs_frictions=pairs_frictions
+
     def add_typical_trace_metabolites(self, amount : float=1000.0, 
                                       static : bool =True):
         """
@@ -1055,6 +1098,8 @@ class layout:
         self.__write_barrier_chunk(lyt)
         self.__write_regions_chunk(lyt)
         self.__write_periodic_media_chunk(lyt)
+        self.__write_models_frictions_chunk(lyt)
+        self.__write_models_pairs_frictions_chunk(lyt)
         lyt.write(r'  //' + '\n')
 
         self.__write_initial_pop_chunk(lyt)
@@ -1299,6 +1344,27 @@ class layout:
                       '\n')
         lyt.write(r'  //' + '\n')
         lyt.write(r'//' + '\n')
+
+    def __write_models_frictions_chunk(self, lyt):
+        """ writes the models frictions to the open
+        lyt file and adds the closing //s """
+        if self.__models_frictions_flag:
+            print('HERE')
+            lyt.write('  modelsFriction\n')
+            for i in self.models_substrate_frictions:
+                print('HERE1')
+                lyt.write('    ' + str(self.models_substrate_frictions.index(i))+ ' ' + str(i) + '\n')
+            lyt.write(r'  //' + '\n')
+
+    def __write_models_pairs_frictions_chunk(self, lyt):
+        """ writes the intermodels pairs frictions to the open
+        lyt file and adds the closing //s """
+        if self.__models_pairs_frictions_flag:
+            lyt.write('  interModelPairsFriction\n')
+            for i in range(len(self.models_pairs_frictions)):
+                for j in range(len(self.models_pairs_frictions)):
+                    lyt.write('    ' + str(i) + ' ' +str(j) + ' ' + str(self.models_pairs_frictions[i][j]) + '\n')
+            lyt.write(r'  //' + '\n')
 
     def update_models(self):
         """ updates layout properties when models are added / removed

@@ -495,6 +495,18 @@ class model:
         self.reactions.loc[self.reactions[
             'REACTION_NAMES'] == reaction, 'HILL'] = hill
 
+    def change_optimizer(self, optimizer):
+        """ changes the optimizer to a specified one. 
+        
+            Parameters
+            ----------
+            
+            optimizer : str
+                the name of the optimizer
+        
+        """
+        self.optimizer = optimizer
+
     def read_cobra_model(self, path : str, randomtag : bool = False):
         """ reads a cobra model from a file and loads it into this model 
             

@@ -17,13 +17,13 @@ import glob
 import numpy as np
 import platform
 
-__author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon"
+__author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon, Ilija Dukovski"
 __copyright__ = "Copyright 2024, The COMETS Consortium"
-__credits__ = ["Djordje Bajic", "Jean Vila", "Jeremy Chacon"]
+__credits__ = ["Djordje Bajic", "Jean Vila", "Jeremy Chacon", "Ilija Dukovski"]
 __license__ = "MIT"
-__version__ = "0.4.20"
-__comets_compatibility__ = "2.11.1" # version of comets this was tested with (except signaling)
-__comets_compatibility_signaling__ = "2.11.1" # version signaling was tested with
+__version__ = "0.5.0"
+__comets_compatibility__ = "2.12.0" # version of comets this was tested with (except signaling)
+__comets_compatibility_signaling__ = "2.12.0" # version signaling was tested with
 
 __maintainer__ = "Djordje Bajic"
 __email__ = "djordje.bajic@yale.edu"
@@ -347,6 +347,7 @@ class comets:
 
         """
         print('\nRunning COMETS simulation ...')
+        print('\nDebug Here ...')
 
         # If evolution is true, write the biomass but not the total biomass log
         if self.parameters.all_params['evolution']:
@@ -389,10 +390,10 @@ class comets:
                      shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
 
         self.run_output, self.run_errors = p.communicate()
-        self.run_output = self.run_output.decode()
+        self.run_output = self.run_output.decode('ascii','ignore')
 
         if self.run_errors is not None:
-            self.run_errors = self.run_errors.decode()
+            self.run_errors = self.run_errors.decode('ascii','ignore')
         else:
             self.run_errors = "STDERR empty."
 
