@@ -1,13 +1,14 @@
 Metadata-Version: 2.1
 Name: cometspy
-Version: 0.4.20
+Version: 0.5.0
 Summary: The Python interface to COMETS
 Home-page: https://github.com/segrelab/cometspy
-Download-URL: https://github.com/segrelab/cometspy/archive/v0.4.16.tar.gz
+Download-URL: https://github.com/segrelab/cometspy/archive/v0.5.0.tar.gz
 Author: The COMETSPy Core Team
 Author-email: djordje.bajic@yale.edu
 License: GPL
 Keywords: metabolism,dynamic,flux,balance,analysis,spatial,evolution
+Platform: UNKNOWN
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: MIT License
@@ -15,6 +16,6 @@ Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 License-File: LICENSE
-Requires-Dist: numpy
-Requires-Dist: cobra
-Requires-Dist: pandas>=1.0.0
+
+UNKNOWN
+

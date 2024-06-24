@@ -117,10 +117,6 @@ class model:
         self.optimizer = 'GUROBI'
         self.obj_style = 'MAXIMIZE_OBJECTIVE_FLUX'
 
-        self.multispecies_convmodel_flag = False
-
-
-
         if model is not None:
             if isinstance(model, cobra.Model):
                 self.load_cobra_model(model, randomtag)
@@ -343,21 +339,6 @@ class model:
                                       'elasticModulus': elasticModulus,
                                       'frictionConstant': frictionConstant,
                                       'convDiffConstant': convDiffConstant}
-        
-    def add_multspecies_convmodel_parameters(self, pressureKappa : float, pressureExponent : float, packBiomass : float, maxPressure : float):
-        if not isinstance(pressureKappa, float):
-            raise ValueError('pressureKappa must be a float')
-        if not isinstance(pressureExponent, float):
-            raise ValueError('pressureExponent must be a float')
-        if not isinstance(packBiomass, float):
-            raise ValueError('packBiomass must be a float')
-        if not isinstance(maxPressure, float):
-            raise ValueError('maxPressure must be a float')
-        self.multispecies_convmodel_flag = True
-        self.multimodel_parameters = {'pressureKappa': pressureKappa,
-                                      'pressureExponent': pressureExponent,
-                                      'packBiomass': packBiomass,
-                                      'maxPressure': maxPressure}
 
     def add_noise_variance_parameter(self, noiseVariance : float):
         """ sets the noise variance parameter 
@@ -1091,11 +1072,6 @@ class model:
 
             if self.convection_flag:
                 for key, value in self.convection_parameters.items():
-                    f.write(key + ' ' + str(value) + '\n')
-                    f.write(r'//' + '\n')
-            
-            if self.multispecies_convmodel_flag:
-                for key, value in self.multimodel_parameters.items():
                     f.write(key + ' ' + str(value) + '\n')
                     f.write(r'//' + '\n')
 
