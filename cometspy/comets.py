@@ -21,7 +21,7 @@ __author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon, Ilija Dukovski"
 __copyright__ = "Copyright 2024, The COMETS Consortium"
 __credits__ = ["Djordje Bajic", "Jean Vila", "Jeremy Chacon", "Ilija Dukovski"]
 __license__ = "MIT"
-__version__ = "0.5.1"
+__version__ = "0.5.2"
 __comets_compatibility__ = "2.12.2" # version of comets this was tested with (except signaling)
 __comets_compatibility_signaling__ = "2.12.2" # version signaling was tested with
 
