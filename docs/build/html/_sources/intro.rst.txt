@@ -1,48 +1,3 @@
-.. COMETSpy documentation master file, written by Helen Scott, last
-   updated on 2023-08-21.
-   You can adapt this file completely to your liking, but it should at
-   least contain the root `toctree` directive.
-
-.. The toctree directive controls what links are in the "Navigation" bar
-   at the top of each page. The "maxdepth" argument determines how many
-   levels deep the links are shown. The "caption" argument determines the
-   title of the "Navigation" bar.
-
-.. toctree::
-   :caption: Package Documentation
-   :maxdepth: 2
-   :hidden:
-
-   intro
-   installation
-   capabilities
-
-.. toctree::
-   :caption: Tutorials
-   :maxdepth: 2
-   :hidden:
-
-   getting_started
-   test_tube
-   competition_assay
-   citrate
-   chemostat
-   evolution
-   circular_colony
-   branching_colony
-   demographic_noise_two_strains
-   petri_dish
-   soil
-   
-.. toctree::
-   :caption: API
-   :maxdepth: 2
-   :hidden:
-   
-   cometspy
-
-
-
 Introduction
 ============
 
@@ -54,7 +9,7 @@ stoichiometric modeling of the genome-scale metabolic network of
 individual microbial species (using dynamic flux balance analysis), and
 on a discrete approximation of convection-diffusion equations.
 
-.. Images from COMETS imulations here, i.e. colony morpologies
+.. Images from COMETS simulations here, i.e. colony morpologies
 .. image:: img/comets_results.png
   :width: 800
   :alt: Results from COMETS simulations
