@@ -15,4 +15,4 @@ sphinxcontrib-jsmath
 sphinxcontrib-qthelp
 sphinxcontrib-serializinghtml
 linkify
-
+linkify-it-py
