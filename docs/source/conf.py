@@ -7,7 +7,7 @@
 # So that you can import cometspy from the docs/source directory
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../cometspy'))
+sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -53,7 +53,7 @@ exclude_patterns = []
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
-html_logo = 'cometspy_logo_white_bkgd.png'
+html_logo = 'img/cometspy_logo_white_bkgd.png'
 html_theme_options = {
     'logo_only': True,
     'display_version': True,

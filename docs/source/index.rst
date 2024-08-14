@@ -39,7 +39,7 @@
    :maxdepth: 2
    :hidden:
    
-   cometspy
+   modules
 
 
 
