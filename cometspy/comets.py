@@ -89,6 +89,8 @@ class comets:
         generated object containing total biomass from simulation
     biomass : pandas.DataFrame
         generated object containing spatially-explicit biomass from sim
+    velocity : pandas.DataFrame
+        generated object containing spatially-explicit velocity from sim
     specific_media : pandas.DataFrame
         generated object containing information on selected media from sim
     media : pandas.Dataframe
@@ -163,6 +165,9 @@ class comets:
                                   "fluxlog" + '_' + hex(id(self)))
         self.parameters.set_param("MediaLogName",
                                   "medialog" + '_' + hex(id(self)))
+        self.parameters.set_param("velocityMultiConvLogName",
+                                  "velocitymulticonvlog" + '_' + hex(id(self)))
+
 
     def __build_default_classpath_pieces(self):
         """
@@ -468,6 +473,24 @@ class comets:
             if delete_files:
                 os.remove(self.working_dir + self.parameters.all_params['BiomassLogName'])
 
+        # Read spatial velocity log
+        if self.parameters.all_params['writeVelocityMultiConvLog']:
+            self.velocity = pd.read_csv(self.working_dir + self.parameters.all_params[
+                'velocityMultiConvLogName'], header=None, delimiter=r'\s+', names=['cycle', 'species', 'x', 'y',
+                                                                            'velocityX','velocityY'])
+            # deal with commas-as-decimals
+            #if isinstance(self.velocity.loc[0,"velocity"], str):
+            #    self.velocity = pd.read_csv(self.working_dir + self.parameters.all_params[
+            #    'velocityMultiConvLogName'], header=None,
+            #        decimal = ",",
+            #        delimiter=r'\s+', names=['cycle', 'x', 'y','species', 'velocityX','velocityY'])
+
+            # cut off extension added by toolbox
+            self.velocity['species'] = [sp[:-4] if '.cmd' in sp else sp for sp in self.velocity.species]
+
+            if delete_files:
+                os.remove(self.working_dir + self.parameters.all_params['velocityMultiConvLogName'])
+
         # Read evolution-related logs
         if 'evolution' in list(self.parameters.all_params.keys()):
             if self.parameters.all_params['evolution']:
@@ -660,7 +683,7 @@ class comets:
         if not self.parameters.all_params['writeBiomassLog']:
             raise ValueError("biomass log was not recorded during simulation")
         if model_id not in list(np.unique(self.biomass['species'])):
-            raise NameError("model " + model.id + " is not one of the model ids")
+            raise NameError("model " + model_id + " is not one of the model ids")
         if cycle not in list(np.unique(self.biomass['cycle'])):
             raise ValueError('biomass was not saved at the desired cycle. try another.')
         im = np.zeros((self.layout.grid[0], self.layout.grid[1]))

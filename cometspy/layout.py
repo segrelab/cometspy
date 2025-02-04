@@ -1349,11 +1349,9 @@ class layout:
         """ writes the models frictions to the open
         lyt file and adds the closing //s """
         if self.__models_frictions_flag:
-            print('HERE')
             lyt.write('  modelsFriction\n')
-            for i in self.models_substrate_frictions:
-                print('HERE1')
-                lyt.write('    ' + str(self.models_substrate_frictions.index(i))+ ' ' + str(i) + '\n')
+            for i in range(len(self.models_substrate_frictions)):
+                lyt.write('    ' + str(i)+' ' +str(self.models_substrate_frictions[i]) + '\n')
             lyt.write(r'  //' + '\n')
 
     def __write_models_pairs_frictions_chunk(self, lyt):
