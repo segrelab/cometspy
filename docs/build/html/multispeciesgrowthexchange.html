@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modeling growth and metabolic exchange of multispecies community in mixed batch culture &mdash; COMETSpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/cometspy_logo_white_bkgd.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Modeling growth and metabolic exchange of multispecies community in mixed batch culture</a><ul>
+<li><a class="reference internal" href="#import-the-models-and-medium-conditions-and-initialize-the-comets-layout">Import the models and medium conditions, and initialize the COMETS layout</a></li>
+<li><a class="reference internal" href="#set-the-comets-parameters-and-run-the-simulation">Set the COMETS parameters and run the simulation</a></li>
+<li><a class="reference internal" href="#parse-the-comets-output-logs-and-visualize-data">Parse the COMETS output logs and visualize data</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">COMETSpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Modeling growth and metabolic exchange of multispecies community in mixed batch culture</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/multispeciesgrowthexchange.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modeling-growth-and-metabolic-exchange-of-multispecies-community-in-mixed-batch-culture">
+<h1>Modeling growth and metabolic exchange of multispecies community in mixed batch culture<a class="headerlink" href="#modeling-growth-and-metabolic-exchange-of-multispecies-community-in-mixed-batch-culture" title="Link to this heading"></a></h1>
+<p>This protocol demonstrates the capacity of COMETS to simulate multispecies community dynamics and metabolic exchange using the MATLAB toolbox.</p>
+<p>The metabolic models used in this simulation modelsCommunity.mat and the growth medium mediumCommunity.mat can be downloaded from the <a class="reference external" href="https://github.com/segrelab/COMETS_Protocols/tree/master/COMETS_protocols/COMETS_example_MultispeciesGrowthExchange">COMETS GitHub repository</a>. In this example, the growth phenotypes of <em>Bacillus subtilis</em> [1], <em>Escherichia coli</em> [2], <em>Klebsiella pneumoniae</em> [3], <em>Lactococcus lactis</em> [4], <em>Methylobacterium extorquens</em> [5], <em>Pseudomonas aeruginosa</em> [6], <em>Porphyromonas gingivalis</em> [7], <em>Rhodobacter sphaeroides</em> [8], <em>Shigella boydii</em> [9], <em>Saccharomyces cerevisiae</em> [10], <em>Salmonella enterica</em> [11], <em>Shewanella oneidensis</em> [12], <em>Synechocystis</em> sp. PCC6803 [13], and <em>Zymomonas mobilis</em> [14] are simulated. These organisms, whose growth and metabolic exchange phenotypes were previously analyzed in silico [15], were selected to represent a broad cross-section of nutrient utilization capabilities. Here, the growth profile of a multispecies combination of these organisms in the presence of D-glucose and L-alanine over 12 hours will be analyzed.</p>
+<section id="import-the-models-and-medium-conditions-and-initialize-the-comets-layout">
+<h2>Import the models and medium conditions, and initialize the COMETS layout<a class="headerlink" href="#import-the-models-and-medium-conditions-and-initialize-the-comets-layout" title="Link to this heading"></a></h2>
+<p>Unzip the ‘modelsCommunity.mat.zip’ file. If this is unzipped as a directory, it will be necessary to move the ‘modelsCommunity.mat’ file back into the top directory.
+In MATLAB, import the metabolic model MATLAB structure.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nb">load</span><span class="w"> </span><span class="n">modelsCommunity</span><span class="p">.</span><span class="n">mat</span>
+</pre></div>
+</div>
+<p>This will result in a structure models being loaded into the workspace.</p>
+<p>Initialize a COMETS layout object using the CometsLayout class and add the models using the addModel function.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nb">layout</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">CometsLayout</span><span class="p">();</span>
+<span class="n">modelNames</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">fieldnames</span><span class="p">(</span><span class="n">models</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">)</span>
+<span class="nb">layout</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">addModel</span><span class="p">(</span><span class="nb">layout</span><span class="p">,</span><span class="n">models</span><span class="p">.(</span><span class="n">modelNames</span><span class="p">{</span><span class="n">m</span><span class="p">}));</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>This step results in a CometsLayout object layout, with the attributes below, being added to the workspace.
+layout =</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">CometsLayout</span><span class="w"> </span><span class="s">with</span><span class="w"> </span><span class="s">properties:</span>
+
+<span class="w">                  </span><span class="n">models</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span>×<span class="mi">14</span><span class="w"> </span><span class="nb">cell</span><span class="p">}</span>
+<span class="w">                    </span><span class="n">xdim</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">                    </span><span class="n">ydim</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">                    </span><span class="n">mets</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="mi">725</span><span class="w"> </span><span class="nb">cell</span><span class="p">}</span>
+<span class="w">               </span><span class="n">media_amt</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">725</span>×<span class="mi">1</span><span class="w"> </span><span class="nb">double</span><span class="p">]</span>
+<span class="w">                  </span><span class="n">params</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span>×<span class="mi">1</span><span class="w"> </span><span class="n">CometsParams</span><span class="p">]</span>
+<span class="w">     </span><span class="n">diffusion_constants</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">725</span>×<span class="mi">2</span><span class="w"> </span><span class="nb">double</span><span class="p">]</span>
+<span class="w">    </span><span class="n">global_media_refresh</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">725</span>×<span class="mi">1</span><span class="w"> </span><span class="nb">double</span><span class="p">]</span>
+<span class="w">           </span><span class="n">media_refresh</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">725</span>×<span class="mi">1</span><span class="w"> </span><span class="nb">double</span><span class="p">]</span>
+<span class="w">     </span><span class="n">global_static_media</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">725</span>×<span class="mi">2</span><span class="w"> </span><span class="nb">double</span><span class="p">]</span>
+<span class="w">            </span><span class="n">static_media</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">725</span>×<span class="mi">1</span><span class="w"> </span><span class="nb">double</span><span class="p">]</span>
+<span class="w">           </span><span class="n">initial_media</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">                 </span><span class="n">barrier</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">             </span><span class="n">initial_pop</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">           </span><span class="n">external_rxns</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span>×<span class="mi">0</span><span class="w"> </span><span class="nb">table</span><span class="p">]</span>
+<span class="w">       </span><span class="n">external_rxn_mets</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span>×<span class="mi">0</span><span class="w"> </span><span class="nb">table</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Here, the object property models is an array with the individual metabolic models.</p>
+<p>Load the medium file.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nb">load</span><span class="w"> </span><span class="n">mediumCommunity</span><span class="p">.</span><span class="n">mat</span>
+</pre></div>
+</div>
+<p>The mediumCommunity file contains four objects that will be added to the workspace:</p>
+<p>minMed: A cell array of 32 molecules (in BIGG format) that are contained in the minimal medium to be added at nonlimiting concentrations:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">minMed</span><span class="w"> </span><span class="p">=</span>
+
+<span class="w">  </span><span class="mi">32</span>×<span class="mi">1</span><span class="w"> </span><span class="nb">cell</span><span class="w"> </span><span class="n">array</span>
+
+<span class="w">    </span><span class="s">&#39;4abz[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;btn[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;ca2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;cbl1[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;chol[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;cl[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;cobalt2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;cu2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;fe2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;fe3[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;fol[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;h2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;h2o[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;k[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;lipoate[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;mg2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;mn2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;mobd[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;na1[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;ncam[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;nh4[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;ni2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;no3[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;o2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;pi[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;pnto-R[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;pydx[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;ribflv[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;slnt[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;so4[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;thm[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;zn2[e]&#39;</span>
+</pre></div>
+</div>
+<p>Nutrients: A cell array of five carbon sources (in BIGG format) that will be added at limiting concentrations:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">nutrients</span><span class="w"> </span><span class="p">=</span>
+
+<span class="w">  </span><span class="mi">1</span>×<span class="mi">2</span><span class="w"> </span><span class="nb">cell</span><span class="w"> </span><span class="n">array</span>
+
+<span class="w">    </span><span class="s">&#39;glc-D[e]&#39;</span><span class="w">    </span><span class="s">&#39;ala-L[e]&#39;</span>
+</pre></div>
+</div>
+<p>nutrientNames: A cell array containing human-readable names of the five carbon sources:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">nutrientNames</span><span class="w"> </span><span class="p">=</span>
+
+<span class="w">  </span><span class="mi">1</span>×<span class="mi">5</span><span class="w"> </span><span class="nb">cell</span><span class="w"> </span><span class="n">array</span>
+
+<span class="w">    </span><span class="s">&#39;D-glucose&#39;</span><span class="w">    </span>‘<span class="n">L</span><span class="o">-</span><span class="n">alanine</span>’
+</pre></div>
+</div>
+<p>numCarbons: A numerical vector containing the number of carbon atoms contained in each of the five carbon sources:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">numCarbons</span><span class="w"> </span><span class="p">=</span>
+
+<span class="w">     </span><span class="mi">6</span><span class="w">     </span><span class="mi">3</span>
+</pre></div>
+</div>
+<p>Add the minimal media components at nonlimiting concentrations using the setMedia function.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">mm</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">minMed</span><span class="p">)</span>
+<span class="w">       </span><span class="nb">layout</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">setMedia</span><span class="p">(</span><span class="n">minMed</span><span class="p">{</span><span class="n">mm</span><span class="p">},</span><span class="mi">1000</span><span class="p">);</span>
+<span class="w">   </span><span class="k">end</span>
+</pre></div>
+</div>
+<p>The quantity 1000 is used to denote 1000mmol, an amount of molecule that is effectively non limiting for this simulation. If a continuous culture environment is desired, the setStaticMedia function can be used within the for loop to fix the amount of each minimal medium molecule at 1000mmol.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nb">layout</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">setStaticMedia</span><span class="p">(</span><span class="nb">layout</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">minMed</span><span class="p">{</span><span class="n">mm</span><span class="p">},</span><span class="mi">1000</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Add the carbon sources at limiting amounts (5e-4 mmol) using the setMedia function.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">nutrients</span><span class="p">)</span>
+<span class="w">       </span><span class="nb">layout</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">setMedia</span><span class="p">(</span><span class="n">nutrients</span><span class="p">{</span><span class="n">n</span><span class="p">},</span><span class="mf">5e-4</span><span class="p">);</span>
+<span class="w">   </span><span class="k">end</span>
+</pre></div>
+</div>
+<p>Alternatively, each nutrient can be added at equal carbon ratios within the for loop:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nb">layout</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">setMedia</span><span class="p">(</span><span class="n">nutrients</span><span class="p">{</span><span class="n">n</span><span class="p">},</span><span class="mf">5e-4</span><span class="o">/</span><span class="n">numCarbons</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="nb">length</span><span class="p">(</span><span class="n">nutrients</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>If a continuous culture environment is desired, the global_media_refresh layout parameter can be used within the for loop in addition to the setMedia function to refresh the amount of each carbon source.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">global_media_refresh</span><span class="p">(</span><span class="nb">find</span><span class="p">(</span><span class="nb">ismember</span><span class="p">(</span><span class="nb">layout</span><span class="p">.</span><span class="n">mets</span><span class="p">,</span><span class="n">nutrients</span><span class="p">(</span><span class="n">n</span><span class="p">))))</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">50</span><span class="o">/</span><span class="p">(</span><span class="mi">12</span><span class="o">/</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The global_media_refresh  parameter defines the amount of additional nutrient to be added at each time step, analogous to a constant influx of fresh nutrients in a continuous culture device.</p>
+<p>Define the initial organism populations.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">initial_pop</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">ones</span><span class="p">(</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="o">.*</span><span class="mf">1.e-7</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Here, each organism is added to the environment at an abundance of 1.0·10-7  grams dry weight. By default, the layout is initialized with dimensions of 1 x 1 cells to simulate a well-mixed environment.</p>
+</section>
+<section id="set-the-comets-parameters-and-run-the-simulation">
+<h2>Set the COMETS parameters and run the simulation<a class="headerlink" href="#set-the-comets-parameters-and-run-the-simulation" title="Link to this heading"></a></h2>
+<p>Define the COMETS working directory, log file names, and simulation parameters.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">cometsDirectory</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;CometsRunDir&#39;</span><span class="p">;</span>
+
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">writeBiomassLog</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">biomassLogRate</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">biomassLogName</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;biomassLog&#39;</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">biomassLogFormat</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;MATLAB&#39;</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">writeMediaLog</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">mediaLogRate</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">mediaLogName</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;mediaLog&#39;</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">mediaLogFormat</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;MATLAB&#39;</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">writeFluxLog</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">fluxLogRate</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">fluxLogName</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;fluxLog.m&#39;</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">fluxLogFormat</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;MATLAB&#39;</span><span class="p">;</span>
+
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">maxSpaceBiomass</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mf">1e3</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">timeStep</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mf">0.01</span><span class="p">;</span><span class="w">  </span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">maxCycles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1200</span><span class="p">;</span>
+<span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">deathRate</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mf">0.1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Here, the simulation records the biomass of each organism, the amounts of medium components, and the fluxes of all organisms at each time step. The time step is set to 0.01 1/h and the maximum number of cycles is set to 2400 for a total simulation time of 24 hours. The death rate is set to a fixed value of 0.1, under which 10% of the population of each organism will be eliminated from the simulation at each time step. This death rate can also be set to approximate an organism dilution rate in a continuous culture environment.</p>
+<p>Prepare the metabolic models for the COMETS simulation. Here, the lower bounds of certain reactions within the models are being altered in order to allow uptake of medium components. Specifically, exchange reactions associated with uptake of the minimal medium components are being unconstrained (lower bound set to -1000), while the exchange reactions associated with uptake of the limiting carbon sources are being opened (lower bound set to -10). The reactions to be unconstrained are located on a model-by-model basis by first identifying the index of a specific external metabolite and matching the appropriate exchange reaction to it via the S matrix.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">)</span>
+<span class="w">    </span><span class="n">modelCurr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">models</span><span class="p">.(</span><span class="n">modelNames</span><span class="p">{</span><span class="n">m</span><span class="p">});</span>
+<span class="w">    </span><span class="n">minMedMets</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">(</span><span class="nb">ismember</span><span class="p">(</span><span class="n">modelCurr</span><span class="p">.</span><span class="n">mets</span><span class="p">,</span><span class="n">minMed</span><span class="p">));</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nb">i</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">minMedMets</span><span class="p">)</span><span class="w"> </span>
+<span class="n">modelCurr</span><span class="p">.</span><span class="n">lb</span><span class="p">(</span><span class="nb">intersect</span><span class="p">(</span><span class="nb">find</span><span class="p">(</span><span class="n">findExcRxns</span><span class="p">(</span><span class="n">modelCurr</span><span class="p">)),</span><span class="nb">find</span><span class="p">(</span><span class="n">modelCurr</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="n">minMedMets</span><span class="p">(</span><span class="nb">i</span><span class="p">),:))))</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1000</span><span class="p">;</span><span class="w"> </span><span class="c">% Allow unlimited uptake of nonlimiting nutrients</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="n">limitingMets</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">(</span><span class="nb">ismember</span><span class="p">(</span><span class="n">modelCurr</span><span class="p">.</span><span class="n">mets</span><span class="p">,</span><span class="n">nutrients</span><span class="p">));</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nb">i</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">limitingMets</span><span class="p">)</span><span class="w"> </span>
+<span class="n">modelCurr</span><span class="p">.</span><span class="n">lb</span><span class="p">(</span><span class="nb">intersect</span><span class="p">(</span><span class="nb">find</span><span class="p">(</span><span class="n">findExcRxns</span><span class="p">(</span><span class="n">modelCurr</span><span class="p">)),</span><span class="nb">find</span><span class="p">(</span><span class="n">modelCurr</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="n">limitingMets</span><span class="p">(</span><span class="nb">i</span><span class="p">),:))))</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="o">-</span><span class="mi">10</span><span class="p">;</span><span class="w"> </span><span class="c">% Allow limited uptake of limiting nutrients</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="n">models</span><span class="p">.(</span><span class="n">modelNames</span><span class="p">{</span><span class="n">m</span><span class="p">})</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">modelCurr</span><span class="p">;</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>Run the COMETS simulation.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">runComets</span><span class="p">(</span><span class="nb">layout</span><span class="p">,</span><span class="n">cometsDirectory</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="parse-the-comets-output-logs-and-visualize-data">
+<h2>Parse the COMETS output logs and visualize data<a class="headerlink" href="#parse-the-comets-output-logs-and-visualize-data" title="Link to this heading"></a></h2>
+<p>Parse the media log using the parseBiomassLog function and format the log into a matrix.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">biomassLogRaw</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">parseBiomassLog</span><span class="p">([</span><span class="n">cometsDirectory</span><span class="w"> </span><span class="s">&#39;/&#39;</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">biomassLogName</span><span class="p">]);</span>
+<span class="n">biomassLog</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">zeros</span><span class="p">(</span><span class="nb">size</span><span class="p">(</span><span class="n">biomassLogRaw</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">),</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">));</span>
+<span class="k">for</span><span class="w"> </span><span class="nb">i</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">)</span>
+<span class="w">    </span><span class="n">biomassLog</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">biomassLogRaw</span><span class="p">.</span><span class="n">biomass</span><span class="p">(</span><span class="nb">i</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">):</span><span class="k">end</span><span class="p">);</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>Format the names of the organisms for plotting and plot the biomass over time.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">modelNamesFormatted</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">cell</span><span class="p">(</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">),</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">)</span>
+<span class="w">    </span><span class="n">s</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">split</span><span class="p">(</span><span class="n">modelNames</span><span class="p">{</span><span class="n">m</span><span class="p">},</span><span class="s">&#39;_&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">modelNamesFormatted</span><span class="p">{</span><span class="n">m</span><span class="p">}</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="n">s</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="w"> </span><span class="s">&#39;. &#39;</span><span class="w"> </span><span class="n">s</span><span class="p">{</span><span class="mi">2</span><span class="p">}];</span>
+<span class="k">end</span>
+<span class="w"> </span>
+<span class="nb">close</span><span class="w"> </span><span class="nb">all</span>
+<span class="nb">figure</span>
+<span class="n">plotColors</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">parula</span><span class="p">(</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">));</span>
+
+<span class="k">for</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">modelNames</span><span class="p">)</span>
+<span class="nb">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">:</span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">maxCycles</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">timeStep</span><span class="p">,</span><span class="n">biomassLog</span><span class="p">(:,</span><span class="n">m</span><span class="p">),</span><span class="s">&#39;LineWidth&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span>’<span class="n">Color</span>’<span class="p">,</span><span class="n">plotColors</span><span class="p">(</span><span class="n">m</span><span class="p">,:))</span>
+<span class="k">end</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="nb">gca</span><span class="p">,</span><span class="s">&#39;FontSize&#39;</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span>
+<span class="nb">ylabel</span><span class="p">(</span><span class="s">&#39;Nutrient Amount (mmol)&#39;</span><span class="p">)</span>
+<span class="nb">xlabel</span><span class="p">(</span><span class="s">&#39;Time (h)&#39;</span><span class="p">)</span>
+<span class="nb">legend</span><span class="p">(</span><span class="n">modelNamesFormatted</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The results of this action are shown in Figure 1a below.</p>
+<p>Parse the media log using the parseMediaLog function and format the log into a matrix.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">allMetsFromModels</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">mets</span><span class="p">;</span>
+<span class="n">COMETSCycles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">maxCycles</span><span class="p">;</span>
+<span class="n">mediaLogMat</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">zeros</span><span class="p">(</span><span class="nb">length</span><span class="p">(</span><span class="n">allMetsFromModels</span><span class="p">),</span><span class="n">COMETSCycles</span><span class="p">);</span>
+
+<span class="n">mediaLogRaw</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">parseMediaLog</span><span class="p">([</span><span class="n">cometsDirectory</span><span class="w"> </span><span class="s">&#39;/&#39;</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">mediaLogName</span><span class="p">]);</span>
+<span class="n">mediaLogMetOrder</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">zeros</span><span class="p">(</span><span class="nb">length</span><span class="p">(</span><span class="n">allMetsFromModels</span><span class="p">),</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c">% Re-order the medium components to match the list in layout.mets</span>
+<span class="k">for</span><span class="w"> </span><span class="nb">i</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">allMetsFromModels</span><span class="p">)</span>
+<span class="w">        </span><span class="n">mediaLogMetOrder</span><span class="p">(</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">(</span><span class="nb">ismember</span><span class="p">(</span><span class="n">mediaLogRaw</span><span class="p">.</span><span class="n">metname</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">allMetsFromModels</span><span class="p">)),</span><span class="n">allMetsFromModels</span><span class="p">(</span><span class="nb">i</span><span class="p">)));</span>
+<span class="k">end</span>
+
+<span class="k">for</span><span class="w"> </span><span class="nb">i</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="n">COMETSCycles</span>
+<span class="n">currentMedia</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">mediaLogRaw</span><span class="p">.</span><span class="n">amt</span><span class="p">(</span><span class="nb">find</span><span class="p">(</span><span class="n">mediaLogRaw</span><span class="p">.</span><span class="n">t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">i</span><span class="p">));</span>
+<span class="n">mediaLogMat</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">currentMedia</span><span class="p">(</span><span class="n">mediaLogMetOrder</span><span class="p">);</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>The resulting mediaLogMat matrix has dimensions M x N, where M is the number of metabolites in the COMETS simulation and N is the number of time steps.</p>
+<p>Plot the nutrient abundances.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="c">% Make a list of indices from allMetsFromModels ordered according to the elements in nutrients</span>
+<span class="n">nutrientsToPlot</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">zeros</span><span class="p">(</span><span class="nb">length</span><span class="p">(</span><span class="n">nutrients</span><span class="p">),</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="nb">i</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">nutrients</span><span class="p">)</span>
+<span class="w">    </span><span class="n">nutrientsToPlot</span><span class="p">(</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">(</span><span class="nb">ismember</span><span class="p">(</span><span class="n">allMetsFromModels</span><span class="p">,</span><span class="n">nutrients</span><span class="p">{</span><span class="nb">i</span><span class="p">}));</span>
+<span class="k">end</span>
+
+<span class="nb">figure</span>
+<span class="nb">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">:</span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">maxCycles</span><span class="p">]</span><span class="o">*</span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">timeStep</span><span class="p">,</span><span class="n">mediaLogMat</span><span class="p">(</span><span class="n">nutrientsToPlot</span><span class="p">,:)</span><span class="o">&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;LineWidth&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="nb">gca</span><span class="p">,</span><span class="s">&#39;FontSize&#39;</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span>
+<span class="nb">ylabel</span><span class="p">(</span><span class="s">&#39;Nutrient Amount (mmol)&#39;</span><span class="p">)</span>
+<span class="nb">xlabel</span><span class="p">(</span><span class="s">&#39;Time (h)&#39;</span><span class="p">)</span>
+<span class="nb">legend</span><span class="p">(</span><span class="n">nutrientNames</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This action allows visualization of the nutrient abundances, shown in Figure 1b below.</p>
+<p>These results, along with directly examining the nutrient abundances in mediaLogMat, allow us to infer that <em>M. extorquens</em> and <em>S. oneidensis</em> initially grew to high abundances on D-glucose and L-alanine, rapidly outcompeting the remaining organisms. We are also able to observe low growth of multiple other organisms, such as <em>S. boydii</em> and <em>Z. mobilis</em>, which peak upon exhausting D-glucose at hour 6. When both primary resources are exhausted between hours 6 and 7, the abundance of all organisms begins to decay.</p>
+<p>Obtain the metabolites secreted, absorbed, and exchanged by each organism using the getSecAbsExcMets function.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">secMets</span><span class="p">,</span><span class="n">absMets</span><span class="p">,</span><span class="n">excTable</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">getSecAbsExcMets</span><span class="p">([</span><span class="n">cometsDirectory</span><span class="w"> </span><span class="s">&#39;/&#39;</span><span class="w"> </span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">fluxLogName</span><span class="p">],</span><span class="n">models</span><span class="p">,</span><span class="nb">layout</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This function outputs two matrices, secMets and absMets, each having dimensions N x M where N is the number of metabolites present in the layout and M is the number of metabolic models. For any model-metabolite pair, the quantity present in secMets or absMets denotes the highest flux that the metabolite was secreted or absorbed by the corresponding organism in the entire simulation.</p>
+<p>The function also outputs a matrix excTable, which contains information about each metabolite that was exchanged in the simulation. The first column of excTable contains the index (corresponding to the order in models) of the organism that secreted a metabolite, the second column contains the index of the organism that absorbed that metabolite, and the third column contains the index (corresponding to allMetsFromModels) of the metabolite that was exchanged. Here, a truncated version of excTable is as follows:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">excTable</span><span class="w"> </span><span class="p">=</span>
+
+<span class="w">     </span><span class="mi">2</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">     </span><span class="mi">2</span><span class="w">    </span><span class="mi">12</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">     </span><span class="mi">3</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">     </span><span class="mi">3</span><span class="w">    </span><span class="mi">12</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">     </span><span class="mi">6</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">     </span><span class="mi">6</span><span class="w">    </span><span class="mi">12</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">     </span><span class="mi">9</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">     </span><span class="mi">9</span><span class="w">    </span><span class="mi">12</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">    </span><span class="mi">11</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">    </span><span class="mi">11</span><span class="w">    </span><span class="mi">12</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">    </span><span class="mi">14</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">    </span><span class="mi">14</span><span class="w">    </span><span class="mi">12</span><span class="w">    </span><span class="mi">17</span>
+<span class="w">     </span><span class="mi">6</span><span class="w">    </span><span class="mi">12</span><span class="w">    </span><span class="mi">36</span>
+<span class="w">     </span><span class="mi">1</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">65</span>
+<span class="w">     </span><span class="mi">2</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">65</span>
+<span class="w">     </span><span class="mi">3</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">65</span>
+<span class="w">     </span><span class="mi">5</span><span class="w">     </span><span class="mi">5</span><span class="w">    </span><span class="mi">65</span>
+</pre></div>
+</div>
+<p>The first line, for example, denotes that acetate (metabolite 17) is secreted by <em>E. coli</em> (organism 2) and absorbed by <em>M. extorquens</em> (organism 5).</p>
+<p>Use the secMets matrix to identify molecule secretion.</p>
+<p>Here, the source organism of each metabolite secreted during the simulation will be identified. First, a list of metabolites with nonzero secretion flux is generated.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w">  </span><span class="n">nonzeroSecMetIndices</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">secMets</span><span class="p">,</span><span class="mi">2</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>This action yields a list of indices that correspond to allMetsFromModels, which can be read using the command:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w">  </span><span class="n">allMetsFromModels</span><span class="p">(</span><span class="n">nonzeroSecMetIndices</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This yields a list of metabolites, a truncated version of which is below:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">ans</span><span class="w"> </span><span class="p">=</span>
+
+<span class="w">  </span><span class="mi">18</span>×<span class="mi">1</span><span class="w"> </span><span class="nb">cell</span><span class="w"> </span><span class="n">array</span>
+
+<span class="w">    </span><span class="s">&#39;5mtr[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;ac[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;ala-L[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;co2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;fe2[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;for[e]&#39;</span>
+<span class="w">    </span><span class="s">&#39;glyclt[e]&#39;</span>
+</pre></div>
+</div>
+<p>Molecules of particular interest can be selected and analyzed further. Here, secretion of acetate (ac[e]) and formate (for[e]) will be analyzed.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">selectSecMets</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="s">&#39;ac[e]&#39;</span><span class="p">,</span><span class="s">&#39;for[e]&#39;</span><span class="p">};</span>
+<span class="n">selectSecMetIndices</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">intersect</span><span class="p">(</span><span class="nb">find</span><span class="p">(</span><span class="nb">ismember</span><span class="p">(</span><span class="n">allMetsFromModels</span><span class="p">,</span><span class="n">selectSecMets</span><span class="p">)),</span><span class="n">nonzeroSecMetIndices</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The abundances of each of these metabolites over time can be plotted:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nb">figure</span>
+<span class="n">plotColors2</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">winter</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">selectSecMets</span><span class="p">)</span>
+<span class="nb">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">:</span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">maxCycles</span><span class="p">]</span><span class="o">*</span><span class="nb">layout</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">timeStep</span><span class="p">,</span><span class="nb">smoothdata</span><span class="p">(</span><span class="n">mediaLogMat</span><span class="p">(</span><span class="n">selectSecMetIndices</span><span class="p">(</span><span class="n">s</span><span class="p">),:)</span><span class="o">&#39;</span><span class="p">),</span><span class="s">&#39;LineWidth&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="s">&#39;Color&#39;</span><span class="p">,</span><span class="n">plotColors2</span><span class="p">(</span><span class="n">s</span><span class="p">,:))</span>
+<span class="w">    </span><span class="nb">hold</span><span class="w"> </span><span class="n">on</span>
+<span class="k">end</span>
+<span class="nb">set</span><span class="p">(</span><span class="nb">gca</span><span class="p">,</span><span class="s">&#39;FontSize&#39;</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span>
+<span class="nb">ylabel</span><span class="p">(</span><span class="s">&#39;Metabolite Amount (mmol)&#39;</span><span class="p">)</span>
+<span class="nb">xlabel</span><span class="p">(</span><span class="s">&#39;Time (h)&#39;</span><span class="p">)</span>
+<span class="nb">legend</span><span class="p">({</span><span class="s">&#39;Acetate&#39;</span><span class="p">,</span><span class="s">&#39;Formate&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>This action yields Figure 1c below, showing rapid accumulation and subsequent consumption of acetate and formate.</p>
+<p><img alt="Figure 1" src="https://github.com/segrelab/comets-manual/blob/master/docs/img/multispecies_1.png" />
+<strong>Figure 1. Growth and metabolic exchange of 14-species microbial community. a)</strong> Biomass production of all 14 organisms over time. <strong>b)</strong> Consumption of limiting carbon sources over time. <strong>c)</strong> Secretion and consumption of metabolic byproducts over time.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<p>[1] Henry, C. S., Zinner, J. F., Cohoon, M. P. &amp; Stevens, R. L. iBsu1103: a new genome-scale metabolic model of Bacillus subtilis based on SEED annotations. Genome Biol. 10, R69 (2009).</p>
+<p>[2] Orth, J. D. et al. A comprehensive genome-scale reconstruction of Escherichia coli metabolism–2011. Mol. Syst. Biol. 7, 535 (2011).</p>
+<p>[3] Liao, Y.-C. et al. An experimentally validated genome-scale metabolic reconstruction of Klebsiella pneumoniae MGH 78578, iYL1228. J. Bacteriol. 193, 1710–1717 (2011).</p>
+<p>[4] Flahaut, N. A. L. et al. Genome-scale metabolic model for Lactococcus lactis MG1363 and its application to the analysis of flavor formation. Appl. Microbiol. Biotechnol. 97, 8729–8739 (2013).</p>
+<p>[5] Peyraud, R. et al. Genome-scale reconstruction and system level investigation of the metabolic network of Methylobacterium extorquens AM1. BMC Syst. Biol. 5, 189 (2011).</p>
+<p>[6] Oberhardt, M. A., Puchałka, J., Fryer, K. E., Martins dos Santos, V. A. P. &amp; Papin, J. A. Genome-scale metabolic network analysis of the opportunistic pathogen Pseudomonas aeruginosa PAO1. J. Bacteriol. 190, 2790–2803 (2008).</p>
+<p>[7] Mazumdar, V., Snitkin, E. S., Amar, S. &amp; Segrè, D. Metabolic network model of a human oral pathogen. J. Bacteriol. 191, 74–90 (2009).</p>
+<p>[8] Imam, S. et al. iRsp1095: a genome-scale reconstruction of the Rhodobacter sphaeroides metabolic network. BMC Syst. Biol. 5, 116 (2011).</p>
+<p>[9] Monk, J. M. et al. Genome-scale metabolic reconstructions of multiple Escherichia coli strains highlight strain-specific adaptations to nutritional environments. Proc. Natl. Acad. Sci. U. S. A. 110, 20338–20343 (2013).</p>
+<p>[10] Zomorrodi, A. R. &amp; Maranas, C. D. Improving the iMM904 S. cerevisiae metabolic model using essentiality and synthetic lethality data. BMC Syst. Biol. 4, 178 (2010).</p>
+<p>[11] Thiele, I. et al. A community effort towards a knowledge-base and mathematical model of the human pathogen Salmonella Typhimurium LT2. BMC Syst. Biol. 5, 8 (2011).</p>
+<p>[12] Pinchuk, G. E. et al. Constraint-based model of Shewanella oneidensis MR-1 metabolism: a tool for data analysis and hypothesis generation. PLoS Comput. Biol. 6, e1000822 (2010).</p>
+<p>[13] Nogales, J., Gudmundsson, S., Knight, E. M., Palsson, B. O. &amp; Thiele, I. Detailing the optimality of photosynthesis in cyanobacteria through systems biology analysis. Proc. Natl. Acad. Sci. U. S. A. 109, 2678–2683 (2012).</p>
+<p>[14] Lee, K. Y., Park, J. M., Kim, T. Y., Yun, H. &amp; Lee, S. Y. The genome-scale metabolic network analysis of Zymomonas mobilis ZM4 explains physiological features and suggests ethanol and succinic acid production strategies. Microb. Cell Fact. 9, 94 (2010).</p>
+<p>[15] Pacheco, A. R., Moel, M. &amp; Segrè, D. Costless metabolic secretions as drivers of interspecies interactions in microbial ecosystems. Nat. Commun. 10, 103 (2019).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, The Segre Lab at Boston University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

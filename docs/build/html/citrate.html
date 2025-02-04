@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Citrate utilization in the Long Term Evolution Experiment. &mdash; COMETSpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Crossfeeding in a chemostat" href="chemostat.html" />
+    <link rel="prev" title="Two-species competition assay" href="competition_assay.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/cometspy_logo_white_bkgd.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Package Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#what-is-cometspy">What is COMETSpy?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#how-to-use-this-documentation">How to use this Documentation:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#cite-us">Cite Us:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-of-comets">Installation of COMETS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="capabilities.html">COMETS Capabilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#capabilities-in-space">Capabilities in space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#biological-capabilities">Biological capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#computational-capabilities">Computational capabilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#preparing-a-model-for-comets">Preparing a model for <code class="docutils literal notranslate"><span class="pre">COMETS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#setting-comets-simulation-parameters">Setting <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#preparing-a-comets-simulation-layout">Preparing a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#running-a-comets-simulation">Running a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#checking-simulation-output-and-possible-errors">Checking simulation output and possible errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#accessing-the-results-of-the-simulation">Accessing the results of the simulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_tube.html">Growth in a test tube</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-the-comets-python-toolbox">Loading the COMETS Python Toolbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#creating-a-test-tube">Creating a test tube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-a-model">Loading a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#setting-the-simulation-parameters">Setting the simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#running-the-simulation">Running the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#analyzing-the-results">Analyzing the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="competition_assay.html">Two-species competition assay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#load-models-and-create-a-mutant">Load models and create a mutant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#create-layout-add-models-and-set-up-media-composition">Create layout, add models and set up media composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#simulating-serial-transfers">Simulating serial transfers</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Citrate utilization in the Long Term Evolution Experiment.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemostat.html">Crossfeeding in a chemostat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evolution.html">Simulating evolution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#load-the-model">Load the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-the-layout">Set up the layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#visualize-the-results">Visualize the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="circular_colony.html">Growth of a circular colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="branching_colony.html">Growth of a branching colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demographic_noise_two_strains.html">Growth and propagation of bacterial colonies on flat surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="petri_dish.html">Simulating growth on Petri dish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soil.html">Soil-air interface</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">COMETSpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Citrate utilization in the Long Term Evolution Experiment.</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/citrate.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="citrate-utilization-in-the-long-term-evolution-experiment">
+<h1>Citrate utilization in the Long Term Evolution Experiment.<a class="headerlink" href="#citrate-utilization-in-the-long-term-evolution-experiment" title="Link to this heading"></a></h1>
+<p>We here demonstrate the use of COMETS to study the effect of specific mutations on population dynamics in the context of experimental evolution. To do this, we will use one of the most well known evolution experiments, the <em>E. coli</em> Long Term evolution experiment [cite].</p>
+<p>After ~33,000 generations, a large population expansion was observed in one of the replicates (Ara-3) of the <em>E. coli</em> long term evolution experiment (Blount et al 2008). This population expansion is associated with two key mutations that together enable the evolution of strong aerobic citrate use (Cit++ phenotype). The first mutation (occuring roughly 31,000 generations) caused the aerobic expression of the citT transporter, producing a weak citrate growth phenotype (Cit+, Blount et al 2012). A subsequent mutation (occuring roughly 33,000 generations in) caused high-level, constitutive expression of dctA, a proton-driven dicarboxylic acid transporter (Quandt et al 2014). Because these two mutations introduce known reactions into the e.coli metabolic network we can simulate them using COMETS.</p>
+<p>This example simulation uses the same models, paramaters and reaction knockouts outlined in (Bajic et al 2018).</p>
+<p>First, create the layout and simulate the DM25 medium.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="kn">import</span> <span class="nn">cobra</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">layout</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
+
+<span class="c1">#Set up media to be DM25</span>
+<span class="n">layout</span><span class="o">.</span><span class="n">add_typical_trace_metabolites</span><span class="p">()</span>
+<span class="n">layout</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s1">&#39;glc__D_e&#39;</span><span class="p">,</span> <span class="mf">0.000139</span><span class="p">)</span>
+<span class="n">layout</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s1">&#39;cit_e&#39;</span><span class="p">,</span> <span class="mf">0.0017</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>building empty layout model
+models will need to be added with layout.add_model()
+Warning: The added metabolite (glc__D_e) is notable to be taken up by any of the current models
+Warning: The added metabolite (cit_e) is notable to be taken up by any of the current models
+</pre></div>
+</div>
+<p>Now load the model and build the mutants. To show the compatibility with the COBRApy toolbox, we will load the model and perform the mutations using COBRA, and then pass these models as input to build COMETS models.</p>
+<p>Unlike the LTEE ancestral strain REL606 (and <em>E. coli</em> in general), which possess the necessary genes for citrate utilization but do not express them in aerobic conditions, iJO1366 is able utilize both citrate and succinate as these reactions are unbounded by default. Thus, the ancestral phenotype can be recreated by knocking out three reactions CITt7pp (citT), SUCCt2_2pp (dctA) and SUCCt2_3pp (dcuA or dcuB).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the E. coli iJO1366 model </span>
+<span class="n">mod</span>  <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s1">&#39;ecoli&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set exchange reaction lower bounds to -1000 to allow them being controlled by COMETS </span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mod</span><span class="o">.</span><span class="n">reactions</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;EX_&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+        <span class="n">i</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=-</span><span class="mf">1000.0</span>
+        
+<span class="c1">#now create the mutants </span>
+<span class="n">mod</span><span class="o">.</span><span class="n">reactions</span><span class="o">.</span><span class="n">SUCCt2_3pp</span><span class="o">.</span><span class="n">upper_bound</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="n">CitTdctA</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">mod</span><span class="o">.</span><span class="n">reactions</span><span class="o">.</span><span class="n">SUCCt2_2pp</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span><span class="mf">0.0</span>
+<span class="n">CitT</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">mod</span><span class="o">.</span><span class="n">reactions</span><span class="o">.</span><span class="n">CITt7pp</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span><span class="mf">0.0</span>
+<span class="n">WT</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">WT</span><span class="o">.</span><span class="n">id</span><span class="o">=</span> <span class="s1">&#39;Ancestor&#39;</span>
+<span class="n">CitT</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s1">&#39;Cit+&#39;</span>
+<span class="n">CitTdctA</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s1">&#39;Cit++&#39;</span>
+        
+<span class="c1"># Generate comets models and set their initial population size</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">WT</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">3.9e-11</span><span class="p">]</span> <span class="c1"># We&#39;ll introduce genotypes 100 cells at a time to avoid the risk of them going extinct through drift</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">CitT</span><span class="p">)</span>
+<span class="n">p2</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># not present at start</span>
+<span class="n">p3</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">CitTdctA</span><span class="p">)</span>
+<span class="n">p3</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># not present at start</span>
+
+<span class="c1"># Add the models to the simulation </span>
+<span class="n">layout</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">layout</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">p2</span><span class="p">)</span>
+<span class="n">layout</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">p3</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Using license file /home/djordje/gurobi.lic
+Academic license - for non-commercial use only
+Read LP format model from file /tmp/tmpj1e0_y3y.lp
+Reading time = 0.03 seconds
+: 1805 rows, 5166 columns, 20366 nonzeros
+Read LP format model from file /tmp/tmpikjkpd7n.lp
+Reading time = 0.02 seconds
+: 1805 rows, 5166 columns, 20366 nonzeros
+Read LP format model from file /tmp/tmpabof91tv.lp
+Reading time = 0.03 seconds
+: 1805 rows, 5166 columns, 20366 nonzeros
+</pre></div>
+</div>
+<p>Set the parameters for the simulation. We use 1 hr as the COMETS timestep to speed up the simulation. Shortening this to the more commonly used 0.1 hr does not substantially affect the final result, but it does significantly increase the time it takes this simulation to run.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">### Setting paramaters for the simulation ###</span>
+<span class="n">b_params</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="n">b_params</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;timeStep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> 
+<span class="n">b_params</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;deathRate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">b_params</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;batchDilution&#39;</span><span class="p">]</span> <span class="o">=</span><span class="kc">True</span>
+<span class="n">b_params</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;dilTime&#39;</span><span class="p">]</span> <span class="o">=</span><span class="mi">24</span>
+<span class="n">b_params</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;dilFactor&#39;</span><span class="p">]</span> <span class="o">=</span><span class="mi">100</span>
+<span class="n">b_params</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;cellSize&#39;</span><span class="p">]</span><span class="o">=</span> <span class="mf">3.9e-13</span> <span class="c1">#Size of a single cell</span>
+<span class="n">b_params</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;minSpaceBiomass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.8e-13</span>
+</pre></div>
+</div>
+<p>Perform the simulations. We will divide our simulation in three actual COMETS runs. We will start the simulation at generation 25000 and run for around 6000 generations. At roughly generation 31,000, we introduce the CitT genotype and run for around 2000 Generations. Finally, at roughly Generation 33,000 we introduce the CitTdctA Genotype and run for a final 6000 generations. For each run, we will input the final biomass composition of the previous run. biomass of each store the biomass data in a separate dataframe that we will then join together for analysis.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Running COMETS simulation ...
+Done!
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cycles_per_day</span> <span class="o">=</span> <span class="mf">24.0</span><span class="o">/</span><span class="n">b_params</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;timeStep&#39;</span><span class="p">]</span>
+
+<span class="c1"># We&#39;ll start at Generation 25,000.  and run for around 6000 generations</span>
+<span class="n">batch_test</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">b_params</span><span class="p">)</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;maxCycles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">900</span><span class="o">*</span><span class="n">cycles_per_day</span><span class="p">)</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">phase_1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Ancestor&#39;</span> <span class="p">:</span> <span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">Ancestor</span><span class="o">/</span><span class="p">(</span><span class="mf">3.9e-13</span><span class="p">),</span>
+                        <span class="s1">&#39;CitT&#39;</span> <span class="p">:</span> <span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">[</span><span class="s1">&#39;Cit+&#39;</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mf">3.9e-13</span><span class="p">),</span>
+                        <span class="s1">&#39;CitTdctA&#39;</span> <span class="p">:</span> <span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">[</span><span class="s1">&#39;Cit++&#39;</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mf">3.9e-13</span><span class="p">),</span>
+                        <span class="s1">&#39;Generations&#39;</span> <span class="p">:</span> <span class="mf">6.67</span><span class="o">*</span><span class="p">(</span><span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">cycle</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">cycles_per_day</span> <span class="o">+</span> <span class="mi">25000</span><span class="p">})</span>
+
+<span class="c1"># At roughly Generation 31,000 we introduce the CitT genotype and run for around 2000 Generations</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">Ancestor</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">))]</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">3.9e-11</span><span class="p">]</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">build_initial_pop</span><span class="p">()</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;maxCycles&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">300</span><span class="o">*</span><span class="n">cycles_per_day</span><span class="p">))</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">phase_2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Ancestor&#39;</span> <span class="p">:</span> <span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">Ancestor</span><span class="o">/</span><span class="p">(</span><span class="mf">3.9e-13</span><span class="p">),</span>
+                        <span class="s1">&#39;CitT&#39;</span> <span class="p">:</span> <span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">[</span><span class="s1">&#39;Cit+&#39;</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mf">3.9e-13</span><span class="p">),</span>
+                        <span class="s1">&#39;CitTdctA&#39;</span> <span class="p">:</span> <span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">[</span><span class="s1">&#39;Cit++&#39;</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mf">3.9e-13</span><span class="p">),</span>
+                        <span class="s1">&#39;Generations&#39;</span> <span class="p">:</span> <span class="mf">6.67</span><span class="o">*</span><span class="p">(</span><span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">cycle</span><span class="p">)</span><span class="o">/</span><span class="n">cycles_per_day</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">phase_1</span><span class="o">.</span><span class="n">Generations</span><span class="p">)})</span>
+
+<span class="c1"># At roughly Generation 33,000 we introduce the CitTdctA Genotype and run for a final 6000 generationr </span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">Ancestor</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">))]</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">[</span><span class="s1">&#39;Cit+&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">))]</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">3.9e-11</span><span class="p">]</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">build_initial_pop</span><span class="p">()</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;maxCycles&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">900</span><span class="o">*</span><span class="n">cycles_per_day</span><span class="p">))</span>
+<span class="n">batch_test</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">phase_3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Ancestor&#39;</span> <span class="p">:</span> <span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">Ancestor</span><span class="o">/</span><span class="p">(</span><span class="mf">3.9e-13</span><span class="p">),</span>
+                        <span class="s1">&#39;CitT&#39;</span> <span class="p">:</span> <span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">[</span><span class="s1">&#39;Cit+&#39;</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mf">3.9e-13</span><span class="p">),</span>
+                        <span class="s1">&#39;CitTdctA&#39;</span> <span class="p">:</span> <span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="p">[</span><span class="s1">&#39;Cit++&#39;</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mf">3.9e-13</span><span class="p">),</span>
+                        <span class="s1">&#39;Generations&#39;</span> <span class="p">:</span> <span class="mf">6.67</span><span class="o">*</span><span class="p">(</span><span class="n">batch_test</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">cycle</span><span class="p">)</span><span class="o">/</span><span class="n">cycles_per_day</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">phase_2</span><span class="o">.</span><span class="n">Generations</span><span class="p">)</span> <span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Running COMETS simulation ...
+Done!
+
+Running COMETS simulation ...
+Done!
+</pre></div>
+</div>
+<p>Group all the results from the three runs together and plot the stationary phase population size through time.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Remove the final timepoint from each phase</span>
+<span class="n">phase_1</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">phase_1</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phase_2</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">phase_2</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phase_3</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">phase_3</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">final_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">phase_1</span><span class="p">,</span><span class="n">phase_2</span><span class="p">,</span><span class="n">phase_3</span><span class="p">])</span>
+<span class="n">final_df</span><span class="o">.</span><span class="n">reindex</span><span class="p">()</span>
+<span class="n">final_df</span> <span class="o">=</span> <span class="n">final_df</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">final_df</span><span class="o">.</span><span class="n">Generations</span> <span class="o">-</span> <span class="mi">25000</span><span class="p">)</span> <span class="o">%</span> <span class="mf">6.67</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mf">6.67</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">final_df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Generations&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/citrate_1.png" /></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="competition_assay.html" class="btn btn-neutral float-left" title="Two-species competition assay" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="chemostat.html" class="btn btn-neutral float-right" title="Crossfeeding in a chemostat" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, The Segre Lab at Boston University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

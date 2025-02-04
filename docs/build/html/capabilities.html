@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COMETS Capabilities &mdash; COMETSpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting started" href="getting_started.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/cometspy_logo_white_bkgd.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Package Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#what-is-cometspy">What is COMETSpy?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#how-to-use-this-documentation">How to use this Documentation:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#cite-us">Cite Us:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-of-comets">Installation of COMETS</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">COMETS Capabilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#capabilities-in-space">Capabilities in space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#biological-capabilities">Biological capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#computational-capabilities">Computational capabilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#preparing-a-model-for-comets">Preparing a model for <code class="docutils literal notranslate"><span class="pre">COMETS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#setting-comets-simulation-parameters">Setting <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#preparing-a-comets-simulation-layout">Preparing a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#running-a-comets-simulation">Running a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#checking-simulation-output-and-possible-errors">Checking simulation output and possible errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#accessing-the-results-of-the-simulation">Accessing the results of the simulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_tube.html">Growth in a test tube</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-the-comets-python-toolbox">Loading the COMETS Python Toolbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#creating-a-test-tube">Creating a test tube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-a-model">Loading a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#setting-the-simulation-parameters">Setting the simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#running-the-simulation">Running the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#analyzing-the-results">Analyzing the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="competition_assay.html">Two-species competition assay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#load-models-and-create-a-mutant">Load models and create a mutant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#create-layout-add-models-and-set-up-media-composition">Create layout, add models and set up media composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#simulating-serial-transfers">Simulating serial transfers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="citrate.html">Citrate utilization in the Long Term Evolution Experiment.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemostat.html">Crossfeeding in a chemostat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evolution.html">Simulating evolution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#load-the-model">Load the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-the-layout">Set up the layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#visualize-the-results">Visualize the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="circular_colony.html">Growth of a circular colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="branching_colony.html">Growth of a branching colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demographic_noise_two_strains.html">Growth and propagation of bacterial colonies on flat surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="petri_dish.html">Simulating growth on Petri dish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soil.html">Soil-air interface</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">COMETSpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">COMETS Capabilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/capabilities.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="comets-capabilities">
+<h1>COMETS Capabilities<a class="headerlink" href="#comets-capabilities" title="Link to this heading"></a></h1>
+<p>The core of COMETS is the simulation of the growth of microbial populations by maximizing an objective reaction, usually biomass production, in an iterative way. An initial amount of biomass of one or more species (defined by their metaboli models) is seeded in an environment containing a list of specified nutrients. In each iteration, both the amount of biomass and the environment are updated using FBA predictions.</p>
+<section id="capabilities-in-space">
+<h2>Capabilities in space<a class="headerlink" href="#capabilities-in-space" title="Link to this heading"></a></h2>
+<p>COMETS is capable of simulating microbial growth in a spatially structured environment. This is achieved by partitioning the simulation space (“world”) in a “grid” of smaller spaces. Inside each space, growth is considered to be well-mixed. Both nutrients and biomass can then propagate to contiguous spaces as simulation proceeds.</p>
+<ul class="simple">
+<li><p>2D and 3D simulation “worlds”</p></li>
+</ul>
+<p>In addition to well-mixed conditions, COMETS can simulate 2D and 3D spatially structured environments. This enables simulation of, for instance, growth of colonies on 2D surfaces such as a Petri dish, or 3D structures such as tumors, bacterial colonies in 3D matrix, etc.</p>
+<ul class="simple">
+<li><p>Diffusive and convective propagation of biomass in space</p></li>
+</ul>
+<p>In simulations with spatial structure, different modes of biomass propagation are implemented. The diffusive mode simulates the propagation of free swimming motile bacteria, while the convective mode simulates the propagation of bacteria by mutual pushing. The two modes of propagation can be combined.</p>
+<ul class="simple">
+<li><p>Substrate-dependent nutrient and biomass propagation</p></li>
+</ul>
+<p>The diffusivity of nutrients as well as the propagation properties of the biomass depend on the substrate properties such as agar density, cell substrate friction coefficient etc.</p>
+<ul class="simple">
+<li><p>Boundary conditions</p></li>
+</ul>
+<p>Two types of boundary conditions are implemented. Fixed value and fixed source or sink rate.</p>
+</section>
+<section id="biological-capabilities">
+<h2>Biological capabilities<a class="headerlink" href="#biological-capabilities" title="Link to this heading"></a></h2>
+<p>COMETS features many interesting biological capabilities to refine and improve the predictions of stoichiometric models, as well as to simulate different types of biologically realistic conditions.</p>
+<ul class="simple">
+<li><p>Lag-phases in microbial growth</p></li>
+</ul>
+<p>Lag-phases are modelled as simulated growth activation of the colonies.</p>
+<ul class="simple">
+<li><p>Continuous (chemostat) and batch growth modes</p></li>
+</ul>
+<p>In chemostat mode, the user controls the rate of replenishment of the nutrient. In batch mode, the user controls dilution and frequency.</p>
+<ul class="simple">
+<li><p>Simulation of multispecies communities</p></li>
+</ul>
+<p>Simulation of two or more species (up to hundreds) can be performed in both species overlapping or non-overlapping spatial distribution, or in well-mixed conditions.</p>
+<ul class="simple">
+<li><p>Parsimonious dFBA</p></li>
+</ul>
+<p>Usually, any metabolic model has multiple optimal solutions. One way to choose among them is to assume that the cell will minimize the total flux through the metabolic network. To achieve this, parsimonious FBA first optimizes the objective function, e.g. growth. Then, it performs a second optimization by fixing growth at the previously obtained optimal level and minimizing the total flux through the network.</p>
+<ul class="simple">
+<li><p>Cell death</p></li>
+</ul>
+<p>A simple model of cell death is implemented with each species assigned death rate.</p>
+<ul class="simple">
+<li><p>Neutral population drift</p></li>
+</ul>
+<p>The presence of demographic noise can result in random variations in the abundance of different species in a simulation. This is especially useful in the batch-growth mode, where dilution bottlenecks can have a significant impact on growing populations.</p>
+<ul class="simple">
+<li><p>Evolutionary processes</p></li>
+</ul>
+<p>Comets allows for evolutionary simulations, including random mutation and drift during simulations. Currently, the only mutations that are available are reaction deletions.</p>
+</section>
+<section id="computational-capabilities">
+<h2>Computational capabilities<a class="headerlink" href="#computational-capabilities" title="Link to this heading"></a></h2>
+<p>COMETS software is implemented in the JAVA language. Therefore, it is highly portable and independent on the operative system. COMETS offers the following simulation capabilities.</p>
+<ul class="simple">
+<li><p>Graphical User Interface (GUI)</p></li>
+</ul>
+<p>In addition to the command line, COMETS simulations can be run using a graphical user interface that includes visualization tools.</p>
+<ul class="simple">
+<li><p>Parallelized dFBA</p></li>
+</ul>
+<p>Runs in multi-CPU systems as multi-threaded process for greater computational performance.</p>
+<ul class="simple">
+<li><p>MATLAB toolbox</p></li>
+</ul>
+<p>A toolbox in MATLAB for modifying the input files for COMETS in a programmatic way.</p>
+<ul class="simple">
+<li><p>Python toolbox</p></li>
+</ul>
+<p>A toolbox in Python for modifying the input files for COMETS in a programmatic way.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, The Segre Lab at Boston University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

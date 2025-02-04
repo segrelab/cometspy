@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulating growth on Petri dish &mdash; COMETSpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Soil-air interface" href="soil.html" />
+    <link rel="prev" title="Growth and propagation of bacterial colonies on flat surfaces" href="demographic_noise_two_strains.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/cometspy_logo_white_bkgd.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Package Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#what-is-cometspy">What is COMETSpy?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#how-to-use-this-documentation">How to use this Documentation:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#cite-us">Cite Us:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-of-comets">Installation of COMETS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="capabilities.html">COMETS Capabilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#capabilities-in-space">Capabilities in space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#biological-capabilities">Biological capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#computational-capabilities">Computational capabilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#preparing-a-model-for-comets">Preparing a model for <code class="docutils literal notranslate"><span class="pre">COMETS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#setting-comets-simulation-parameters">Setting <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#preparing-a-comets-simulation-layout">Preparing a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#running-a-comets-simulation">Running a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#checking-simulation-output-and-possible-errors">Checking simulation output and possible errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#accessing-the-results-of-the-simulation">Accessing the results of the simulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_tube.html">Growth in a test tube</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-the-comets-python-toolbox">Loading the COMETS Python Toolbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#creating-a-test-tube">Creating a test tube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-a-model">Loading a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#setting-the-simulation-parameters">Setting the simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#running-the-simulation">Running the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#analyzing-the-results">Analyzing the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="competition_assay.html">Two-species competition assay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#load-models-and-create-a-mutant">Load models and create a mutant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#create-layout-add-models-and-set-up-media-composition">Create layout, add models and set up media composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#simulating-serial-transfers">Simulating serial transfers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="citrate.html">Citrate utilization in the Long Term Evolution Experiment.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemostat.html">Crossfeeding in a chemostat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evolution.html">Simulating evolution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#load-the-model">Load the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-the-layout">Set up the layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#visualize-the-results">Visualize the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="circular_colony.html">Growth of a circular colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="branching_colony.html">Growth of a branching colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demographic_noise_two_strains.html">Growth and propagation of bacterial colonies on flat surfaces</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Simulating growth on Petri dish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soil.html">Soil-air interface</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">COMETSpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Simulating growth on Petri dish</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/petri_dish.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="simulating-growth-on-petri-dish">
+<h1>Simulating growth on Petri dish<a class="headerlink" href="#simulating-growth-on-petri-dish" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cobra</span>
+<span class="kn">import</span> <span class="nn">cobra.test</span> <span class="c1"># for the e coli core model</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/home/jeremy/Dropbox/work_related/harcombe_lab/segre/cometspy&quot;</span><span class="p">)</span> <span class="c1"># not necessary if you pip install cometspy</span>
+<span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+</pre></div>
+</div>
+<p>We will use the E. coli core model, which is available in cobrapy.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">core</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;textbook&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We convert the core model into a COMETS model, open its lower exchange bounds (so that they are set by the environment), and set convection parameters to simulate pushing-expansion of the colony. Also, we will pick a number of locations where founder biomass will be deposited.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ecoli</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">core</span><span class="p">)</span>
+<span class="n">ecoli</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+<span class="n">ecoli</span><span class="o">.</span><span class="n">add_convection_parameters</span><span class="p">(</span><span class="n">packedDensity</span> <span class="o">=</span> <span class="mf">0.022</span><span class="p">,</span>
+                                    <span class="n">elasticModulus</span> <span class="o">=</span> <span class="mf">1.e-10</span><span class="p">,</span>
+                                    <span class="n">frictionConstant</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+                                    <span class="n">convDiffConstant</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="n">ecoli</span><span class="o">.</span><span class="n">add_noise_variance_parameter</span><span class="p">(</span><span class="mf">100.</span><span class="p">)</span>
+
+<span class="c1"># ecoli.initial_pop = [[x, x, 1.e-6] for x in [10,20,30,40]]</span>
+
+<span class="n">ecoli</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">140</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">58</span><span class="p">,</span> <span class="mi">162</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">28</span><span class="p">,</span><span class="mi">55</span><span class="p">,</span><span class="mf">1.e-6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">132</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">85</span><span class="p">,</span> <span class="mi">152</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">73</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">120</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">138</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">44</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">180</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">165</span><span class="p">,</span> <span class="mi">135</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">24</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">44</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">99</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">95</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">35</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mf">1.e-6</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Note: for convection parameters to function,
+params.all_params[&#39;biomassMotionStyle&#39;] = &#39;Convection 2D&#39;
+must also be set
+</pre></div>
+</div>
+<p>One of the novel aspects of this Protocol is that the “Petri dish” is divided into two different spatial regions, each of which has different metabolite diffusion constants. A user must define a number of parameters to get this to work: the “region map” which is a 2d matrix of integers corresponding to the specific regions, and then the region-specific parameters. We will do these in turn.</p>
+<p>First, the region map.  For this example we will use a simulation arena of 200x200 boxes. Half of the “Petri dish” will be one region, and the second half will be the other region. We will make an integer numpy array that describes this. Here, I will also plot the region map as an image, although this is not at all necessary.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">width</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">grid_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">]</span> <span class="c1"># width boxes in each direction</span>
+<span class="n">region_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">grid_size</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">int</span><span class="p">)</span> <span class="c1"># an integer array filled with zeros</span>
+<span class="n">region_map</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># first fill the whole map with 1s</span>
+<span class="n">region_map</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span><span class="n">width</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># next fill the bottom half with 2s</span>
+
+<span class="c1"># this code here is unnecessary, but useful to visualize your region map:</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">region_map</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/petri_dish_1.png" /></p>
+<p>The region_map looks correct: a square of 200x200 boxes divided into two regions. Let’s make the base layout for the simulation and set this region map. Once done, we will set the region parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ly</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">ecoli</span><span class="p">])</span>
+<span class="n">ly</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">grid_size</span>
+<span class="n">ly</span><span class="o">.</span><span class="n">set_region_map</span><span class="p">(</span><span class="n">region_map</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The region-specific parameters include a metabolite diffusion constant for each metabolite and a single friction constant used for all metabolites, per region. For simplicity we will also use the same metabolite diffusion constant for each metabolite, per region.  This will be 5e-6 (cm2/s) for region 1, and 5e-7 for region 2. The friction constant will be 1.0 for both regions.</p>
+<p>Since we are using the same number for each metabolite, we will just make a list that is as long as the number of metabolites in the simulation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">num_mets</span> <span class="o">=</span> <span class="n">ly</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">diffusion_constant_region1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.e-6</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_mets</span>
+<span class="n">diffusion_constant_region2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.e-7</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_mets</span>
+<span class="n">friction_constant</span> <span class="o">=</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>We set these values by specifying the (integer) region and then passing the list of diffusion constants and the scalar friction constant.  This must be done separately for each region.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ly</span><span class="o">.</span><span class="n">set_region_parameters</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">diffusion_constant_region1</span><span class="p">,</span> <span class="n">friction_constant</span><span class="p">)</span>
+<span class="n">ly</span><span class="o">.</span><span class="n">set_region_parameters</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">diffusion_constant_region2</span><span class="p">,</span> <span class="n">friction_constant</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The media concentrations will be initially constant across the “Petri dish.” We will set these here.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ly</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;glc__D_e&quot;</span><span class="p">,</span> <span class="mf">5.e-5</span><span class="p">)</span>
+<span class="n">ly</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;h2o_e&quot;</span><span class="p">,</span> <span class="mf">1000.</span><span class="p">)</span>
+<span class="n">ly</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;nh4_e&quot;</span><span class="p">,</span> <span class="mf">1000.</span><span class="p">)</span>
+<span class="n">ly</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;h_e&quot;</span><span class="p">,</span> <span class="mf">1000.</span><span class="p">)</span>
+<span class="n">ly</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s2">&quot;pi_e&quot;</span><span class="p">,</span> <span class="mf">1000.</span><span class="p">)</span>
+<span class="n">ly</span><span class="o">.</span><span class="n">display_current_media</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>      diff_c g_refresh g_static g_static_val init_amount metabolite
+8   0.000005         0        0            0       5e-05   glc__D_e
+11  0.000005         0        0            0        1000      h2o_e
+12  0.000005         0        0            0        1000        h_e
+15  0.000005         0        0            0        1000      nh4_e
+17  0.000005         0        0            0        1000       pi_e
+</pre></div>
+</div>
+<p>We next set the relevant parameters. We must make sure to set ‘biomassMotionStyle’ to ‘Convection 2D’ or else biomass will not use the convection parameters set above.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;biomassMotionStyle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Convection 2D&quot;</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;writeBiomassLog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;BiomassLogRate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">]</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;defaultKm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;defaultVmax&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;timeStep&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;spaceWidth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.02</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;maxSpaceBiomass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;minSpaceBiomass&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.e-10</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;allowCellOverlap&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;writeFluxLog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;FluxLogRate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">]</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;writeMediaLog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;MediaLogRate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now we make a simulation object and run it.  This can take awhile.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">ly</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Running COMETS simulation ...
+Done!
+</pre></div>
+</div>
+<p>Next, in turn, we use three different helper functions get to biomass, a metabolite concentration, and flux value (growth rate, here) and plot them in 2D space.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span><span class="o">,</span> <span class="nn">matplotlib.cm</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="n">my_cmap</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;copper&quot;</span><span class="p">)</span>
+<span class="n">my_cmap</span><span class="o">.</span><span class="n">set_bad</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_biomass_image</span><span class="p">(</span><span class="s1">&#39;e_coli_core&#39;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">(),</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">my_cmap</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/petri_dish_2.png" /></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># glucose</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">get_metabolite_image</span><span class="p">(</span><span class="s2">&quot;glc__D_e&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;maxCycles&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/petri_dish_3.png" /></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># growth rate</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_flux_image</span><span class="p">(</span><span class="s2">&quot;e_coli_core&quot;</span><span class="p">,</span> <span class="s2">&quot;Biomass_Ecoli_core&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/petri_dish_4.png" /></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="demographic_noise_two_strains.html" class="btn btn-neutral float-left" title="Growth and propagation of bacterial colonies on flat surfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soil.html" class="btn btn-neutral float-right" title="Soil-air interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, The Segre Lab at Boston University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

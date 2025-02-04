@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crossfeeding in a chemostat &mdash; COMETSpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Simulating evolution" href="evolution.html" />
+    <link rel="prev" title="Citrate utilization in the Long Term Evolution Experiment." href="citrate.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/cometspy_logo_white_bkgd.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Package Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#what-is-cometspy">What is COMETSpy?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#how-to-use-this-documentation">How to use this Documentation:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#cite-us">Cite Us:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-of-comets">Installation of COMETS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="capabilities.html">COMETS Capabilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#capabilities-in-space">Capabilities in space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#biological-capabilities">Biological capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#computational-capabilities">Computational capabilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#preparing-a-model-for-comets">Preparing a model for <code class="docutils literal notranslate"><span class="pre">COMETS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#setting-comets-simulation-parameters">Setting <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#preparing-a-comets-simulation-layout">Preparing a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#running-a-comets-simulation">Running a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#checking-simulation-output-and-possible-errors">Checking simulation output and possible errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#accessing-the-results-of-the-simulation">Accessing the results of the simulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_tube.html">Growth in a test tube</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-the-comets-python-toolbox">Loading the COMETS Python Toolbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#creating-a-test-tube">Creating a test tube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-a-model">Loading a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#setting-the-simulation-parameters">Setting the simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#running-the-simulation">Running the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#analyzing-the-results">Analyzing the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="competition_assay.html">Two-species competition assay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#load-models-and-create-a-mutant">Load models and create a mutant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#create-layout-add-models-and-set-up-media-composition">Create layout, add models and set up media composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="competition_assay.html#simulating-serial-transfers">Simulating serial transfers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="citrate.html">Citrate utilization in the Long Term Evolution Experiment.</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Crossfeeding in a chemostat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evolution.html">Simulating evolution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#load-the-model">Load the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-the-layout">Set up the layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#visualize-the-results">Visualize the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="circular_colony.html">Growth of a circular colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="branching_colony.html">Growth of a branching colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demographic_noise_two_strains.html">Growth and propagation of bacterial colonies on flat surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="petri_dish.html">Simulating growth on Petri dish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soil.html">Soil-air interface</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">COMETSpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Crossfeeding in a chemostat</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/chemostat.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="crossfeeding-in-a-chemostat">
+<h1>Crossfeeding in a chemostat<a class="headerlink" href="#crossfeeding-in-a-chemostat" title="Link to this heading"></a></h1>
+<p>COMETS provides the functionality to run simulations in a chemostat. Here, we use the python toolbox to generate a chemostat simulation in two ways. 1) by manually assigning all the “parts,” and 2) by using a helper function we’ve included.</p>
+<p>Here we are going to simulate a chemostat with lactose as the sole carbon resource and two strains of E. coli: one which is defiicient in the ability to uptake lactose, and one which is deficient in the ability to metabolize galactose. We will use the ijo1366 model provided as part of cobrapy. Let’s first do the imports.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cobra</span>
+<span class="kn">import</span> <span class="nn">cobra.test</span> <span class="c1"># for the ijo1366 model</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/home/jeremy/Dropbox/work_related/harcombe_lab/segre/cometspy&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+</pre></div>
+</div>
+<p>Now let’s load the ijo1366 model, make a copy, and knockout the relevant reactions.</p>
+<p>Note that the first model had galE knocked out to prevent metabolism of galactose, which will cause galactose to be secreted during metabolism of lactose. The second model had a reaction knocked out instead of a gene, as lactose transport to the periplasm can be accomplished with multiple genes, and so it is simpler to juts knockout the reaction itself.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">E_no_galE</span> <span class="o">=</span> <span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;ecoli&quot;</span><span class="p">)</span> <span class="c1"># this model will have galE KO&#39;d</span>
+<span class="n">E_no_LCTStex</span> <span class="o">=</span> <span class="n">E_no_galE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># this model will have lactose uptake KO&#39;d</span>
+<span class="n">E_no_galE</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">b0759</span><span class="o">.</span><span class="n">knock_out</span><span class="p">()</span>
+<span class="n">E_no_LCTStex</span><span class="o">.</span><span class="n">reactions</span><span class="o">.</span><span class="n">LCTStex</span><span class="o">.</span><span class="n">knock_out</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can test that the knockouts perform as expected by trying to grow them in media containing lactose and galactose. We do this in cobrapy.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">medium</span> <span class="o">=</span> <span class="n">E_no_galE</span><span class="o">.</span><span class="n">medium</span>
+<span class="n">medium</span><span class="p">[</span><span class="s2">&quot;EX_glc__D_e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">medium</span><span class="p">[</span><span class="s2">&quot;EX_lcts_e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="n">medium</span><span class="p">[</span><span class="s2">&quot;EX_gal_e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">medium</span><span class="p">)</span>
+<span class="n">E_no_galE</span><span class="o">.</span><span class="n">medium</span> <span class="o">=</span> <span class="n">medium</span>
+<span class="n">E_no_LCTStex</span><span class="o">.</span><span class="n">medium</span> <span class="o">=</span> <span class="n">medium</span>
+<span class="c1"># examine growth and uptake in the galE knockout shows galactose is excreted</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">E_no_galE uptakes lactose and excrete galactose: &quot;</span><span class="p">)</span>
+<span class="n">E_no_galE</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;EX_ca2_e&#39;: 1000.0, &#39;EX_cbl1_e&#39;: 0.01, &#39;EX_cl_e&#39;: 1000.0, &#39;EX_co2_e&#39;: 1000.0, &#39;EX_cobalt2_e&#39;: 1000.0, &#39;EX_cu2_e&#39;: 1000.0, &#39;EX_fe2_e&#39;: 1000.0, &#39;EX_fe3_e&#39;: 1000.0, &#39;EX_glc__D_e&#39;: 0.0, &#39;EX_h_e&#39;: 1000.0, &#39;EX_h2o_e&#39;: 1000.0, &#39;EX_k_e&#39;: 1000.0, &#39;EX_mg2_e&#39;: 1000.0, &#39;EX_mn2_e&#39;: 1000.0, &#39;EX_mobd_e&#39;: 1000.0, &#39;EX_na1_e&#39;: 1000.0, &#39;EX_nh4_e&#39;: 1000.0, &#39;EX_ni2_e&#39;: 1000.0, &#39;EX_o2_e&#39;: 1000.0, &#39;EX_pi_e&#39;: 1000.0, &#39;EX_sel_e&#39;: 1000.0, &#39;EX_slnt_e&#39;: 1000.0, &#39;EX_so4_e&#39;: 1000.0, &#39;EX_tungs_e&#39;: 1000.0, &#39;EX_zn2_e&#39;: 1000.0, &#39;EX_lcts_e&#39;: 1.0, &#39;EX_gal_e&#39;: 1.0}
+
+
+E_no_galE uptakes lactose and excrete galactose: 
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead tr th {
+    text-align: left;
+}
+</pre></div>
+</div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">IN_FLUXES</th>
+      <th colspan="2" halign="left">OUT_FLUXES</th>
+      <th colspan="2" halign="left">OBJECTIVES</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>ID</th>
+      <th>FLUX</th>
+      <th>ID</th>
+      <th>FLUX</th>
+      <th>ID</th>
+      <th>FLUX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>o2_e</td>
+      <td>2.464303</td>
+      <td>h2o_e</td>
+      <td>4.131365</td>
+      <td>BIOMASS_Ec_iJO1366_core_53p95M</td>
+      <td>0.086479</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>lcts_e</td>
+      <td>1.000000</td>
+      <td>co2_e</td>
+      <td>2.450194</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>nh4_e</td>
+      <td>0.934040</td>
+      <td>gal_e</td>
+      <td>1.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>fe2_e</td>
+      <td>0.795974</td>
+      <td>fe3_e</td>
+      <td>0.794585</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>pi_e</td>
+      <td>0.083420</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">E_no_LCTStex uptakes galactose but not lactose: &quot;</span><span class="p">)</span>
+<span class="n">E_no_LCTStex</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>E_no_LCTStex uptakes galactose but not lactose: 
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead tr th {
+    text-align: left;
+}
+</pre></div>
+</div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">IN_FLUXES</th>
+      <th colspan="2" halign="left">OUT_FLUXES</th>
+      <th colspan="2" halign="left">OBJECTIVES</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>ID</th>
+      <th>FLUX</th>
+      <th>ID</th>
+      <th>FLUX</th>
+      <th>ID</th>
+      <th>FLUX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>o2_e</td>
+      <td>2.310433</td>
+      <td>h2o_e</td>
+      <td>4.749252</td>
+      <td>BIOMASS_Ec_iJO1366_core_53p95M</td>
+      <td>0.085442</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>gal_e</td>
+      <td>1.000000</td>
+      <td>co2_e</td>
+      <td>2.492757</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>nh4_e</td>
+      <td>0.922840</td>
+      <td>h_e</td>
+      <td>0.785058</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>pi_e</td>
+      <td>0.082420</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>Now that we are satisfied we have made our models correctly, we can setup a COMES simulation. Let’s intend that the medium above is the reservoir medium (except that we will remove galactose first), and that the input rate and output rate are 10% per hour. Here, let’s set dilution rate parameter, the initial population size (in gDW), and generate the COMETS models.</p>
+<p>Whenever we make COMETS models from COBRA models, we almost always want to set the exchange lower bounds to -1000 so that COMETS can alter these based upon media concentrations.</p>
+<p>Finally, right now both models have the same ID, which will confuse COMETS, so we must give them unique IDs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># chemostat parameters</span>
+<span class="n">dilution_rate</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># / hr</span>
+<span class="n">initial_pop</span> <span class="o">=</span> <span class="mf">1.e-3</span> <span class="c1"># gDW</span>
+
+<span class="c1"># make COMETS models from the cobrapy models</span>
+<span class="n">E_no_galE</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s2">&quot;galE_KO&quot;</span>
+<span class="n">E_no_LCTStex</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s2">&quot;LCTStex_KO&quot;</span>
+
+<span class="n">galE_comets</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">E_no_galE</span><span class="p">)</span>
+<span class="n">galE_comets</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">initial_pop</span><span class="p">]</span> <span class="c1"># x, y, gDW</span>
+<span class="n">galE_comets</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+
+<span class="n">lcts_comets</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">E_no_LCTStex</span><span class="p">)</span>
+<span class="n">lcts_comets</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">initial_pop</span><span class="p">]</span> <span class="c1"># x, y, gDW</span>
+<span class="n">lcts_comets</span><span class="o">.</span><span class="n">open_exchanges</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Now we are going to use the manual method for making a chemostat. Recall that cobrapy media are set using exchange reaction IDs, whereas COMETS media are set using metabolite ids. We can easily take care of this difference with a dictionary comprehension. Here we do that, then generate a layout, and add the media components to that layout.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># setup layout by providing models</span>
+<span class="n">layout</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">([</span><span class="n">galE_comets</span><span class="p">,</span> <span class="n">lcts_comets</span><span class="p">])</span>
+
+<span class="c1"># re-write media (while removing galactose) and add it to layout</span>
+<span class="n">comets_media</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">:]:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">medium</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s2">&quot;EX_gal_e&quot;</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">comets_media</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">layout</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The input of fresh media from the reservoir into the simulation is done using media_refresh. Metabolites with a media_refresh value are replenished at the specified amount per-hour. Since we are diluting at 0.1 per hour, we multiply the reservoir concentration by this rate.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">comets_media</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">layout</span><span class="o">.</span><span class="n">set_specific_refresh</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">*</span> <span class="n">dilution_rate</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The rest of the chemostat–the outflow–is setup in the parameters using metaboliteDilutionRate and deathRate. These should be set equal to the desired dilution rate. Here we generate a parameters object and set these values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;deathRate&quot;</span><span class="p">,</span> <span class="n">dilution_rate</span><span class="p">)</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;metaboliteDilutionRate&quot;</span><span class="p">,</span> <span class="n">dilution_rate</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s also adjust a few other parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;timeStep&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span> <span class="c1"># hours</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxSpaceBiomass&quot;</span><span class="p">,</span> <span class="mf">10.</span><span class="p">)</span> <span class="c1"># gDW</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span> <span class="c1"># duration of simulation in time steps</span>
+</pre></div>
+</div>
+<p>Finally, let’s keep track of two key metabolites: lactose and galactose. We do this using the specificMedia log, and choosing the metabolites with a comma-separated string with no spaces.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;writeSpecificMediaLog&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;specificMediaLogRate&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># time steps</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;specificMedia&quot;</span><span class="p">,</span> <span class="s2">&quot;lcts_e,gal_e&quot;</span><span class="p">)</span> <span class="c1"># metabolites to track</span>
+</pre></div>
+</div>
+<p>Now the chemostat aspects are setup using the layout and the parameters. Therefore, we can generate a COMETS simulation, run it, and then examine the biomass and metabolites.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Warning: java class libraries cannot be found
+
+Running COMETS simulation ...
+Done!
+</pre></div>
+</div>
+<p>Now let’s plot the results. Note how we specify the axes, otherwise “cycle”, “x”, and “y” will be assumed to be state variables.</p>
+<p>What we see is that both species survive, because the LCTStex_KO cross-feeds galactose from the galE_KO, which uses the glucose piece of lactose. The metabolites, as is typical in a chemostat, are in very low concentrations once equilibrium is reached.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;cycle&quot;</span><span class="p">,</span> <span class="n">logy</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">specific_media</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;cycle&quot;</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;lcts_e&quot;</span><span class="p">,</span><span class="s2">&quot;gal_e&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f468e670b70&gt;
+</pre></div>
+</div>
+<p><img alt="" src="_images/chemostat_1.png" /></p>
+<p><img alt="" src="_images/chemostat_2.png" /></p>
+<p>The above code required setting chemostat parameters in multiple places. We offer this functionality so that researchers can create complex setups that may, for example, have different initial concentrations than reservoir concentrations, and different inflow rates than outflow rates. However, we expect most chemostat simulations will function like above, where a single dilution parameter dictates the behavior of the system. For this typical use-case, we have made a helper function in the utils subpackage which generates a layout and parameters objects with the correct setup.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cometspy.utils</span> <span class="kn">import</span> <span class="n">chemostat</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">chemostat</span><span class="p">([</span><span class="n">galE_comets</span><span class="p">,</span> <span class="n">lcts_comets</span><span class="p">],</span> <span class="n">comets_media</span><span class="p">,</span> <span class="n">dilution_rate</span><span class="p">)</span>
+<span class="c1"># we can still adjust the parameters as desired.</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;timeStep&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span> <span class="c1"># hours</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxSpaceBiomass&quot;</span><span class="p">,</span> <span class="mf">10.</span><span class="p">)</span> <span class="c1"># gDW</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;maxCycles&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span> <span class="c1"># duration of simulation in time steps</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;writeSpecificMediaLog&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;specificMediaLogRate&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># time steps</span>
+<span class="n">params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s2">&quot;specificMedia&quot;</span><span class="p">,</span> <span class="s2">&quot;lcts_e,gal_e&quot;</span><span class="p">)</span> <span class="c1"># metabolites to track</span>
+<span class="c1"># then we make the simulation object and run as before</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">total_biomass</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;cycle&quot;</span><span class="p">,</span> <span class="n">logy</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Running COMETS simulation ...
+Done!
+
+
+
+
+
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f468e200c88&gt;
+</pre></div>
+</div>
+<p><img alt="" src="_images/chemostat_3.png" /></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="citrate.html" class="btn btn-neutral float-left" title="Citrate utilization in the Long Term Evolution Experiment." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="evolution.html" class="btn btn-neutral float-right" title="Simulating evolution" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, The Segre Lab at Boston University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

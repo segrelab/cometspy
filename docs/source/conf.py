@@ -23,6 +23,24 @@ extensions = [
     # ... other extensions ...
     'sphinx.ext.autodoc',
     'sphinx_rtd_theme',
+    'myst_parser'
+]
+
+myst_enable_extensions = [
+    "amsmath",
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "linkify",
+    "replacements",
+    "smartquotes",
+    "strikethrough",
+    "substitution",
+    "tasklist",
 ]
 
 templates_path = ['_templates']
@@ -35,7 +53,7 @@ exclude_patterns = []
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
-html_logo = 'images/cometspy_logo_white_bkgd.png'
+html_logo = 'img/cometspy_logo_white_bkgd.png'
 html_theme_options = {
     'logo_only': True,
     'display_version': True,

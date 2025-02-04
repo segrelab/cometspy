@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Two-species competition assay &mdash; COMETSpy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Citrate utilization in the Long Term Evolution Experiment." href="citrate.html" />
+    <link rel="prev" title="Growth in a test tube" href="test_tube.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/cometspy_logo_white_bkgd.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Package Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#what-is-cometspy">What is COMETSpy?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#how-to-use-this-documentation">How to use this Documentation:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#cite-us">Cite Us:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-of-comets">Installation of COMETS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="capabilities.html">COMETS Capabilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#capabilities-in-space">Capabilities in space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#biological-capabilities">Biological capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities.html#computational-capabilities">Computational capabilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#preparing-a-model-for-comets">Preparing a model for <code class="docutils literal notranslate"><span class="pre">COMETS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#setting-comets-simulation-parameters">Setting <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#preparing-a-comets-simulation-layout">Preparing a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#running-a-comets-simulation">Running a <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#checking-simulation-output-and-possible-errors">Checking simulation output and possible errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#accessing-the-results-of-the-simulation">Accessing the results of the simulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_tube.html">Growth in a test tube</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-the-comets-python-toolbox">Loading the COMETS Python Toolbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#creating-a-test-tube">Creating a test tube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#loading-a-model">Loading a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#setting-the-simulation-parameters">Setting the simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#running-the-simulation">Running the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_tube.html#analyzing-the-results">Analyzing the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Two-species competition assay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#load-models-and-create-a-mutant">Load models and create a mutant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-layout-add-models-and-set-up-media-composition">Create layout, add models and set up media composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simulating-serial-transfers">Simulating serial transfers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="citrate.html">Citrate utilization in the Long Term Evolution Experiment.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemostat.html">Crossfeeding in a chemostat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evolution.html">Simulating evolution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#load-the-model">Load the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-the-layout">Set up the layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#set-up-simulation-parameters">Set up simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#run-the-simulation">Run the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolution.html#visualize-the-results">Visualize the results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="circular_colony.html">Growth of a circular colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="branching_colony.html">Growth of a branching colony</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demographic_noise_two_strains.html">Growth and propagation of bacterial colonies on flat surfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="petri_dish.html">Simulating growth on Petri dish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soil.html">Soil-air interface</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">COMETSpy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Two-species competition assay</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/competition_assay.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="two-species-competition-assay">
+<h1>Two-species competition assay<a class="headerlink" href="#two-species-competition-assay" title="Link to this heading"></a></h1>
+<p>Competition experiments are frequently performed in the laboratory to assay, for example, the fitness of a mutant in competition to the wild-type. Here, we simulate one such experiemnt involving E. coli and a nonessential but deleterious mutation involving the deletion of the triose phosphate isomerase reaction from glycolisis.</p>
+<section id="load-models-and-create-a-mutant">
+<h2>Load models and create a mutant<a class="headerlink" href="#load-models-and-create-a-mutant" title="Link to this heading"></a></h2>
+<p>We first load our <em>E. coli</em> “core” model and create the mutant in triose phosphate isomerase by setting both upper and lower bounds to zero. We will add both models to our <code class="docutils literal notranslate"><span class="pre">test_tube</span></code> layout.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start by loading required packages, including the COMETS toolbox</span>
+<span class="kn">import</span> <span class="nn">cometspy</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="kn">import</span> <span class="nn">cobra.test</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># load the models and perform the mutation</span>
+<span class="n">wt</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;ecoli&quot;</span><span class="p">))</span>
+<span class="n">wt</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s1">&#39;wt&#39;</span>
+<span class="n">mut</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">cobra</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">create_test_model</span><span class="p">(</span><span class="s2">&quot;ecoli&quot;</span><span class="p">))</span>
+<span class="n">mut</span><span class="o">.</span><span class="n">change_bounds</span><span class="p">(</span><span class="s1">&#39;TPI&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">mut</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s1">&#39;TPI_KO&#39;</span>
+
+<span class="c1"># set its initial biomass, 5e-6 gr at coordinate [0,0]</span>
+<span class="n">wt</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">5e-8</span><span class="p">]</span>
+<span class="n">mut</span><span class="o">.</span><span class="n">initial_pop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">5e-8</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Using license file /home/djordje/gurobi.lic
+Academic license - for non-commercial use only
+</pre></div>
+</div>
+</section>
+<section id="create-layout-add-models-and-set-up-media-composition">
+<h2>Create layout, add models and set up media composition<a class="headerlink" href="#create-layout-add-models-and-set-up-media-composition" title="Link to this heading"></a></h2>
+<p>We create an empty layout (“test_tube”) and set the initial nutrient supply.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create an empty layout</span>
+<span class="n">test_tube</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
+
+<span class="c1"># add the models to the test tube</span>
+<span class="n">test_tube</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">wt</span><span class="p">)</span>
+<span class="n">test_tube</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">mut</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>building empty layout model
+models will need to be added with layout.add_model()
+</pre></div>
+</div>
+<p>Set the media composition by adding glucose and the inorganic nutrients required for this model (ammonia, phosphate) and oxygen. These inorganic nutrients will be considered as “static” by the simulation, with a value of 1000 that never depletes. Considering metabolites as “static” is the way COMETS has to simulate an unlimited supply of metabolites.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add glucose to the media </span>
+<span class="n">test_tube</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="s1">&#39;glc__D_e&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># Add typical trace metabolites and oxygen coli as static</span>
+<span class="n">trace_metabolites</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ca2_e&#39;</span><span class="p">,</span> <span class="s1">&#39;cl_e&#39;</span><span class="p">,</span> <span class="s1">&#39;cobalt2_e&#39;</span><span class="p">,</span> <span class="s1">&#39;cu2_e&#39;</span><span class="p">,</span> <span class="s1">&#39;fe2_e&#39;</span><span class="p">,</span> <span class="s1">&#39;fe3_e&#39;</span><span class="p">,</span> <span class="s1">&#39;h_e&#39;</span><span class="p">,</span> <span class="s1">&#39;k_e&#39;</span><span class="p">,</span> <span class="s1">&#39;h2o_e&#39;</span><span class="p">,</span> <span class="s1">&#39;mg2_e&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;mn2_e&#39;</span><span class="p">,</span> <span class="s1">&#39;mobd_e&#39;</span><span class="p">,</span> <span class="s1">&#39;na1_e&#39;</span><span class="p">,</span> <span class="s1">&#39;ni2_e&#39;</span><span class="p">,</span> <span class="s1">&#39;nh4_e&#39;</span><span class="p">,</span> <span class="s1">&#39;o2_e&#39;</span><span class="p">,</span> <span class="s1">&#39;pi_e&#39;</span><span class="p">,</span> <span class="s1">&#39;so4_e&#39;</span><span class="p">,</span> <span class="s1">&#39;zn2_e&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">trace_metabolites</span><span class="p">:</span>
+    <span class="n">test_tube</span><span class="o">.</span><span class="n">set_specific_metabolite</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">test_tube</span><span class="o">.</span><span class="n">set_specific_static</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="set-up-simulation-parameters">
+<h2>Set up simulation parameters<a class="headerlink" href="#set-up-simulation-parameters" title="Link to this heading"></a></h2>
+<p>We next create a parameters object and modify needed parameters - in this case only the number of cycles the simulation runs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">comp_params</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="n">comp_params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;maxCycles&#39;</span><span class="p">,</span> <span class="mi">240</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="run-the-simulation">
+<h2>Run the simulation<a class="headerlink" href="#run-the-simulation" title="Link to this heading"></a></h2>
+<p>Finally, we create the comets object using the above created layout and parameters, and run the competition assay.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">comp_assay</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">test_tube</span><span class="p">,</span> <span class="n">comp_params</span><span class="p">)</span>
+<span class="n">comp_assay</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Running COMETS simulation ...
+Done!
+</pre></div>
+</div>
+<p>We now plot the biomasses of these two genotypes in coculture.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">biomass</span> <span class="o">=</span> <span class="n">comp_assay</span><span class="o">.</span><span class="n">total_biomass</span>
+<span class="n">biomass</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">biomass</span><span class="p">[</span><span class="s1">&#39;cycle&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">comp_assay</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;timeStep&#39;</span><span class="p">]</span>
+
+<span class="n">myplot</span> <span class="o">=</span> <span class="n">biomass</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cycle&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;t&#39;</span><span class="p">)</span>
+<span class="n">myplot</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Biomass (gr.)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/comp_1.png" /></p>
+<p>We can quantitatively analyze the results. For example, we can compute the competitive fitness of the mutant respect to the wild-type as the ratio of the biomass increase of the mutant divided by that of the wild-type:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cfit</span> <span class="o">=</span> <span class="p">(</span><span class="n">biomass</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biomass</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">24</span><span class="p">,</span> <span class="s1">&#39;TPI_KO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">biomass</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biomass</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;TPI_KO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">biomass</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biomass</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">24</span><span class="p">,</span> <span class="s1">&#39;wt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">biomass</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biomass</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;wt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">cfit</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0.39378816074777145
+</pre></div>
+</div>
+</section>
+<section id="simulating-serial-transfers">
+<h2>Simulating serial transfers<a class="headerlink" href="#simulating-serial-transfers" title="Link to this heading"></a></h2>
+<p>Using <code class="docutils literal notranslate"><span class="pre">COMETS</span></code> we can also simulate a serial tranfer competition between these two mutants. We will just modify the parameters, increasing the total simulation time and including batch transfers of 1% every 24h, but we will use the same <code class="docutils literal notranslate"><span class="pre">test_tube</span></code> layout as before.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">serial_params</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">params</span><span class="p">()</span>
+<span class="n">serial_params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;maxCycles&#39;</span><span class="p">,</span> <span class="mi">240</span><span class="o">*</span><span class="mi">25</span><span class="p">)</span> <span class="c1"># simulate 4 serial transfers of 24h each</span>
+<span class="n">serial_params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;batchDilution&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">serial_params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;dilFactor&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">serial_params</span><span class="o">.</span><span class="n">set_param</span><span class="p">(</span><span class="s1">&#39;dilTime&#39;</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We run the simulation</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">serial_expt</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">comets</span><span class="p">(</span><span class="n">test_tube</span><span class="p">,</span> <span class="n">serial_params</span><span class="p">)</span>
+<span class="n">serial_expt</span><span class="o">.</span><span class="n">JAVA_CLASSPATH</span> <span class="o">=</span> <span class="n">comp_assay</span><span class="o">.</span><span class="n">JAVA_CLASSPATH</span>
+<span class="n">serial_expt</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Running COMETS simulation ...
+Done!
+</pre></div>
+</div>
+<p>Now plot the biomass of the two species during the experiment</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">biomass</span> <span class="o">=</span> <span class="n">serial_expt</span><span class="o">.</span><span class="n">total_biomass</span>
+<span class="n">biomass</span><span class="p">[</span><span class="s1">&#39;transfer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">biomass</span><span class="p">[</span><span class="s1">&#39;cycle&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">comp_assay</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">all_params</span><span class="p">[</span><span class="s1">&#39;timeStep&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">24</span>
+
+<span class="n">myplot</span> <span class="o">=</span> <span class="n">biomass</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cycle&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;transfer&#39;</span><span class="p">)</span>
+<span class="n">myplot</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Biomass (gr.)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/comp_2.png" /></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="test_tube.html" class="btn btn-neutral float-left" title="Growth in a test tube" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="citrate.html" class="btn btn-neutral float-right" title="Citrate utilization in the Long Term Evolution Experiment." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, The Segre Lab at Boston University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
