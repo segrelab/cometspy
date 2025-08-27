@@ -235,7 +235,7 @@ class model:
         """ sets the neutralDriftSigma parameter """
         if not isinstance(neutralDriftSigma, float):
             raise ValueError("neutralDriftSigma must be a float")
-        self.neutral_drift_flag = True
+        #self.neutral_drift_flag = True
         self.neutralDriftSigma = neutralDriftSigma
 
     def add_nonlinear_diffusion_parameters(self,
