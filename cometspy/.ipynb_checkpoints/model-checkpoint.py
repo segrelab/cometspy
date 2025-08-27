@@ -51,7 +51,7 @@ class model:
         obj_style : str
             one of MAXIMIZE_OBJECTIVE_FLUX (fba) or MAX_OBJECTIVE_MIN_TOTAL (pfba)
         optimizer : str
-            one of "GUROBI" or "GLPK". not all functionality works with GLPK
+            one of "GLOP", "GUROBI" or "GLPK". not all functionality works with GLPK
             
         Examples
         --------
@@ -235,7 +235,7 @@ class model:
         """ sets the neutralDriftSigma parameter """
         if not isinstance(neutralDriftSigma, float):
             raise ValueError("neutralDriftSigma must be a float")
-        self.neutral_drift_flag = True
+        #self.neutral_drift_flag = True
         self.neutralDriftSigma = neutralDriftSigma
 
     def add_nonlinear_diffusion_parameters(self,

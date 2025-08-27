@@ -238,6 +238,12 @@ class model:
         #self.neutral_drift_flag = True
         self.neutralDriftSigma = neutralDriftSigma
 
+    def add_neutral_drift(self, neutralDrift):
+        """ sets the neutralDriftSigma parameter """
+        if not isinstance(neutralDrift, bool):
+            raise ValueError("neutralDriftSigma must be a boolean")
+        self.neutral_drift_flag = neutralDrift
+
     def add_nonlinear_diffusion_parameters(self,
                                            zero : float=1.,
                                            n : float =1.,
