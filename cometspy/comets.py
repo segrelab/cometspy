@@ -320,7 +320,7 @@ class comets:
         self.classpath_pieces[libraryname] = path
         self.__build_and_set_classpath()
 
-    def run(self, delete_files : bool = True):
+    def run(self, delete_files : bool = True, progress : bool = True):
         """
         run a COMETS simulation
 
@@ -342,6 +342,9 @@ class comets:
         delete_files : bool, optional
             Whether to delete simulation and log files. The default is True.
 
+        progress : bool, optional
+            Whether to display a progress bar via tqdm. The default is True.
+
         Examples
         --------
 
@@ -352,7 +355,7 @@ class comets:
 
         """
         print('\nRunning COMETS simulation ...')
-        print('\nDebug Here ...')
+        #print('\nDebug Here ...')
 
         # If evolution is true, write the biomass but not the total biomass log
         if self.parameters.all_params['evolution']:
@@ -390,12 +393,33 @@ class comets:
                         ' edu.bu.segrelab.comets.fba.FBACometsLoader' +
                         ' -script "' + c_script + '"')
 
-        p = sp.Popen(self.cmd,
+        process = sp.Popen(self.cmd,
                      cwd = self.working_dir,
                      shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
 
-        self.run_output, self.run_errors = p.communicate()
-        self.run_output = self.run_output.decode('ascii','ignore')
+        # progress bar
+        if progress:
+            from tqdm.auto import tqdm # auto-detects whether to use terminal progress bar or notebook-style one
+            
+            prog = tqdm(range(self.parameters.all_params["maxCycles"]),
+                        desc = "Progress",
+                        unit = "cycle")
+
+            self.run_output = ""
+            
+            with process.stdout:
+                for line in iter(process.stdout.readline, b''):
+                    line = line.decode("ascii")
+                    self.run_output += line
+                    if(line.strip().startswith("Cycle ") & (line.strip() != "Cycle 1")):
+                        prog.update(1)
+            process.wait()
+
+            self.run_errors = process.stderr
+        
+        else:
+            self.run_output, self.run_errors = process.communicate()
+            self.run_output = self.run_output.decode('ascii','ignore')
 
         if self.run_errors is not None:
             self.run_errors = self.run_errors.decode('ascii','ignore')
