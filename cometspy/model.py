@@ -51,7 +51,7 @@ class model:
         obj_style : str
             one of MAXIMIZE_OBJECTIVE_FLUX (fba) or MAX_OBJECTIVE_MIN_TOTAL (pfba)
         optimizer : str
-            one of "GUROBI" or "GLPK". not all functionality works with GLPK
+            one of "GLOP", "GUROBI" or "GLPK". not all functionality works with GLPK
             
         Examples
         --------
