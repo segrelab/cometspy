@@ -1,0 +1,32 @@
+name: Publish Python 🐍 distribution 📦 to PyPI
+
+    on:
+      release:
+        types: [published] # Trigger on a new release being published
+
+    jobs:
+      build-and-publish:
+        runs-on: ubuntu-latest
+        environment: release # Optional: Define an environment for publishing
+
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+
+          - name: Set up Python
+            uses: actions/setup-python@v5
+            with:
+              python-version: "3.13.0" # Specify your Python version
+
+          - name: Install dependencies
+            run: |
+              python -m pip install --upgrade pip
+              pip install build twine
+
+          - name: Build distribution
+            run: python -m build
+
+          - name: Publish package to PyPI
+            uses: pypa/gh-action-pypi-publish@release/v1 # Use the official PyPA action
+            with:
+              password: ${{ secrets.PYPI_API_TOKEN }} # Use a secret for your PyPI token
