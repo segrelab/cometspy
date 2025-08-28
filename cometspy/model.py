@@ -657,7 +657,12 @@ class model:
                                 'rxn': [rxn_num]*len(rxn_mets),
                                 's_coef': met_s_coefs})
             cdf = cdf.sort_values('metabolite')
-            self.smat = pd.concat([self.smat, cdf])
+            # skip concatenation on first row (prevents pandas FutureWarning)
+            if index == 0:
+                self.smat = cdf
+            else:
+                self.smat = pd.concat([self.smat, cdf])
+                
 
         self.smat = self.smat.sort_values(by=['metabolite', 'rxn'])
 
