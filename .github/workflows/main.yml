@@ -3,6 +3,12 @@ name: Publish Python 🐍 distribution 📦 to PyPI
 on:
    release:
       types: [published] # Trigger on a new release being published
+   workflow_dispatch:
+        inputs:
+          my_input:
+            description: 'A test input'
+            required: false
+            default: 'default_value'
 
 jobs:
    build-and-publish:
