@@ -99,8 +99,12 @@ class params:
         """
         if name in self.all_params:
             self.all_params[name] = value
+        elif name.lower() in [n.lower() for n in self.all_params.keys()]:
+            match = [n for n in self.all_params.keys() if n.lower() == name.lower()][0]
+            self.all_params[match] = value
+            print('Warning: inputted parameter ' + name + ' is properly spelled as ' + match)
         else:
-            print('Parameter ' + name + ' does not exist')
+            print('Warning: inputted parameter ' + name + ' does not exist')
 
     def get_param(self, name : str) -> object:
         """
