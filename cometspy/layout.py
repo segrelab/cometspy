@@ -1422,8 +1422,12 @@ class layout:
                                                   'g_static_val': [
                                                       self.default_g_static_val],
                                                   'g_refresh': [self.default_g_refresh]})
-                self.media = pd.concat([self.media, new_row],
-                                       ignore_index=True, sort=True)
+                # concat the row only if table isn't empty (avoids FutureWarning)
+                if self.media.shape[0] == 0:
+                    self.media = new_row
+                else:
+                    self.media = pd.concat([self.media, new_row],
+                                            ignore_index=True, sort=True)
 
     def __build_exchanged_mets(self):
         # goes through each model, grabs its exchange met names, and bundles
