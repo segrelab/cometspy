@@ -178,10 +178,10 @@ class comets:
                                            '/lib/gurobi.jar')
 	
         self.classpath_pieces['or_tools_java'] = (self.COMETS_HOME +
-                                           '/lib/or_tools/9.4.1874/' + 'ortools-java-9.4.1874.jar')
+                                           '/lib/or-tools/9.4.1874/' + 'ortools-java-9.4.1874.jar')
 
         self.classpath_pieces['or_tools_linux'] = (self.COMETS_HOME +
-                                           '/lib/or_tools/9.4.1874/' + 'ortools-linux-x86-64-9.4.1874.jar')
+                                           '/lib/or-tools/9.4.1874/' + 'ortools-linux-x86-64-9.4.1874.jar')
 
         self.classpath_pieces['junit'] = glob.glob(self.COMETS_HOME +
                                                    '/lib/junit' + '/**/*junit*',
