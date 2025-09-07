@@ -26,7 +26,8 @@ classifiers = [
 dependencies = [
   "numpy",
   "cobra",
-  "pandas>=1.0.0"
+  "pandas>=1.0.0",
+  "tqdm"
 ]
 
 [project.urls]

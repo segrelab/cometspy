@@ -755,7 +755,12 @@ class model:
                                 'rxn': [rxn_num]*len(rxn_mets),
                                 's_coef': met_s_coefs})
             cdf = cdf.sort_values('metabolite')
-            self.smat = pd.concat([self.smat, cdf])
+            # skip concatenation on first row (prevents pandas FutureWarning)
+            if index == 0:
+                self.smat = cdf
+            else:
+                self.smat = pd.concat([self.smat, cdf])
+                
 
         self.smat = self.smat.sort_values(by=['metabolite', 'rxn'])
 
@@ -763,13 +768,13 @@ class model:
         if hasattr(curr_m, 'default_bounds'):
             self.default_bounds = curr_m.default_bounds
 
+        # set objective(s) using COBRA reactions objective coefficient information
         obj = {str(x).split(':')[0]:x.objective_coefficient 
                for x in reaction_list 
                if x.objective_coefficient != 0}
         obj = {rx: -1 if coef < 0 else 1 for rx, coef in obj.items()}
 
-        self.objective = [int(self.reactions[self.reactions.
-                                             REACTION_NAMES == rx]['ID']) * coef for rx, coef in obj.items()]
+        self.objective = [int(self.reactions[self.reactions.REACTION_NAMES == rx]['ID'].iloc[0]) * coef for rx, coef in obj.items()]
 
         if hasattr(curr_m, 'comets_optimizer'):
             self.optimizer = curr_m.comets_optimizer

@@ -894,9 +894,13 @@ class layout:
                       'init_amount': amount,
                       'diff_c': self.default_diff_c}
             newrow = pd.DataFrame([newrow], columns=newrow.keys())
-            self.media = pd.concat([self.media,
-                                    newrow],
-                                   axis=0, sort=False, ignore_index=True)
+            # concat the row only if table isn't empty (avoids FutureWarning)
+            if self.media.shape[0] == 0:
+                self.media = newrow
+            else:
+                self.media = pd.concat([self.media,
+                                        newrow],
+                                        axis=0, sort=False, ignore_index=True)
             print('Warning: The added metabolite (' + met + ') is not ' +
                   'able to be taken up by any of the current models')
 
@@ -1482,14 +1486,18 @@ class layout:
         for met in self.all_exchanged_mets:
             if met not in self.media['metabolite'].values:
                 new_row = pd.DataFrame.from_dict({'metabolite': [met],
-                                                  'init_amount': [0],
+                                                  'init_amount': [0.0],
                                                   'diff_c': [self.default_diff_c],
                                                   'g_static': [self.default_g_static],
                                                   'g_static_val': [
                                                       self.default_g_static_val],
                                                   'g_refresh': [self.default_g_refresh]})
-                self.media = pd.concat([self.media, new_row],
-                                       ignore_index=True, sort=True)
+                # concat the row only if table isn't empty (avoids FutureWarning)
+                if self.media.shape[0] == 0:
+                    self.media = new_row
+                else:
+                    self.media = pd.concat([self.media, new_row],
+                                            ignore_index=True, sort=True)
 
     def __build_exchanged_mets(self):
         # goes through each model, grabs its exchange met names, and bundles

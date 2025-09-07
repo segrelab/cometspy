@@ -178,10 +178,10 @@ class comets:
                                            '/lib/gurobi.jar')
 	
         self.classpath_pieces['or_tools_java'] = (self.COMETS_HOME +
-                                           '/lib/or_tools/9.4.1874/' + 'ortools-java-9.4.1874.jar')
+                                           '/lib/or-tools/9.4.1874/' + 'ortools-java-9.4.1874.jar')
 
         self.classpath_pieces['or_tools_linux'] = (self.COMETS_HOME +
-                                           '/lib/or_tools/9.4.1874/' + 'ortools-linux-x86-64-9.4.1874.jar')
+                                           '/lib/or-tools/9.4.1874/' + 'ortools-linux-x86-64-9.4.1874.jar')
 
         self.classpath_pieces['junit'] = glob.glob(self.COMETS_HOME +
                                                    '/lib/junit' + '/**/*junit*',
@@ -456,12 +456,12 @@ class comets:
             max_rows = 4 + max([len(m.reactions) for m in self.layout.models])
 
             self.fluxes = pd.read_csv(self.working_dir + self.parameters.all_params['FluxLogName'],
-                                      delim_whitespace=True,
+                                      sep="\\s+",
                                       header=None, names=range(max_rows))
             # deal with commas-as-decimals
             if any([isinstance(self.fluxes.iloc[0,i], str) for i in range(self.fluxes.shape[1])]):
                 self.fluxes = pd.read_csv(self.working_dir + self.parameters.all_params['FluxLogName'],
-                                      decimal = ",", delim_whitespace=True,
+                                      decimal = ",", sep="\\s+",
                                       header=None, names=range(max_rows))
             if delete_files:
                 os.remove(self.working_dir + self.parameters.all_params['FluxLogName'])
@@ -470,7 +470,7 @@ class comets:
         # Read media logs
         if self.parameters.all_params['writeMediaLog']:
             self.media = pd.read_csv(self.working_dir + self.parameters.all_params[
-                'MediaLogName'], delim_whitespace=True, names=('metabolite',
+                'MediaLogName'], sep="\\s+", names=('metabolite',
                                                                'cycle', 'x',
                                                                'y',
                                                                'conc_mmol'))
@@ -478,7 +478,7 @@ class comets:
             if isinstance(self.media.loc[0, "conc_mmol"], str):
                 self.media = pd.read_csv(self.working_dir + self.parameters.all_params[
                 'MediaLogName'],
-                    decimal = ",", delim_whitespace=True, names=('metabolite',
+                    decimal = ",", sep="\\s+", names=('metabolite',
                                                                'cycle', 'x',
                                                                'y',
                                                                'conc_mmol'))
