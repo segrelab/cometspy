@@ -607,7 +607,73 @@ class layout:
                         if stat_spec[j*2] != 0:
                             self.local_static[loc][
                                 self.all_exchanged_mets[j]] = stat_spec[j*2+1]
+                            
+        # '''----------- CHEMOTAXIS COEFFICIENT ----------------------------------'''
+        # .. chemotaxis coefficient and nutrient parameter
+        #filedata_string is one big string with all the data from the file
+        self.__chemotaxis_coeff_flag = False
+        if 'MODEL_MEDIA_CHEMOTAXIS_COEFFS' in filedata_string.upper().strip().split():
+            #splits at keyword
+            self.__chemotaxis_coeff_flag = True
+            #there is chemotaxis
+            #split at keyword
+            lin_ctx = re.split('CHEMOTAXIS',
+                                filedata_string.upper())[0].count('\n')
+            lin_ctx_end = next(x for x in end_blocks if x > lin_ctx)
 
+            g_ctx = [float(x) for x in f_lines[lin_ctx].split()[1:]]
+
+            if len(g_ctx) != 3:
+                print('\nWarning: Some chemotaxis coeff lines are corrupt\n ' +
+                      '(wrong number of entries). Check your layout file.')
+                
+            else:
+                #self.chemotaxis = pd.DataFrame(columns =  ['model', 'media', 'coeff', 'n_params'])
+        #H. Shi: model, media, coeff, nutrient params
+                self.chemotaxis['model'] = [int(x) for x in g_ctx[0::4]] #first element then every fourth element?
+                self.chemotaxis['media'] = [int(x) for x in g_ctx[1::4]]
+                self.chemotaxis['coeff'] = [float(x) for x in g_ctx[2::4]]
+                #self.chemotaxis['n_params'] = [float(x) for x in g_ctx[3:4]]
+        '''
+                self.chemotaxis['model'] = int(g_ctx[0])
+                self.chemotaxis['media'] = int(g_ctx [1])
+                self.chemotaxis['coeff'] = g_ctx[2]
+                self.chemotaxis['n_params'] =  g_ctx[3]
+        '''
+
+        # '''----------- CHEMOTAXIS NUTRIENT PARAMETER ----------------------------------'''
+        # .. nutrient parameter
+        #filedata_string is one big string with all the data from the file
+        self.__chemotaxis_param_flag = False
+        if 'MODEL_MEDIA_NUTRIENT_PARAMS' in filedata_string.upper().strip().split():
+            #splits at keyword
+            self.__chemotaxis_param_flag = True
+            #there is chemotaxis
+            #split at keyword
+            lin_ctx_p = re.split('NUTRIENT',
+                                filedata_string.upper())[0].count('\n')
+            lin_ctx_p_end = next(x for x in end_blocks if x > lin_ctx_p)
+
+            g_ctx_p = [float(x) for x in f_lines[lin_ctx_p].split()[1:]]
+
+            if len(g_ctx_p) != 3:
+                print('\nWarning: Some chemotaxis nutrient params lines are corrupt\n ' +
+                      '(wrong number of entries). Check your layout file.')
+                
+            else:
+                #self.chemotaxis = pd.DataFrame(columns =  ['model', 'media', 'coeff', 'n_params'])
+        #H. Shi: model, media, coeff, nutrient params
+                #self.chemotaxis['model'] = [int(x) for x in g_ctx[0::4]] #first element then every fourth element?
+                #self.chemotaxis['media'] = [int(x) for x in g_ctx[1::4]]
+                #self.chemotaxis['coeff'] = [float(x) for x in g_ctx[2::4]]
+                self.chemotaxis['n_params'] = [float(x) for x in g_ctx_p[2:3]]
+        '''
+                self.chemotaxis['model'] = int(g_ctx[0])
+                self.chemotaxis['media'] = int(g_ctx [1])
+                self.chemotaxis['coeff'] = g_ctx[2]
+                self.chemotaxis['n_params'] =  g_ctx[3]
+        '''
+        
     def get_model_ids(self) -> list:
         """
         returns a list of the ids of the models in this layout.

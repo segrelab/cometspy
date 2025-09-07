@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cometspy"
-version = "0.5.4"
+version = "0.6.1"
 description = "The Python interface to COMETS"
 authors = [
   { name = "The COMETSPy Core Team", email = "dukovski@bu.edu" }

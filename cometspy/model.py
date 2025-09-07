@@ -113,6 +113,7 @@ class model:
         self.default_km = 1
         self.default_hill = 1
         self.default_bounds = [0, 1000]
+        self.objectives = {} #Empty dictionary
         self.objective = None
         self.optimizer = 'GUROBI'
         self.obj_style = 'MAXIMIZE_OBJECTIVE_FLUX'
@@ -245,8 +246,8 @@ class model:
         self.neutral_drift_flag = neutralDrift
 
     def add_nonlinear_diffusion_parameters(self,
-                                           zero : float=1.,
-                                           n : float =1.,
+                                           D0 : float=1.,
+                                           Dk : float =1.,
                                            exponent : float=1.,
                                            hilln : float=10.,
                                            hillk : float=0.9):
@@ -257,8 +258,8 @@ class model:
             
             Parameters
             ----------
-            zero : float, optional
-            n : float, optional
+            D0 : float, optional
+            Dk : float, optional
             exponent : float, optional
             hilln : float, optional
             hillk : float, optional
@@ -275,18 +276,51 @@ class model:
             
         """
         
-        for parm in [zero, n,
+        for parm in [D0, Dk,
                      exponent, hilln,
                      hillk]:
             if not isinstance(parm, float):
                 raise ValueError('all nonlinear diffusion terms must be float')
         self.nonlinear_diffusion_flag = True
-        self.nonlinear_diffusion_parameters = {'convNonLinDiffZero': zero,
-                                               'convNonlinDiffN': n,
+        self.nonlinear_diffusion_parameters = {'convNonLinDiffZero': D0,
+                                               'convNonlinDiffN': Dk,
                                                'convNonlinDiffExponent': exponent,
                                                'convNonlinDiffHillN': hilln,
                                                'convNonlinDiffHillK': hillk}
-
+    #H. Shi Jan 2023
+    def add_nonlinear_diffusion_chemotaxis_parameters(self,
+                                           hilln : float=1.0,
+                                           hillk : float=0.0):
+        """ sets the model to use non-linear diffusion chemotaxis biomass spread.
+            
+            This also requires one set the biomassMotionStyle to 
+            'Nonlin Diff Chemotaxis 2D' in the comets.params object (see Example)
+            
+            Parameters
+            ----------
+            hilln : float, optional
+            hillk : float, optional
+            
+            Example
+            --------
+            
+            >>> import cobra.test
+            >>> import cometspy as c
+            >>> model = c.model(cobra.test.create_test_model("ecoli"))
+            >>> model.add_nonlinear_diffusion_parameters(5., 0.5)
+            >>> params = c.params()
+            >>> params.set_param("biomassMotionStyle", "Nonlin Diff Chemotaxis 2D")
+            
+        """
+        
+        for parm in [hilln,
+                     hillk]:
+            if not isinstance(parm, float):
+                raise ValueError('all nonlinear diffusion chemotaxis terms must be float')
+        self.nonlinear_diffusion_ctx_flag = True
+        self.nonlinear_diffusion_ctx_parameters = {
+                                               'NonlinDiffCtxHillN': hilln,
+                                               'NonlinDiffCtxHillK': hillk}
     def add_light(self, reaction : str, 
                   abs_coefficient : float, 
                   abs_base : float):
@@ -531,6 +565,70 @@ class model:
         
         """
         self.optimizer = optimizer
+
+    def change_objective(self, reaction, weight):
+        """ changes the list of objective reactions
+
+            Parameters
+            ----------
+
+            reaction : str
+                the name of the reaction
+            weight : float
+                the weight for the reaction (0 to remove it as an objective)
+
+        """
+
+        rxnIdx = self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction]['ID'].iloc[0]
+
+        if (weight == 0):
+            if (rxnIdx in self.objectives):
+                del self.objectives[rxnIdx]
+            return
+
+        self.objectives[rxnIdx] = weight
+
+    def change_biomass(self, reaction):
+        """ changes the biomass that's logged
+
+            Parameters
+            ----------
+
+            reaction : str
+                the name of the reaction
+        """
+
+        self.biomass = self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction]['ID'].iloc[0]
+
+    def change_objective_style(self, style):
+        """ changes the objective style
+
+            Parameters
+            ----------
+
+            reaction : str
+                the new objective style
+        """
+
+        self.obj_style = style
+
+    def change_maintenance(self, reaction, flux):
+        """ changes the maintenance reaction and its flux
+
+            Parameters
+            ----------
+
+            reaction : str
+                the name of the reaction
+            flux : float
+                the minimum flux for the cell to survive
+
+        """
+
+        rxnIdx = self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction]['ID'].iloc[0]
+
+        self.maintenanceRxn = rxnIdx
+        self.maintenanceFlux = flux
 
     def read_cobra_model(self, path : str, randomtag : bool = False):
         """ reads a cobra model from a file and loads it into this model 
@@ -909,7 +1007,23 @@ class model:
                                                            'convNonlinDiffHillN': 10.,
                                                            'convNonlinDiffHillK': .9}
                     self.nonlinear_diffusion_parameters[parm] = parm_value
-                    
+
+        # '''--------------non-linear diffusion chemotaxis---------------------------'''
+        #H. Shi Jan 2023
+        for parm in ['NonlinDiffCtxHillN', 'NonlinDiffCtxHillK']:
+            if parm in m_filedata_string:
+                lin_obj_st = re.split(parm,
+                                      m_filedata_string)[0].count(
+                                          '\n')
+                parm_value = float(m_f_lines[lin_obj_st].strip().split()[1])
+                try:
+                    self.nonlinear_diffusion_parameters[parm] = parm_value
+                except:  # TODO change bare except statements to ifelse
+                    self.nonlinear_diffusion_ctx_flag = True
+                    self.nonlinear_diffusion_ctx_parameters = {'NonlinDiffCtxHillN': 1.0,
+                                               'NonlinDiffCtxHillK': 0.0}
+                    self.nonlinear_diffusion_ctx_parameters[parm] = parm_value  
+
         # '''-----------noise variance-----------------'''
         if 'noiseVariance' in m_filedata_string:
             lin_obj_st = re.split('noiseVariance',
@@ -1109,6 +1223,13 @@ class model:
                 for key, value in self.nonlinear_diffusion_parameters.items():
                     f.write(key + ' ' + str(value) + '\n')
                     f.write(r'//' + '\n')
+                    
+            #H. Shi Feb 2023
+            if self.nonlinear_diffusion_ctx_flag:
+                for key, value in self.nonlinear_diffusion_ctx_parameters.items():
+                    f.write(key + ' ' + str(value) + '\n')
+                    f.write(r'//' + '\n')
+
 
             if self.noise_variance_flag:
                 f.write('noiseVariance' + ' ' +
