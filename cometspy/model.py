@@ -942,7 +942,10 @@ class model:
         if working_dir is not None:
             path_to_delete = working_dir
         path_to_delete = path_to_delete + self.id + '.cmd'
-        os.remove(path_to_delete)
+        try:
+            os.remove(path_to_delete)
+        except OSError:
+            pass
         
     def write_comets_model(self, working_dir : str = None):
         """ writes the COMETS model object to a file 
