@@ -106,7 +106,6 @@ class model:
         self.convection_flag = False
         self.light_flag = False
 
-        self.nonlinear_diffusion_flag = False
         self.neutral_drift_flag = False
         self.noise_variance_flag = False
         self.default_vmax = 10
@@ -118,9 +117,9 @@ class model:
         self.optimizer = 'GUROBI'
         self.obj_style = 'MAXIMIZE_OBJECTIVE_FLUX'
 
+        self.nonlinear_diffusion_flag = False
         self.multispecies_convmodel_flag = False
-
-
+        self.nonlinear_diffusion_ctx_flag = False
 
         if model is not None:
             if isinstance(model, cobra.Model):
