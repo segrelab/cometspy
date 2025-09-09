@@ -112,8 +112,11 @@ class model:
         self.default_km = 1
         self.default_hill = 1
         self.default_bounds = [0, 1000]
+
         self.objectives = {} #Empty dictionary
         self.objective = None
+        self.biomass = None
+
         self.optimizer = 'GUROBI'
         self.obj_style = 'MAXIMIZE_OBJECTIVE_FLUX'
 
@@ -597,7 +600,7 @@ class model:
                 the name of the reaction
         """
 
-        self.biomass = self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction]['ID'].iloc[0]
+        self.biomass = [self.reactions.loc[self.reactions['REACTION_NAMES'] == reaction]['ID'].iloc[0]]
 
     def change_objective_style(self, style):
         """ changes the objective style
@@ -774,6 +777,8 @@ class model:
         obj = {rx: -1 if coef < 0 else 1 for rx, coef in obj.items()}
 
         self.objective = [int(self.reactions[self.reactions.REACTION_NAMES == rx]['ID'].iloc[0]) * coef for rx, coef in obj.items()]
+
+        self.biomass = self.objective
 
         if hasattr(curr_m, 'comets_optimizer'):
             self.optimizer = curr_m.comets_optimizer
@@ -1142,6 +1147,11 @@ class model:
             f.write('OBJECTIVE\n' +
                     '    ' + '    '.join([str(rx) for rx in self.objective]) + '\n')
             f.write(r'//' + '\n')
+
+            if self.biomass != None or self.biomass != self.objective:
+                f.write('BIOMASS\n' +
+                        '    ' + '    '.join([str(rx) for rx in self.biomass]) + '\n')
+                f.write(r'//' + '\n')
 
             f.write('METABOLITE_NAMES\n')
             met_n.to_csv(f, mode='a', lineterminator = '\n', header=False, index=False)
