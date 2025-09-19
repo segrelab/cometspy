@@ -326,7 +326,7 @@ class comets:
         self.classpath_pieces[libraryname] = path
         self.__build_and_set_classpath()
 
-    def run(self, delete_files : bool = True, progress : bool = True):
+    def run(self, delete_files : bool = True, progress : bool = False):
         """
         run a COMETS simulation
 
