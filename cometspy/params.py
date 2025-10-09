@@ -74,6 +74,14 @@ class params:
         pdparams = pd.DataFrame({'VALUE': pd.Series(self.all_params),
                                  'UNITS': pd.Series(self.param_units)})
         return pdparams
+    
+    def search_params(self, term: str):
+        """
+        utility function that returns all parameters matching a given term
+        """
+        params_table = self.show_params()
+        indices = [n for n, param in enumerate(params_table.index) if term.lower() in param.lower()]
+        return(params_table.iloc[indices])
 
     def set_param(self, name : str, value):
         """
