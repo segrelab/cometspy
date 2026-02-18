@@ -21,7 +21,7 @@ __author__ = "Djordje Bajic, Jean Vila, Jeremy Chacon, Ilija Dukovski"
 __copyright__ = "Copyright 2024, The COMETS Consortium"
 __credits__ = ["Djordje Bajic", "Jean Vila", "Jeremy Chacon", "Ilija Dukovski"]
 __license__ = "MIT"
-__version__ = "0.6.2"
+__version__ = "0.6.2_test"
 __comets_compatibility__ = "2.12.4" # version of comets this was tested with (except signaling)
 __comets_compatibility_signaling__ = "2.12.4" # version signaling was tested with
 
@@ -135,12 +135,13 @@ class comets:
                     self.GUROBI_HOME = os.environ['COMETS_GUROBI_HOME']
                 except:
                     self.GUROBI_HOME = ''
-                    print("could not find environmental variable GUROBI_COMETS_HOME or GUROBI_HOME or COMETS_GUROBI_HOME")
-                    print("COMETS will not work with GUROBI until this is solved. ")
-                    print("Here is a solution:")
-                    print("    1. import os and set os.environ['GUROBI_HOME'] then try to make a comets object again")
-                    print("       e.g.   import os")
-                    print("              os.environ['GUROBI_HOME'] = 'C:\\\\gurobi902\\\\win64'")
+                    #print("Could not find environmental variable GUROBI_COMETS_HOME or GUROBI_HOME or COMETS_GUROBI_HOME")
+                    #print("Make sure you are using glop (or-tools) instead.")
+                    #print("COMETS will not work with GUROBI until this is solved. ")
+                    #print("Here is a solution:")
+                    #print("    1. import os and set os.environ['GUROBI_HOME'] then try to make a comets object again")
+                    #print("       e.g.   import os")
+                    #print("              os.environ['GUROBI_HOME'] = 'C:\\\\gurobi902\\\\win64'")
         self.COMETS_HOME = os.environ['COMETS_HOME']
         self.VERSION = os.path.splitext(os.listdir(os.environ['COMETS_HOME'] +
                                                    '/bin')[0])[0]
@@ -174,14 +175,20 @@ class comets:
         sets up what it thinks the classpath should be
         """
         self.classpath_pieces = {}
-        self.classpath_pieces['gurobi'] = (self.GUROBI_HOME +
+        if 'GUROBI_HOME' in os.environ:
+            self.classpath_pieces['gurobi'] = (self.GUROBI_HOME +
                                            '/lib/gurobi.jar')
+        else:
+            print("GUROBI_HOME not found. Skipping Gurobi import.")
 	
         self.classpath_pieces['or_tools_java'] = (self.COMETS_HOME +
                                            '/lib/or-tools/9.4.1874/' + 'ortools-java-9.4.1874.jar')
 
         self.classpath_pieces['or_tools_linux'] = (self.COMETS_HOME +
                                            '/lib/or-tools/9.4.1874/' + 'ortools-linux-x86-64-9.4.1874.jar')
+        
+        self.classpath_pieces['or_tools_linux'] = (self.COMETS_HOME +
+                                           '/lib/or-tools/9.4.1874/*')
 
         self.classpath_pieces['junit'] = glob.glob(self.COMETS_HOME +
                                                    '/lib/junit' + '/**/*junit*',
