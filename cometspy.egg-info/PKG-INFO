@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: cometspy
-Version: 0.5.4
+Version: 0.6.3
 Summary: The Python interface to COMETS
 Author-email: The COMETSPy Core Team <dukovski@bu.edu>
 License:                     GNU GENERAL PUBLIC LICENSE
@@ -691,6 +691,7 @@ Description-Content-Type: text/markdown
 Requires-Dist: numpy
 Requires-Dist: cobra
 Requires-Dist: pandas>=1.0.0
+Requires-Dist: tqdm
 
 
 [![Current PyPI version](https://img.shields.io/pypi/v/cometspy.svg)](https://pypi.org/project/cometspy/)
