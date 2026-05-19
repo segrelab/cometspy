@@ -7,14 +7,16 @@ We start by importing the necessary libraries and loading the *E. coli* model.
 
 
 ```python
-import cometspy as c
-import cobra.test
 import os
+import cobra
+
 import pandas as pd
+import cometspy as c
 import matplotlib.pyplot as plt
 
 # load model 
-wt = cobra.test.create_test_model("ecoli")
+model = cobra.io.load_model("e_coli_core")
+
 ```
 
     Using license file /home/djordje/gurobi.lic
@@ -26,7 +28,7 @@ Remove the bounds for all exchange reactions in the model to allow them to be co
 
 ```python
 # Remove bounds from exchange reactions
-for i in wt.reactions:
+for i in model.reactions:
     if 'EX_' in i.id:
         i.lower_bound =-1000.0
 ```
@@ -42,7 +44,7 @@ test_tube.set_specific_metabolite('glc__D_e', 0.0001)
 test_tube.add_typical_trace_metabolites(amount=1000)
 
 # add model
-wt = c.model(wt)
+wt = c.model(model)
 wt.initial_pop = [0, 0, 1e-7]
 test_tube.add_model(wt)
 ```
@@ -60,20 +62,20 @@ Create a params object, and modify the needed parameters. The simulation in this
 # .. load parameters and layout from file
 evo_params = c.params()
 
-evo_paramsset_param('timeStep', 0.1)             # hours
+evo_params.set_param('timeStep', 0.1)             # hours
 
-evo_paramsset_param('maxCycles', 2400)            # simulate 10 serial transfers of 24h each (timeStep = 0.1)
-evo_paramsset_param('batchDilution', True)
-evo_paramsset_param('dilFactor', 0.5)            # Dilution to apply
-evo_paramsset_param('dilTime', 3)                # hours
+evo_params.set_param('maxCycles', 2400)            # simulate 10 serial transfers of 24h each (timeStep = 0.1)
+evo_params.set_param('batchDilution', True)
+evo_params.set_param('dilFactor', 0.5)            # Dilution to apply
+evo_params.set_param('dilTime', 3)                # hours
 
-evo_paramsset_param('evolution', True)
-evo_paramsset_param('mutRate', 1e-8)             # 
-evo_paramsset_param('cellSize', 1e-10)           # cellSize should always be larger than maxSpaceBiomass
-evo_paramsset_param('minSpaceBiomass', 1e-11)    # make sure it is smaller than cell size!
+evo_params.set_param('evolution', True)
+evo_params.set_param('mutRate', 1e-8)             # 
+evo_params.set_param('cellSize', 1e-10)           # cellSize should always be larger than maxSpaceBiomass
+evo_params.set_param('minSpaceBiomass', 1e-11)    # make sure it is smaller than cell size!
 
 
-evo_paramsset_param('BiomassLogRate', 1)
+evo_params.set_param('BiomassLogRate', 1)
 ```
 
 ## Run the simulation
@@ -83,40 +85,34 @@ We now create the COMETS object using the above layout and parameters, and run t
 ```python
 # create comets object from the loaded parameters and layout 
 evo_simulation = c.comets(test_tube, evo_params)
-evo_simulation.JAVA_CLASSPATH = '/home/djordje/Dropbox/COMETS_RUN/lib/jmatio.jar:/home/djordje/Dropbox/COMETS_RUN/lib/jdistlib-0.4.5-bin.jar:/home/djordje/Dropbox/COMETS_RUN/lib/commons-math3-3.6.1.jar:/home/djordje/Dropbox/COMETS_RUN/lib/commons-lang3-3.9.jar:/home/djordje/Dropbox/COMETS_RUN/lib/colt.jar:/home/djordje/Dropbox/COMETS_RUN/lib/concurrent.jar:/home/djordje/Dropbox/COMETS_RUN/bin/comets_2.9.3.jar:/opt/gurobi901/linux64/lib/gurobi.jar'
+```
 
+In case a warning like 
+`Warning: java class libraries cannot be found` is returned, you may consider to double check your `.bashrc`: 
+
+```bash
+# COMETS
+export COMETS_HOME=/<path_to>/comets_linux/comets_2.12.5
+
+# Python bindings
+export PYTHONPATH=$COMETS_HOME/lib/cometspy-master:$PYTHONPATH
+
+# Java classpath (CRITICAL FIX)
+export COMETS_JAVA_CLASSPATH="$COMETS_HOME/lib/*:$COMETS_HOME/lib/or-tools/9.4.1874/*"
+
+# Gurobi
+export GUROBI_HOME=/opt/gurobi/linux64
+export PATH=$PATH:$GUROBI_HOME/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$GUROBI_HOME/lib
+```
+
+Once `comets` is ready to go, you may run the simulation:
+
+```python
 # run comets simulation
 evo_simulation.run()
 ```
 
-    Warning: java class libraries cannot be found
-    These are the expected locations for dependencies:
-    Dependency 			 expected path
-    __________ 			 _____________
-    junit			/home/djordje/Dropbox/COMETS_RUN/lib/junit/junit-4.12.jar
-    hamcrest			/home/djordje/Dropbox/COMETS_RUN/lib/junit/hamcrest-core-1.3.jar
-    jogl_all			/home/djordje/Dropbox/COMETS_RUN/lib/jogl/jogamp-all-platforms/jar/jogl-all.jar
-    gluegen_rt			/home/djordje/Dropbox/COMETS_RUN/lib/jogl/jogamp-all-platforms/jar/gluegen-rt.jar
-    gluegen			/home/djordje/Dropbox/COMETS_RUN/lib/jogl/jogamp-all-platforms/jar/gluegen.jar
-    gluegen_rt_natives			/home/djordje/Dropbox/COMETS_RUN/lib/jogl/jogamp-all-platforms/jar/gluegen-rt-natives-linux-amd64.jar
-    jogl_all_natives			/home/djordje/Dropbox/COMETS_RUN/lib/jogl/jogamp-all-platforms/jar/jogl-all-natives-linux-amd64.jar
-    jmatio			/home/djordje/Dropbox/COMETS_RUN/lib/JMatIO/lib/jamtio.jar
-    jmat			/home/djordje/Dropbox/COMETS_RUN/lib/JMatIO/JMatIO-041212/lib/jmatio.jar
-    concurrent			/home/djordje/Dropbox/COMETS_RUN/lib/colt/lib/concurrent.jar
-    colt			/home/djordje/Dropbox/COMETS_RUN/lib/colt/lib/colt.jar
-    lang3			/home/djordje/Dropbox/COMETS_RUN/lib/commons-lang3-3.7/commons-lang3-3.7.jar
-    math3			/home/djordje/Dropbox/COMETS_RUN/lib/commons-math3-3.6.1/commons-math3-3.6.1.jar
-    
-      You have two options to fix this problem:
-    1.  set each class path correctly by doing:
-        comets.set_classpath(libraryname, path)
-        e.g.   comets.set_classpath('hamcrest', '/home/chaco001/comets/junit/hamcrest-core-1.3.jar')
-    
-        note that versions dont always have to exactly match, but you're on your own if they don't
-    
-    2.  fully define the classpath yourself by overwriting comets.JAVA_CLASSPATH
-           look at the current comets.JAVA_CLASSPATH to see how this should look.
-    
     Running COMETS simulation ...
     Done!
 
@@ -126,29 +122,55 @@ We can visualize the population dynamics of all species over time (color coded) 
 
 
 ```python
+
 fig, ax = plt.subplots(figsize=(15, 5))
 
-for key, grp in evo_simulation.biomass.groupby(['species']):
-    ax = grp.plot(ax=ax, kind='line', x='cycle', y='biomass')
-ax.get_legend().remove()
-plt.yscale('log')
-plt.ylabel("Biomass (gr.)")
+species_to_mut = evo_simulation.genotypes.set_index("Species")["Mutation"].to_dict()
+
+for species, grp in evo_simulation.biomass.groupby("species"):
+    grp = grp.sort_values("cycle")
+    grp = grp[grp["biomass"] > 0]
+    ax.plot(grp["cycle"], grp["biomass"])
+    # find peak point
+    peak_idx = grp["biomass"].idxmax()
+    peak = grp.loc[peak_idx]
+    label = species_to_mut.get(species, species)
+    ax.text(
+        peak["cycle"],
+        peak["biomass"],
+        label,
+        fontsize=8,
+        ha="center",
+        va="bottom"
+    )
+
+ax.set_yscale("log")
+ax.set_ylabel("Biomass (g)")
+ax.set_xlabel("Cycle")
+
+plt.show()
 ```
 
 
-
-
-    Text(0,0.5,'Biomass (gr.)')
+    Text(0,0.5,'Biomass (g)')
 
 
 
 
-![](img/evolution_1.png)
+![](img/evolution_2.png)
 
 
-In order to analyze the results, it is also helpful to visualize the genotypes data frame, which contains all the mutants that ever appeared during the simulation. The data frame contains three columns: The ancestor, the mutation, and the name of the resulting genotype, which is assigned as a random hash.
-
+In order to analyze the results, it is also helpful to visualize the genotypes data frame, which contains all the mutants that ever appeared during the simulation. 
+The data frame contains three columns: The ancestor, the mutation, and the name of the resulting genotype, which is assigned as a random hash.
 
 ```python
-evo_simulation.genotypes
+evo_simulation.genotypes.head()
 ```
+    
+              Ancestor Mutation                               Species
+    0      NO_ANCESTOR   NO_MUT                       e_coli_core.cmd
+    1  e_coli_core.cmd   del_88  1a10c078-ca36-4145-b956-53006511ba98
+    2  e_coli_core.cmd   del_11  2b1fc102-808f-43df-86b0-d967fc66decf
+    3  e_coli_core.cmd   del_75  12f368aa-3afc-4e50-9b3f-0901c6f0d713
+    4  e_coli_core.cmd   del_93  47a5ccf6-f7b7-452a-a802-d656e995d46f
+
